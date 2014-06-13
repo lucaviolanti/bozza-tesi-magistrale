@@ -1,0 +1,342 @@
+\begin{thebibliography}{52}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{\texttt{#1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+
+\bibitem[{Baader et~al.(2005)Baader, Brandt, and Lutz}]{rifel}
+Baader, F., Brandt, S., Lutz, C., August 2005. {Pushing the} $\mathcal{EL}$
+  {envelope}. In: Kaelbling, L., Saffiotti, A. (Eds.), Proceedings of the 19th
+  International Joint Conference on Artificial Intelligence (IJCAI 2005).
+  Professional Book Center, Edinburgh, Scotland, UK, pp. 364--369.
+
+\bibitem[{Baader et~al.(2007)Baader, Calvanese, McGuinness, Nardi, and
+  Patel-Schneider}]{handbook}
+Baader, F., Calvanese, D., McGuinness, D., Nardi, D., Patel-Schneider, P.,
+  2007. {The Description Logic Handbook - Theory, Implementation, and
+  Applications, 2nd edition}. Cambridge.
+
+\bibitem[{Baader and Hollunder(1995{\natexlab{a}})}]{baader95a}
+Baader, F., Hollunder, B., 1995{\natexlab{a}}. Embedding defaults into
+  terminological knowledge representation formalisms. Journal of Automated
+  Reasoning (JAR) 14~(1), 149--180.
+
+\bibitem[{Baader and Hollunder(1995{\natexlab{b}})}]{baader95b}
+Baader, F., Hollunder, B., 1995{\natexlab{b}}. Priorities on defaults with
+  prerequisites, and their application in treating specificity in
+  terminological default logic. Journal of Automated Reasoning (JAR) 15~(1),
+  41--68.
+
+\bibitem[{Bonatti et~al.(2009{\natexlab{a}})Bonatti, Faella, and
+  Sauro}]{bonattiijcai2009}
+Bonatti, P., Faella, M., Sauro, L., July 2009{\natexlab{a}}. {Defeasible
+  inclusions in low-complexity DLs: Preliminary notes}. In: Boutilier, C.
+  (Ed.), Proceedings of the 21st International Joint Conference on Artificial
+  Intelligence (IJCAI 2009). Morgan Kaufmann, Pasadena, California, USA, pp.
+  696--701.
+
+\bibitem[{Bonatti et~al.(2010)Bonatti, Faella, and Sauro}]{bonattiiswc}
+Bonatti, P., Faella, M., Sauro, L., November 2010. $\mathcal{EL}$ with default
+  attributes and overriding. In: Patel-Schneider, P., Pan, Y., Hitzler, P.,
+  Mika, P., Zhang, L., Pan, J.~Z., Horrocks, I., Glimm, B. (Eds.), 9th
+  International Semantic Web Conference (ISWC 2010). Vol. 6496 of Lecture Notes
+  in Computer Science (LNCS). Springer, Shanghai, China, pp. 64--79.
+
+\bibitem[{Bonatti et~al.(2011{\natexlab{a}})Bonatti, Faella, and
+  Sauro}]{bonattiaaai2011}
+Bonatti, P.~A., Faella, M., Sauro, L., August 2011{\natexlab{a}}. Adding
+  default attributes to $\mathcal{EL}$++. In: Burgard, W., Roth, D. (Eds.),
+  Proceedings of the Twenty-Fifth AAAI Conference on Artificial Intelligence
+  (AAAI 2011). AAAI Press, San Francisco, California, USA.
+
+\bibitem[{Bonatti et~al.(2011{\natexlab{b}})Bonatti, Faella, and
+  Sauro}]{bonattiijcai2011}
+Bonatti, P.~A., Faella, M., Sauro, L., July 2011{\natexlab{b}}. On the
+  complexity of $\mathcal{EL}$ with defeasible inclusions. In: Walsh, T. (Ed.),
+  Proceedings of the 22nd International Joint Conference on Artificial
+  Intelligence (IJCAI 2011). Morgan Kaufmann, Barcelona, Spain, pp. 762--767.
+
+\bibitem[{Bonatti et~al.(2006)Bonatti, Lutz, and
+  Wolter}]{bonattilutzwolterkr06}
+Bonatti, P.~A., Lutz, C., Wolter, F., 2006. {Description Logics with
+  Circumscription}. In: Doherty, P., Mylopoulos, J., Welty, C.~A. (Eds.),
+  Proceedings of the Tenth International Conference on Principles of Knowledge
+  Representation and Reasoning (KR 2006). AAAI Press, Lake District of the
+  United Kingdom, pp. 400--410.
+
+\bibitem[{Bonatti et~al.(2009{\natexlab{b}})Bonatti, Lutz, and
+  Wolter}]{bonattilutz}
+Bonatti, P.~A., Lutz, C., Wolter, F., 2009{\natexlab{b}}. {The Complexity of
+  Circumscription in DLs}. Journal of Artificial Intelligence Research (JAIR)
+  35, 717--773.
+
+\bibitem[{Brewka(1987)}]{brewka87}
+Brewka, G., August 1987. The logic of inheritance in frame systems. In:
+  McDermott, J. (Ed.), Proceedings of the 10th International Joint Conference
+  on Artificial Intelligence (IJCAI 1987). Morgan Kaufmann, Milan, Italy, pp.
+  483--488.
+
+\bibitem[{Britz et~al.(2008)Britz, Heidema, and Meyer}]{sudafricaniKR}
+Britz, K., Heidema, J., Meyer, T., September 2008. Semantic preferential
+  subsumption. In: Brewka, G., Lang, J. (Eds.), Principles of Knowledge
+  Representation and Reasoning: Proceedings of the Eleventh International
+  Conference (KR 2008). AAAI Press, Sidney, Australia, pp. 476--484.
+
+\bibitem[{Buchheit et~al.(1993)Buchheit, Donini, and Schaerf}]{buchheit-et-al}
+Buchheit, M., Donini, F.~M., Schaerf, A., 1993. Decidable reasoning in
+  terminological knowledge representation systems. Journal of Artificial
+  Intelligence Research (JAIR) 1, 109--138.
+
+\bibitem[{Cadoli et~al.(1990)Cadoli, Donini, and Schaerf}]{cadoli90}
+Cadoli, M., Donini, F., Schaerf, M., 1990. Closed world reasoning in hybrid
+  systems. In: Proceedings of the 6th International Symposium on Methodologies
+  for Intelligent Systems (ISMIS-90). North Holland, pp. 474Ð--481.
+
+\bibitem[{Calvanese et~al.(2005)Calvanese, Giacomo, Lembo, Lenzerini, and
+  Rosati}]{rifdllite}
+Calvanese, D., Giacomo, G.~D., Lembo, D., Lenzerini, M., Rosati, R., July 2005.
+  {DL-Lite: Tractable Description Logics for Ontologies}. In: Veloso, M.,
+  Kambhampati, S. (Eds.), Proceedings of the 20th National Conference on
+  Artificial Intelligence and the 17th Innovative Applications of Artificial
+  Intelligence Conference. AAAI Press / The MIT Press, Pittsburgh,
+  Pennsylvania, USA, pp. 602--607.
+
+\bibitem[{Calvanese et~al.(2007)Calvanese, Giacomo, Lembo, Lenzerini, and
+  Rosati}]{calvanese}
+Calvanese, D., Giacomo, G.~D., Lembo, D., Lenzerini, M., Rosati, R., 2007.
+  {Tractable Reasoning and Efficient Query Answering in Description Logics: The
+  {\it DL-Lite} Family}. Journal of Automated Reasoning (JAR) 39~(3), 385--429.
+
+\bibitem[{Casini and Straccia(2010)}]{casinistraccia2010}
+Casini, G., Straccia, U., September 2010. {Rational Closure for Defeasible
+  Description Logics}. In: Janhunen, T., Niemel{\"a}, I. (Eds.), Proceedings of
+  the 12th European Conference on Logics in Artificial Intelligence (JELIA
+  2010). Vol. 6341 of Lecture Notes in Artificial Intelligence (LNAI).
+  Springer, Helsinki, Finland, pp. 77--90.
+
+\bibitem[{Casini and Straccia(2011)}]{stracciaijcai2011}
+Casini, G., Straccia, U., July 2011. {Defeasible Inheritance-Based Description
+  Logics}. In: Walsh, T. (Ed.), Proceedings of the 22nd International Joint
+  Conference on Artificial Intelligence (IJCAI 2011). Morgan Kaufmann,
+  Barcelona, Spain, pp. 813--818.
+
+\bibitem[{Donini et~al.(1998)Donini, Lenzerini, Nardi, Nutt, and
+  Schaerf}]{donini98}
+Donini, F.~M., Lenzerini, M., Nardi, D., Nutt, W., Schaerf, A., 1998. {An
+  Epistemic Operator for Description Logics}. Artificial Intelligence
+  100~(1-2), 225--274.
+
+\bibitem[{Donini et~al.(1997)Donini, Nardi, and Rosati}]{donini97:ijcai}
+Donini, F.~M., Nardi, D., Rosati, R., August 1997. {Autoepistemic Description
+  Logics}. In: Georgeff, M., Pollack, M. (Eds.), Proceedings of the 15th
+  International Joint Conference on Artificial Intelligence (IJCAI 1997),
+  volume 1. Morgan Kaufmann, Nagoya, Japan, pp. 136--141.
+
+\bibitem[{Donini et~al.(2002)Donini, Nardi, and Rosati}]{donini2002}
+Donini, F.~M., Nardi, D., Rosati, R., 2002. {Description logics of minimal
+  knowledge and negation as failure}. {ACM Transactions on Computational Logic
+  (ToCL)} 3~(2), 177--225.
+
+\bibitem[{Eiter et~al.(2004)Eiter, Lukasiewicz, Schindlauer, and
+  Tompits}]{eiter2004}
+Eiter, T., Lukasiewicz, T., Schindlauer, R., Tompits, H., June 2004. {Combining
+  Answer Set Programming with Description Logics for the Semantic Web}. In:
+  Dubois, D., Welty, C., Williams, M. (Eds.), Principles of Knowledge
+  Representation and Reasoning: Proceedings of the 9th International Conference
+  (KR 2004). AAAI Press, Whistler, Canada, pp. 141--151.
+
+\bibitem[{Etherington and Reiter(1983)}]{EtheringtonReiter83}
+Etherington, D.~W., Reiter, R., 1983. On inheritance hierarchies with
+  exceptions. In: AAAI. pp. 104--108.
+
+\bibitem[{Fahlman et~al.(1981)Fahlman, Touretzky, and van Roggen}]{FahlmanTR81}
+Fahlman, S.~E., Touretzky, D.~S., van Roggen, W., August 1981. Cancellation in
+  a parallel semantic network. In: Hayes, P.~J. (Ed.), Proceedings of the 7th
+  International Joint Conference on Artificial Intelligence (IJCAI 1981).
+  William Kaufmann, Vancouver, BC, Canada, pp. 257--263.
+
+\bibitem[{Giordano et~al.(2008)Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{jelia2008}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., September 2008.
+  {R}easoning {A}bout {T}ypicality in {P}referential {D}escription {L}ogics.
+  In: H\'olldobler, S., Lutz, C., Wansing, H. (Eds.), Proceedings of the 11th
+  European Conference on Logics in Artificial Intelligence (JELIA 2008). Vol.
+  5293 of Lecture Notes in Artificial Intelligence (LNAI). Springer-Verlag,
+  Dresden, Germany, pp. 192--205.
+
+\bibitem[{Giordano et~al.(2009{\natexlab{a}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{FI09}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., 2009{\natexlab{a}}.
+  {$\mathcal{ALC}$+{\bf T}}: a preferential extension of {Description Logics}.
+  Fundamenta Informaticae 96, 1--32.
+
+\bibitem[{Giordano et~al.(2009{\natexlab{b}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{tr2008}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., 2009{\natexlab{b}}.
+  {On Extending Description Logics for Reasoning About Typicality: a First
+  Step}. TR Dip. di Informatica,
+  \emph{\texttt{http://www.di.unito.it/$\thicksim$pozzato/tr09.pdf}}.
+
+\bibitem[{Giordano et~al.(2009{\natexlab{c}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{lpnmr2009}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., September
+  2009{\natexlab{c}}. {Prototypical reasoning with low complexity Description
+  Logics: preliminary results}. In: Lin, F., Schaub, T., Erdem, E. (Eds.),
+  Proceedings of LPNMR 2009 (10th International Conference on Logic Programming
+  and Nonmonotonic Reasoning). Vol. 5753 of Lecture Notes in Artificial
+  Intelligence (LNAI). Springer-Verlag, Potsdam, Germany, pp. 430--436.
+
+\bibitem[{Giordano et~al.(2009{\natexlab{d}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{aiia2009}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., December
+  2009{\natexlab{d}}. {Reasoning about typicality with low complexity
+  Description Logics: the logic $\mathcal{EL}^{+^\bot}\tip$}. In: Serra, R.,
+  Cucchiara, R. (Eds.), {AI*IA 2009: Emergent Perspectives in Artificial
+  Intelligence: XI Conference of the Italian Association for Artificial
+  Intelligence}. Vol. 5883 of Lecture Notes in Artificial Intelligence (LNAI).
+  Springer-Verlag, Reggio Emilia, Italy, pp. 62--71.
+
+\bibitem[{Giordano et~al.(2010{\natexlab{a}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{lpar2010}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., October
+  2010{\natexlab{a}}. {A nonmonotonic extension of KLM Preferential Logic P}.
+  In: Ferm\"uller, C.~G., Voronkov, A. (Eds.), Proceedings of the 17th
+  Conference on Logic for Programming, Artificial Intelligence, and Reasoning
+  (LPAR 2010). Vol. 6397 of ARCoSS Lecture Notes in Computer Science (LNCS).
+  Springer-Verlag, Yogyakarta, Indonesia, pp. 317--332.
+
+\bibitem[{Giordano et~al.(2010{\natexlab{b}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{ecai2010}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., August
+  2010{\natexlab{b}}. {Preferential vs Rational Description Logics: which one
+  for Reasoning About Typicality?} In: Coelho, H., Studer, R., Wooldridge, M.
+  (Eds.), Proceedings of the 19th European Conference on Artificial
+  Intelligence (ECAI 2010). Vol. 215 of Frontiers in Artificial Intelligence
+  and Applications. IOS Press, Lisbon, Portugal, pp. 1069--1070 (short paper).
+
+\bibitem[{Giordano et~al.(2010{\natexlab{c}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{cilc2010}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., July
+  2010{\natexlab{c}}. {Reasoning About Typicality in Preferential Description
+  Logics: Preferential vs Rational Entailment}. In: Faber, W., Leone, N.
+  (Eds.), Proceedings of the 25th Convegno Italiano di Logica Computazionale
+  (CILC 2010). Vol. 598 of CEUR Workshop Proceedings. CEUR-WS.org, Rende (CS),
+  Italy, pp. 1--15.
+
+\bibitem[{Giordano et~al.(2011{\natexlab{a}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{tableaux2011DLs}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., July
+  2011{\natexlab{a}}. {A tableau calculus for a nonmonotonic extension of
+  $\mathcal{EL}^\bot$}. In: Br\"unnler, K., Metcalfe, G. (Eds.), Proceedings of
+  TABLEAUX 2011 (20th International Conference on Automated Reasoning with
+  Analytic Tableaux and Related Methods). Vol. 6793 of LNAI. Springer-Verlag,
+  Bern, Switzerland, pp. 180--195.
+
+\bibitem[{Giordano et~al.(2011{\natexlab{b}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{aiia2011}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., Sptember
+  2011{\natexlab{b}}. {A tableau calculus for a nonmonotonic extension of the
+  Description Logic $\mathit{DL-Lite}_\mathit{core}$}. In: Pirrone, R.,
+  Sorbello, F. (Eds.), AI*IA 2011: Artificial Intelligence Around Man and
+  Beyond - XIIth International Conference of the Italian Association for
+  Artificial Intelligence, Palermo, Italy, September 15-17, 2011. Proceedings.
+  Vol. 6934 of LNAI. Springer-Verlag, Palermo, Italy, pp. 164--176.
+
+\bibitem[{Giordano et~al.(2011{\natexlab{c}})Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{ijcai2011}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., July
+  2011{\natexlab{c}}. {Reasoning about typicality in low complexity DLs: the
+  logics $\eltm$ and $\dlltm$}. In: Walsh, T. (Ed.), Proceedings of the 22nd
+  International Joint Conference on Artificial Intelligence (IJCAI 2011).
+  Morgan Kaufmann, Barcelona, Spain, pp. 894--899.
+
+\bibitem[{Giordano et~al.(2012)Giordano, Gliozzi, Olivetti, and
+  Pozzato}]{jelia2012nmr}
+Giordano, L., Gliozzi, V., Olivetti, N., Pozzato, G.~L., Sptember 2012. {A
+  minimal model semantics for nonmonotonic reasoning}. In: Luis Fari\~{n}as~del
+  Cerro, Andreas~Herzig, J.~M. (Ed.), Logics in Artificial Intelligence - 13th
+  European Conference, JELIA 2012. Vol. 7519 of LNAI. Springer-Verlag,
+  Toulouse, France, pp. 228--241.
+
+\bibitem[{Giugno and Lukasiewicz(2002)}]{giugno}
+Giugno, R., Lukasiewicz, T., 2002. {P}-$\mathcal{SHOQ}$({D}): {A}
+  {P}robabilistic {E}xtension of $\mathcal{SHOQ}$({D}) for {P}robabilistic
+  {O}ntologies in the {S}emantic {W}eb. In: Flesca, S., Greco, S., Leone, N.,
+  Ianni, G. (Eds.), Proceedings of JELIA 2002 (8th European Conference on
+  Logics in Artificial Intelligence). Vol. 2424 of Lecture Notes in Artificial
+  Intelligence (LNAI). pp. 86--97.
+
+\bibitem[{Grimm and Hitzler(2009)}]{hitzlertableau}
+Grimm, S., Hitzler, P., October 2009. {A Preferential Tableaux Calculus for
+  Circumscriptive $\mathcal ALCO$}. In: Polleres, A., Swift, T. (Eds.),
+  Proceedings of the 3rd International Conference on Web Reasoning and Rule
+  Systems (RR 2009). Vol. 5837 of Lecture Notes in Computer Science (LNCS).
+  Springer, Chantilly, VA, USA, pp. 40--54.
+
+\bibitem[{Junker and Konolige(1990)}]{junkerkonolige}
+Junker, U., Konolige, K., 1990. Computing the extensions of autoepistemic and
+  default logics with a truth maintenance system. In: AAAI. pp. 278--283.
+
+\bibitem[{Ke and Sattler(2008)}]{kesattler}
+Ke, P., Sattler, U., May 2008. {N}ext {S}teps for {D}escription {L}ogics of
+  {M}inimal {K}nowledge and {N}egation as {F}ailure. In: Baader, F., Lutz, C.,
+  Motik, B. (Eds.), Proceedings of the 21st International Workshop on
+  {Description Logics (DL2008)}. Vol. 353 of CEUR Workshop Proceedings.
+  CEUR-WS.org, Dresden, Germany.
+
+\bibitem[{Kraus et~al.(1990)Kraus, Lehmann, and
+  Magidor}]{KrausLehmannMagidor:90}
+Kraus, S., Lehmann, D., Magidor, M., 1990. Nonmonotonic reasoning, preferential
+  models and cumulative logics. Artificial Intelligence 44~(1-2), 167--207.
+
+\bibitem[{Krisnadhi et~al.(2011)Krisnadhi, Sengupta, and Hitzler}]{hitzlerdl}
+Krisnadhi, A.~A., Sengupta, K., Hitzler, P., July 2011. Local closed world
+  semantics: Keep it simple, stupid! In: Proceedings of the 24th International
+  Workshop on Description Logics (DL 2011). Vol. 745 of CEUR Workshop
+  Proceedings. Barcelona, Spain.
+
+\bibitem[{Lehmann and Magidor(1992)}]{whatdoes}
+Lehmann, D., Magidor, M., 1992. What does a conditional knowledge base entail?
+  Artificial Intelligence 55~(1), 1--60.
+
+\bibitem[{Lifschitz(1991)}]{lif1}
+Lifschitz, V., August 1991. Nonmonotonic databases and epistemic queries. In:
+  Mylopoulos, J., Reiter, R. (Eds.), Proceedings of the 12th International
+  Joint Conference on Artificial Intelligence (IJCAI 1991). Morgan Kaufmann,
+  Sidney, Australia, pp. 381--386.
+
+\bibitem[{Lifschitz(1994)}]{lif2}
+Lifschitz, V., 1994. Minimal belief and negation as failure. Artificial
+  Intelligence 70~(1-2), 53--72.
+
+\bibitem[{McCarthy(1986)}]{mccarthy86}
+McCarthy, J., 1986. Applications of circumscription to formalizing common-sense
+  knowledge. Artificial Intelligence 28~(1), 89--116.
+
+\bibitem[{Motik and Rosati(2010)}]{rosatiacm}
+Motik, B., Rosati, R., 2010. {Reconciling Description Logics and rules}.
+  Journal of the ACM 57~(5).
+
+\bibitem[{Nute(1980)}]{Nute80}
+Nute, D., 1980. Topics in conditional logic. Reidel, Dordrecht.
+
+\bibitem[{Reiter(1980)}]{reiter}
+Reiter, R., 1980. A logic for default reasoning. Artificial Intelligence
+  13~(1-2), 81--132.
+
+\bibitem[{Rognone(2009)}]{tesiRognone}
+Rognone, D., 2009. {Non Monotonic Extensions of DLs: Reasoning About Typicality
+  with Number Restrictions}. Master's thesis, {U}niversit\`a degli {S}tudi di
+  {T}orino.
+
+\bibitem[{Schwind and Risch(1991)}]{schwindrisch}
+Schwind, C., Risch, V., 1991. A tableau-based characterisation for default
+  logic. In: ECSQARU. pp. 310--317.
+
+\bibitem[{Straccia(1993)}]{straccia93}
+Straccia, U., August 1993. Default inheritance reasoning in hybrid kl-one-style
+  logics. In: Bajcsy, R. (Ed.), Proceedings of the 13th International Joint
+  Conference on Artificial Intelligence (IJCAI 1993). Morgan Kaufmann,
+  Chamb\'ery, France, pp. 676--681.
+
+\end{thebibliography}
