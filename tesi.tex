@@ -1,0 +1,1107 @@
+\documentclass[a4paper, 11pt, oneside]{elsarticle}
+
+\usepackage{listings}
+\usepackage{graphicx} \pdfcompresslevel=9
+\usepackage[usenames,dvipsnames]{color}
+%\usepackage{cite}
+\usepackage{setspace}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{amsmath, amsthm, amssymb}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{url}
+\usepackage{appendix}
+\usepackage{wrapfig}
+\usepackage[hang,small,bf]{caption}
+\usepackage{alltt}
+\usepackage{hyperref}
+\usepackage[margin=3cm]{geometry}
+\usepackage{bchart}
+\usepackage{framed}
+\usepackage{mdframed}
+\usepackage{graphicx}
+\usepackage{lineno}
+%\usepackage{times}
+
+\lstset{
+	language=bash,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\bfseries,
+	commentstyle=\small\color{blue},
+	numbers=left,
+	numberstyle=\tiny,
+	frame=tb,
+	columns=fullflexible,
+	showstringspaces=false
+}
+
+%****************************************************
+%********************   MACROS   ********************
+%****************************************************
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\setlength{\parindent}{0in}
+
+
+\newcommand{\tip}{{\bf T}}
+\newcommand{\alc}{\mathcal{ALC}}
+\newcommand{\alct}{\mathcal{ALC}+\tip}
+\newcommand{\alctmin}{\mathcal{ALC}+\tip_{\mbox{\em min}}}
+
+\newcommand{\hide}[1]{}
+
+\newcommand{\falso} {\bot}
+\newcommand{\vero} {\top}
+\newcommand{\unione} {\cup}
+\newcommand{\intersezione} {\cap}
+\newcommand{\unioneq}{\sqcup}
+\newcommand{\vuoto} {\emptyset}
+\newcommand{\nott} {\lnot}
+\newcommand{\tc} {\mid}
+\newcommand{\imp} {\rightarrow}
+\newcommand{\incluso} {\subseteq}
+\newcommand{\appartiene} {\in}
+\newcommand{\bbox}{\square}
+\newcommand{\diverso} {\neq}
+\newcommand{\sqset}{\sqsubseteq}
+\newcommand{\subs}{\subseteq}
+\newcommand{\mint}{\sqcap}
+\newcommand{\mun}{\sqcup}
+\newcommand{\sx} {\langle}
+\newcommand{\dx} {\rangle}
+\newcommand{\modello} {\models}
+\newcommand{\perogni} {\forall}
+\newcommand{\esiste} {\exists}
+
+\newcommand{\db}{\mathcal{D}(\mbox{\bf B})}
+\newcommand{\elle} {\mathcal{L}}
+\newcommand{\ellet} {\mathcal{L}_{\bf T}}
+\newcommand{\emme} {\begin{mathcal}M\end{mathcal}}
+\newcommand{\enne} {\begin{mathcal}N\end{mathcal}}
+\newcommand{\Gammam}[2]{S^{M}_{#1 \imp #2}}
+
+\newcommand{\nuovoc}{\mathrel{{\mathcal{T}\!\mathcal{AB}}}_{min}^{\mathcal{ALC}+\mbox{\scriptsize $\tip$}}}
+\newcommand{\primo}{\mathrel{{\mathcal{T}\!\mathcal{AB}}}_{PH 1}^{\mathcal{ALC}+\mbox{\scriptsize $\tip$}}}
+\newcommand{\secondo}{\mathrel{{\mathcal{T}\!\mathcal{AB}}}_{PH 2}^{\mathcal{ALC}+\mbox{\scriptsize $\tip$}}}
+\newcommand{\calcolo}{T^{\mathcal{ALC}+\mbox{\scriptsize $\tip$}}}
+\newcommand{\trans}[1]{\stackrel{#1}{\longrightarrow}}
+
+%\newcommand{\qed}{{\hspace*{\fill} \rule{2.2mm}{2.2mm}}}
+
+%****************************************************
+%******************  ENVIRONMENTS  ******************
+%****************************************************
+
+\hide{
+\newenvironment{proof}
+{\begin{trivlist} \item[] {\bf Proof:}}%
+{\qed \end{trivlist}}
+
+\newenvironment{definition}
+{\begin{defi} \rm}{\qed \end{defi}}
+
+\newenvironment{proofof}[2]
+{\begin{trivlist} \item[] {\bf Proof of #1~\protect{\ref{#2}}.}}%
+{\qed \end{trivlist}}
+
+
+\newenvironment{example}
+{\begin{exa} \rm}{\qed \end{exa}}
+
+\newenvironment{remark}
+{\begin{rem} \rm}{\end{rem}}
+}
+
+\newtheorem{theorem}{Theorem}
+\newdefinition{definition}{Definition}
+\newdefinition{example}{Example}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+%\newproof{proof}{Proof}
+
+\hide{
+\newcounter{posu}
+\newtheorem{theorem}[posu]{Theorem}
+\newtheorem{lemma}[posu]{Lemma}
+\newtheorem{corollary}[posu]{Corollary}
+\newtheorem{proposition}[posu]{Proposition}
+\newtheorem{definition}[posu]{Definition}
+\newtheorem{example}[posu]{Example}
+\newtheorem{rem}[posu]{Remark}
+\newtheorem{proof}[posu]{Proof}
+\newtheorem{fact}[posu]{Fact}
+}
+
+
+
+
+\begin{document}
+
+%****************************************************
+%********************   TITLE   *********************
+%****************************************************
+\begin{titlepage}
+\begin{center}
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=0.25]{img/logo_unito.png}
+\label{}
+\end{figure}
+
+\textsc{\LARGE Università degli studi di Torino}\\[2cm]
+\textsc{\Large Tesi di Laurea Magistrale}\\[2cm]
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Thesis title}\\[0.2cm]
+\HRule \\[3cm]
+
+% Authors
+\begin{flushleft}
+{\Large
+Candidato:\\[0.5cm]
+Luca Violanti}
+\end{flushleft}
+
+\end{center}
+\end{titlepage}
+\newpage
+
+%****************************************************
+%*****************  ABSTRACT  ***********************
+%****************************************************
+
+
+%[TODO] scrivere l'abstract
+\section*{Abstract}
+
+\newpage
+
+%****************************************************
+%********************  TOC  *************************
+%****************************************************
+
+\tableofcontents
+
+\newpage
+
+%****************************************************
+%***************  INTRODUCTION  *********************
+%****************************************************
+
+\section{Introduction}
+
+In this thesis we present the design and implementation of a distributed theorem prover for the non-monotonic description logic $\alctmin$.
+
+Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
+DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science is in bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of nonmonotonic extension of DLs.
+
+%[TODO] completare introduzione
+
+%\chapter{Why}
+%\chapter{What}
+%\chapter{Logics}
+%\chapter{The problem}
+%\chapter{Automated reasoning}
+%\chapter{State of the art}
+
+
+%****************************************************
+%*********************  DL  *************************
+%****************************************************
+
+\section{Description Logics}
+
+While formal, logic-based approaches to representing and working with knowledge occur throughout human history, the advent and widespread adoption of programmable computing devices in the 20th century has led to intensified studies of both theoretical and practical aspects of knowledge representation and automated reasoning.
+Rooted in early AI approaches, Description Logics (DLs) have developed into one of the main knowledge representation formalisms.
+The maturity of the field is also reflected by the adoption of description logics as prior specification paradigm for ontological descriptions - culminating in the standardization of the OWL web ontology language by the World Wide Web Consortium (W3C) - as well as the availability of highly optimized and readily deployable (yet open source) tools for automated inferencing.
+Thanks to this ``dissemination path'', DLs constitute the theoretical backbone for information systems in many disciplines, among which life sciences can be seen as the ``early adopters''\cite{Sidhu05proteinontology, Golbreich:2006:FMA:1222219.1222304, Wolstencroft:2005:LSW:2079844.2079902}.
+
+%****************************************************
+%******************  DL + T  ************************
+%****************************************************
+
+\section{Description Logics for typicality}
+
+\subsection{The logic $\alct$}\label{alct}
+
+
+In this section, we recall the original $\alct$, which is an extension of $\alc$ by a typicality operator $\tip$ introduced in \cite{FI09}. Given an alphabet of concept names $\mathcal{C}$, of role names $\mathcal{R}$, and of individual constants $\mathcal{O}$, the language $\elle$ of the logic $\alct$ is defined by distinguishing \emph{concepts} and \emph{extended concepts} as follows:
+
+\begin{itemize}
+\item (Concepts)
+  \begin{itemize}
+     \item $A \in \mathcal{C}$, $\vero$ and $\bot$ are \emph{concepts} of
+$\elle$;
+    \item if $C, D \in \elle$ and $R \in \mathcal{R}$, then $C
+\sqcap D, C \sqcup D, \neg C, \forall R.C, \exists R.C$ are
+\emph{concepts} of $\elle$
+  \end{itemize}
+\item (Extended concepts)
+    \begin{itemize}
+       \item if $C$ is a
+concept of $\elle$, then $C$ and $\tip(C)$ are \emph{extended concepts} of $\elle$
+     \item boolean combinations of extended concepts are extended
+concepts of $\elle$.
+    \end{itemize}
+\end{itemize}
+
+\noindent  A knowledge base is a pair (TBox, ABox). TBox
+contains subsumptions $C \sqsubseteq D$, where $C \in \elle$ is
+an extended concept of the form either $C'$ or $\tip(C')$, and $C', D \in
+\elle$ are concepts. ABox contains expressions of the form $C(a)$
+and $aRb$ where $C \in \elle$ is an extended concept, $R \in
+\mathcal{R}$, and $a, b \in \mathcal{O}$.
+
+
+
+In order to provide a semantics to the operator $\tip$, we extend the definition of a model used in ``standard''
+%terminological logic $\alc$\footnote{We refer to {\cite[handbook]} for a detailed description of the standard Description Logic $\alc$.}:
+
+\begin{definition}[Semantics of $\tip$ with selection function]\label{Semantics
+with f_tip} A model is any structure $$\langle \Delta, I, f_\tip \rangle$$
+where:
+
+\begin{itemize}
+\item $\Delta$ is the domain, whose elements are denoted with $x, y, z, \dots$;
+\item $I$ is the extension function that
+maps each extended concept $C$
+to $C^I \subseteq \Delta$, and each role $R$ to a $R^I \subseteq
+\Delta \times \Delta$. $I$ assigns to each atomic concept $A \in
+\mathcal{C}$ a set $A^I \subseteq \Delta$ and it is extended to
+arbitrary extended concepts as follows:
+
+\begin{itemize}
+  \item $\top^I=\Delta$
+  \item $\bot^I=\vuoto$
+  \item $(\nott C)^I=\Delta \backslash C^I$
+  \item $(C \sqcap D)^I=C^I \cap D^I$
+  \item $(C \sqcup D)^I=C^I \cup D^I$
+  \item $(\forall R.C)^I=\{x \in \Delta \tc \forall y. (x,y) \in R^I \imp y \in C^I\}$
+  \item $(\exists R.C)^I=\{x \in \Delta \tc \exists y.(x,y) \in R^I \ \mbox{and} \ y \in C^I\}$
+  \item $(\tip(C))^I = f_\tip(C^I)$
+\end{itemize}
+
+
+\item Given $S \subseteq \Delta$, $f_\tip$ is a function $f_\tip : Pow(\Delta) \rightarrow Pow(\Delta)$
+satisfying the
+following properties:
+
+\begin{itemize}
+\item $(f_\tip-1)$ $f_\tip(S) \subseteq S$;
+\item $(f_\tip-2)$ if $S \neq \emptyset$, then also $f_\tip(S)
+\neq \emptyset$;
+\item $(f_\tip-3)$ if $f_\tip(S) \subseteq R$, then $f_\tip(S) = f_\tip(S \cap R)$;
+ \item $(f_\tip-4)$ $f_\tip(\bigcup S_i ) \subseteq \bigcup f_\tip(S_i)$;
+\item $(f_\tip-5)$ $\bigcap f_\tip(S_i) \subseteq  f_\tip(\bigcup S_i)$.
+\end{itemize}
+
+\end{itemize}
+
+\end{definition}
+
+\noindent Intuitively, given the extension of some concept $C$,
+the selection function $f_\tip$ selects  the {\em typical}
+instances of $C$. ($f_\tip-1$) requests that typical elements of
+$S$ belong to $S$. ($f_\tip-2$) requests that if there are
+elements in $S$, then there are also {\em typical} such elements.
+The following properties constrain the behavior of $f_\tip$ with
+respect to $\cap$ and $\cup$ in such a way that they do not entail
+monotonicity. According to ($f_\tip-3$), if the typical elements
+of $S$ are in $R$, then they coincide with the typical elements of
+$S \cap R$, thus expressing a weak form of monotonicity (namely,
+{\em cautious monotonicity}). ($f_\tip-4$) corresponds to one
+direction of the equivalence $f_\tip(\bigcup S_i) = \bigcup
+f_\tip(S_i)$, so that it does not entail monotonicity. Similar
+considerations apply to the equation $f_\tip(\bigcap S_i) =
+\bigcap f_\tip(S_i)$, of which only the inclusion $\bigcap
+f_\tip(S_i) \incluso f_\tip(\bigcap S_i)$ holds. ($f_\tip-5$) is a
+further constraint on the behavior of $f_\tip$ with respect to
+arbitrary unions and intersections; it would be derivable if
+$f_\tip$ were monotonic.
+
+
+
+In \cite{FI09}, we have shown that one can give an equivalent,
+alternative semantics for $\tip$ based on a \emph{preference
+relation} semantics rather than on a selection function semantics.
+The idea is that there is a global, irreflexive and transitive
+relation among individuals and that the typical members of a
+concept $C$ (i.e., those selected by $f_\tip(C^I)$) are the
+minimal elements of $C$ with respect to this relation. Observe
+that this notion is \emph{global}, that is to say, it does not
+compare individuals with respect to a specific concept. For this
+reason,  we cannot express the fact that  $y$ is more typical than
+$x$ with respect to concept $C$, whereas $x$ is more typical than
+$y$ with respect to another concept $D$. All what we can say is
+that either $x$ is incomparable with $y$ or $x$ is more typical
+than $y$ or $y$ is more typical than $x$. In this framework, an
+element $x \in \Delta$ is a {\em typical instance} of some concept
+$C$ if $x \in C^I$ and there is no $C$-element in $\Delta$ {\em
+more typical} than $x$. The typicality preference relation is
+partial since it is not always possible to establish given two
+element which one of the two is more typical. Following KLM, the
+preference relation also satisfies a \emph{Smoothness Condition},
+which is related to the well known \emph{Limit Assumption} in
+Conditional Logics \cite{Nute80} \footnote{More precisely,
+the Limit Assumption entails the Smoothness Condition (i.e. that
+there are no infinite $<$ descending chains). Both properties come
+for free in finite models.}; this condition ensures that, if the
+extension $C^I$ of a concept $C$ is not empty, then there is at
+least one \emph{minimal} element of $C^I$. This is stated in a
+rigorous manner in the following definition:
+
+\begin{definition}\label{Definition of $<$} Given an irreflexive and transitive relation  $<$ over a domain
+$\Delta$, called \emph{preference relation}, for all $S \subseteq \Delta$,
+ we define
+
+ $$Min_<(S)= \{x \in S \tc \nexists y \in S \ \mbox{s.t.} \ y < x \}$$
+
+
+\noindent We say that $<$ satisfies the {\em Smoothness Condition}
+if for all $S \subseteq \Delta$, for all $x \in S$, either $x \in Min_<(S)$ or
+$\exists y \in  Min_<(S)$ such that $y < x$.
+\end{definition}
+
+
+\noindent The following representation theorem is proved in \cite{FI09}:
+
+\begin{theorem}[Theorem 2.1 in \cite{FI09}]\label{rtrt} Given any model $\langle \Delta, I, f_\tip
+\rangle$,
+  $f_\tip$ satisfies postulates $(f_\tip-1)$ to $(f_\tip-5)$ above iff there exists  an irreflexive and transitive relation $<$ on $\Delta$,
+satisfying the Smoothness Condition, such that for all $S \subseteq \Delta$, $f_\tip(S)
+= Min_<(S)$.
+\end{theorem}
+
+
+\noindent Having the above Representation Theorem, from now on, we will refer
+to the following semantics:
+
+\begin{definition}[Semantics of $\alct$]\label{Semantics of T} A model $\emme$ of $\alct$ is any
+structure $$\langle \Delta, I, < \rangle$$ where:
+
+\begin{itemize}
+
+\item $\Delta$ is the domain;
+
+\item $<$ is an irreflexive and transitive
+relation over $\Delta$ satisfying the Smoothness
+Condition (Definition \ref{Definition of $<$})
+
+\item $I$ is the extension function that
+maps each  extended concept $C$ to $C^I \subseteq \Delta$, and
+each role $R$ to a $R^I \subseteq \Delta \times \Delta$. $I$
+assigns to each atomic concept $A \in \mathcal{C}$ a set $A^I
+\subseteq \Delta$. Furthermore, $I$ is extended as in Definition
+\ref{Semantics with f_tip} with the exception of $(\tip(C))^I$,
+which is defined as
+$$(\tip(C))^I = Min_<(C^I).$$
+\end{itemize}
+
+\end{definition}
+
+ \noindent Let us now introduce the notion of
+satisfiability of an $\alct$ knowledge base. In order to define the semantics of the assertions of the ABox, we  extend
+the function $I$ to individual constants;  we assign to each individual constant $a \in \mathcal{O}$ a
+\emph{distinct} domain element $a^I \in \Delta$, that is to say we enforce the \emph{unique name assumption}.
+As usual, the adoption of the  unique name assumption greatly simplifies reasoning about
+prototypical properties of individuals denoted by different individual constants.
+Considering the example of department staff having lunches, if (in addition to the TBox) the ABox only contains the following facts about Greg and Sara:
+
+\begin{quote}
+$\mathit{DepartmentMember}(\mathit{greg})$ \\
+$\mathit{DepartmentMember}(\mathit{sara}), \mathit{TemporaryWorker}(\mathit{sara})$
+\end{quote}
+
+\noindent we would like to infer that Greg takes his lunches at the restaurant, whereas Sara does not; but without the unique name hypothesis,
+we cannot get this conclusion since Greg and Sara might be the same individual.
+To perform useful reasoning we would need to  extend the language with equality and make a case
+analysis according to possible identities of individuals. While this is technically possible,
+we prefer to keep the things simple here by adopting the unique name assumption.
+
+
+
+\begin{definition}[Model satisfying a Knowledge Base]\label{Def-ModelSatTBox-ABox}
+Consider a model $\emme$, as defined in Definition \ref{Semantics
+of T}. We extend $I$ so that it assigns to each individual
+constant $a$ of $\mathcal{O}$ an element $a^I \in \Delta$,  and $I$ satisfies the unique name assumption. Given a KB (TBox,ABox), we say that:
+
+\begin{itemize}
+\item $\emme$  satisfies TBox iff  for all  inclusions $C \sqsubseteq D$  in TBox, $C^I \subseteq D^I$.
+\item $\emme$ satisfies ABox  iff:
+(i) for all $C(a)$  in ABox, we have that $a^I \in C^I$,
+(ii) for all $aRb$ in ABox, we have that $(a^I,b^I) \in R^I$.
+\end{itemize}
+
+\noindent $\emme$ satisfies a knowledge base if it satisfies both
+its TBox and its ABox.  Last, a query $F$  is  entailed by KB in
+$\alct$ if it holds in all models satisfying \emph{KB}. In this
+case we write \emph{KB} $\models_{\alct} F$.
+\end{definition}
+
+
+
+
+
+
+\noindent Notice that the meaning of $\tip$ can be split into two parts: for any
+$x$ of the domain $\Delta$,  $x \in (\tip(C))^I$ just in case
+(i) $x \in C^I$, and (ii) there is no $y \in C^I$ such that $y < x$. As already mentioned in the Introduction,
+in order to isolate the second part of the meaning of $\tip$ (for the
+purpose of the calculus that we will present in Section \ref{calcolo}), we introduce
+a new modality $\bbox$. The basic idea is simply to interpret the preference
+relation $<$ as an accessibility relation. By the Smoothness
+Condition, it turns out that $\bbox$ has the
+properties as in G\"odel-L\"ob modal logic of provability G. The
+Smoothness Condition ensures that typical elements of $C^I$ exist
+whenever $C^I \diverso \vuoto$, by avoiding infinitely
+descending chains of elements. This condition therefore
+corresponds to the finite-chain condition on the accessibility
+relation (as in G).
+The interpretation of $\bbox$ in $\emme$ is as follows:
+
+\begin{definition}\label{def-box}
+Given a model $\emme$ as in Definition \ref{Semantics of T}, we extend the definition of $I$ with the following clause:
+\begin{center}
+      $ (\bbox C)^I = \{x \in \Delta \tc $  for every $y \appartiene \Delta$, if
+    $y < x$ then $y \in C^I \}$
+\end{center}
+\end{definition}
+
+
+\noindent It is easy to observe that $x$ is a typical instance  of $C$ if and only if it is an instance of $C$ and $\bbox \nott C$, that is to say:
+
+\begin{proposition}\label{Relation between T an box}
+Given a model $\emme$ as in Definition \ref{Semantics of T}, given a concept $C$ and an element $x \in \Delta$, we have that
+$$x \in (\tip(C))^I \ \mbox{iff} \  x \in (C \sqcap \bbox \neg C)^I$$
+\end{proposition}
+
+\noindent
+Since we only use $\bbox$ to capture the meaning of $\tip$, in the
+following we will always use the modality $\bbox$ followed by a negated concept,
+as in $\bbox \neg C$.
+
+The Smoothness condition, together with the transitivity of $<$, ensures the following Lemma:
+
+\begin{lemma}\label{ssc}
+Given an $\alct$ model as in Definition \ref{Semantics of T}, an extended concept $C$, and an element $x \in \Delta$, if there exists $y < x$ such that $y \in C^I$, then either $y \in Min_<(C^I)$ or there is $z<x$ such that $z \in Min_<(C^I)$.
+\end{lemma}
+
+%[TODO] Aggiungere riferimento alla dimostrazione
+
+
+Last, we state a theorem which will be used in the following:
+
+\begin{theorem}[Finite model property of $\alct$]\label{fmpALCT}
+The logic $\alct$ has the finite model property.
+\end{theorem}
+
+%[TODO] Aggiungere riferimento alla dimostrazione
+
+
+
+\subsection{The logic $\alctmin$}\label{alctmin}
+
+As mentioned in the Introduction, the logic $\alct$ presented in
+\cite{FI09} allows  to reason about typicality. As a difference
+with respect to standard $\alc$, in $\alct$ we can consistently
+express, for instance, the fact that three different concepts,
+like {\em Department member}, {\em Temporary Department Member}
+and {\em Temporary Department member having restaurant tickets},
+have a different status with respect to {\em Have lunch at a
+restaurant}. This can be consistently expressed by including in a
+knowledge base the three formulas:
+
+\begin{quote}
+$\tip (\mathit{DepartmentMember}) \sqset \mathit{LunchAtRestaurant}$\\
+$\tip (\mathit{DepartmentMember} \mint \mathit{TemporaryResearcher})  \sqset \nott \mathit{LunchAtRestaurant}$\\
+$\tip (\mathit{DepartmentMember} \mint \mathit{TemporaryResearcher} \mint \exists \mathit{Owns}.\mathit{RestaurantTicket})  \sqset \mathit{LunchAtRestaurant}$
+\end{quote}
+
+\noindent Assume that $\mathit{greg}$ is an instance of the concept
+$\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket}$. What can we conclude about
+$\mathit{\mathit{greg}}$? We have already mentioned that if the ABox explicitly points out that $\mathit{greg}$ is a {\em typical} instance of the  concept, and it contains the assertion that:
+
+$$(*)  \ \tip(\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$$
+
+
+\noindent then, in $\alct$, we can conclude
+that
+
+$$\mathit{LunchAtRestaurant(\mathit{greg})}.$$
+
+\noindent However, if (*) is replaced by the weaker
+$$(**)  \ (\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$$ in which
+there is no information about the typicality of $\mathit{greg}$,
+in $\alct$ we can no longer draw this conclusion, and indeed we
+cannot make any inference about whether $\mathit{greg}$ spends its
+lunch time at a restaurant or not. The limitation here lies in the
+fact that $\alct$ is {\em monotonic}, whereas we would like to
+make a non-monotonic inference. Indeed, we would like to
+non-monotonically assume, in the absence of information to the
+contrary, that $\mathit{greg}$ is a typical instance of the
+concept. In general, we would like to infer that individuals are
+typical instances of the concepts they belong to, if this is
+consistent with the KB.
+
+As a difference with respect to $\alct$, $\alctmin$ is {\em non-monotonic}, and it allows to make this kind of inference. Indeed, in $\alctmin$ if (**) is all the information about $\mathit{greg}$ present in the ABox, we can derive that $\mathit{greg}$ is a typical instance of the concept, and from the inclusions above we conclude that $\mathit{LunchAtRestaurant(\mathit{greg})}.$
+ We have already mentioned that we obtain this non-monotonic behaviour by restricting our attention to the  minimal $\alct$ models. As a difference with respect to $\alct$,
+ in order to determine what is entailed by  a given knowledge base KB, we do not consider {\em all} models of KB but only the {\em minimal} ones. These are the models that minimize the number of atypical instances of  concepts.
+
+Given a KB, we consider a finite set $\ellet$ of concepts
+occurring in the KB: these are the concepts for which we want to
+minimize the atypical instances.
+%Our purpose is that of maximizing the typicality of all
+%instances of the concepts in $\ellet$,
+The minimization of the set of atypical instances will apply to
+individuals explicitly occurring in the ABox as well as to
+implicit individuals. We assume that the set $\ellet$ contains at
+least all concepts $C$ such that $\tip(C)$ occurs in the KB.
+Notice that in case $\ellet$ contains more concepts than
+those occurring in the scope of $\tip$ in KB, the atypical
+instances of these concepts will be minimized but no extra
+properties will be inferred for the typical instances of the
+concepts, since the KB does not say anything about these
+instances.
+
+% individuals implicitly defined in the KB.
+
+%The preference relation among models, informally, allows a model
+%$\emme$ to be preferred to a model $\enne$, when $\emme$ contains
+%more typical instances of the concepts in {\cal C} than $\enne$.
+
+We have seen that $(\tip(C))^I =(C \sqcap \bbox \neg C)^I$: $x$ is
+a typical instance  of a concept $C$ ($x \in (\tip(C))^I$) when it
+is an instance of $C$  and there is no other instance of $C$
+preferred to $x$, i.e. $x \in (C \sqcap \bbox \neg C)^I$. By
+contraposition an instance of $C$ is atypical if $x \in (\neg
+\bbox \neg C)^I$ therefore in order to minimize the atypical
+instances of $C$, we minimize the instances of $\neg \bbox \neg
+C$. Notice that this is different from maximizing the instances of
+$\tip(C)$. We have adopted this solution since it allows to
+maximize the set of typical instances of $C$ without affecting the
+extension $C^I$ of $C$ (whereas maximizing the extension of
+$\tip(C)$  would imply maximizing also the extension of $C$).
+
+%for those $C \in \ellet$.
+
+We define the set $\emme^{\bbox^-}_{\ellet}$ of negated boxed
+formulas holding in a model, relative to the concepts in
+$\ellet$:
+
+
+\begin{definition}
+Given a model $\emme=\sx \Delta, I, <\dx$ and a set of concepts $\ellet$, we define
+$$\emme^{\bbox^-}_{\ellet}=\{(x, \nott \bbox \nott C) \tc x \in (\nott \bbox \nott C)^I, \ \mbox{with} \ x \in \Delta, C \in
+\ellet \}$$
+\end{definition}
+
+
+\noindent Let KB be a knowledge base and let ${\ellet}$ be a set of concepts
+occurring in KB.
+
+\begin{definition}[Preferred and minimal models]\label{def preferred and minimal models}
+Given a model $\emme=\sx \Delta_{\emme}, I_{\emme}, <_{\emme} \dx$ of KB
+and  a model $\enne=\sx \Delta_{\enne}, I_{\enne}, <_{\enne} \dx$ of KB,
+we say that $\emme$ is preferred to $\enne$ with respect to
+${\ellet}$, and we write $\emme <_{\ellet} \enne$, if the
+following conditions hold:
+
+\begin{itemize}
+\item $\Delta_{\emme}=\Delta_{\enne}$
+\item $a^{I_{\emme}}=a^{I_{\enne}}$ for all individual constants $a \in \begin{mathcal}O\end{mathcal}$
+\item $\emme^{\bbox^-}_{\ellet} \subset \enne^{\bbox^-}_{\ellet}$.
+\end{itemize}
+
+ \noindent A model $\emme$ is a \emph{minimal model} for KB (with respect to
+${\ellet}$) if it is a model of KB and there is no a model
+$\emme'$ of KB such that $\emme' <_{\ellet} \emme$.
+\end{definition}
+
+\noindent Given the notion of preferred and minimal models above, we introduce a notion of \emph{minimal entailment}, that is to say we restrict our consideration to minimal models only. First of all,
+we introduce the notion of \emph{query}, which can be minimally entailed from a given KB.
+A query $F$ is  a formula of the form $C(a)$ where $C$ is an extended concept and $a \in \mathcal{O}$.
+We assume that, for all $\tip(C')$ occurring in $F$, $C' \in \ellet$.
+Given a KB and a model $\emme=\sx \Delta, I, < \dx$ satisfying it, we say that a query $C(a)$ holds in $\emme$ if $a^I \in C^I$.
+
+Let us now define minimal entailment of a query in $\alctmin$. In
+Section \ref{sec:altri problemi di ragionamento} we will reduce
+the other  standard reasoning tasks to minimal entailment.
+
+\begin{definition}[Minimal Entailment in $\alctmin$]\label{LogicalConsequenceALCTMIN}
+A query $F$  is minimally entailed from a
+knowledge base \emph{KB} with respect to ${\ellet}$ if it holds in all
+models of \emph{KB} that are minimal with respect to ${\ellet}$. We write \emph{KB}
+$\models_{min}^{\ellet} F$.
+\end{definition}
+
+
+\noindent The non-monotonic character of $\alctmin$ also allows to deal with the following examples.
+
+\vspace{0.5cm}
+
+
+\noindent {\em Example 1}.
+Consider the following KB:
+$$\mbox{KB} \ = \{ \tip(\mathit{Athlet}) \sqset
+\mathit{Confident}, \mathit{Athlet}(\mathit{john}),
+\mathit{Finnish}(\mathit{john})\}$$ and ${\ellet}=
+\{\mathit{Athlet}, \mathit{Finnish}\}$. We have $$\mbox{KB} \
+\models_{min}^{\ellet} \mathit{Confident}(\mathit{john})$$
+%If we restrict our attention to minimal models, we derive $T(i)$.
+Indeed, there is no minimal model of KB that contains a non typical instance of some concept (indeed in all minimal models of KB the relation $<$ is empty).
+Hence $\mathit{john}$ is an instance of $\tip(\mathit{Athlet})$
+(it can be easily verified that any model in which $\mathit{john}$
+is not an instance of $\tip(\mathit{Athlet})$ is not minimal).  By
+KB, in all these models, $\mathit{john}$ is an instance of
+$\mathit{Confident}$. Observe that $\mathit{Confident}(\mathit{john})$ is obtained, in spite of the
+presence of the irrelevant assertion
+$\mathit{Finnish}(\mathit{john})$.
+
+
+\vspace{0.35cm}
+
+\noindent {\em Example 2}. Consider now the knowledge base KB' obtained by adding to KB the
+formula $\tip(\mathit{Athlet} \mint \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident}$, that is to say:
+$$\mbox{KB'}  = \{ \tip(\mathit{Athlet}) \sqset \mathit{Confident}, \tip(\mathit{Athlet} \ \mint \ \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident},
+\mathit{Athlet}(\mathit{john}), \mathit{Finnish}(\mathit{john})\}$$
+and to ${\ellet}$ concept
+$\mathit{Athlet} \mint \mathit{Finnish}$. From KB', $\mathit{Confident}(\mathit{john})$ is no longer derivable.
+Instead, we have that $$\mbox{KB}' \models_{min}^{\ellet} \neg \mathit{Confident}(\mathit{john}).$$ Indeed, by reasoning as above it can be shown that in all the minimal models of KB', $\mathit{john}$ is an instance of $\tip(\mathit{Athlet} \mint \mathit{Finnish})$, and it is
+no longer an instance of $\tip(\mathit{Athlet})$. This example shows that, in case of
+conflict (here, $\mathit{john}$ cannot be both a typical instance of $\mathit{Athlet}$ and of
+$\mathit{Athlet} \mint \mathit{Finnish}$), typicality in the more specific concept is
+preferred.
+
+\vspace{0.35cm}
+
+\noindent In general, a knowledge base KB may have no minimal model or more
+than one minimal model, with respect to a given $\ellet$. The following property holds.
+
+\begin{proposition}\label{proprModMinimali1}
+If \emph{KB} has a model, then \emph{KB} has a minimal model with respect to
+any $\ellet$.
+\end{proposition}
+
+The above fact  is  a consequence of the \emph{finite model property} of the logic $\alct$ (Theorem \ref{fmpALCT}).
+
+
+%****************************************************
+%*************  TABLEAUX CALCULUS   *****************
+%****************************************************
+
+
+\section{A tableaux calculus for $\alctmin$}
+
+In this section we present a tableau calculus for deciding whether
+a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
+We introduce a labelled tableau calculus  called $\nuovoc$, which
+extends the calculus $\calcolo$ presented in \cite{FI09}, and
+allows to reason about minimal models.
+
+$\nuovoc$ performs a two-phase computation in order to check whether a
+query $F$ is minimally entailed from the initial KB. In particular,
+the procedure tries to build an open branch representing a minimal model satisfying KB $\unione \ \{\nott F\}$.
+
+\noindent In the first phase, a tableau calculus, called $\primo$,
+simply verifies whether KB $ \unione \ \{\nott F\}$ is satisfiable
+in an $\alct$ model, building candidate models. In the second
+phase another tableau calculus, called $\secondo$, checks whether
+the candidate models found in the first phase are \emph{minimal}
+models of KB. To this purpose for each open branch of the first
+phase, $\secondo$ tries to build a ``smaller'' model of KB, i.e. a
+model whose individuals satisfy less formulas $\nott \bbox \nott
+C$ than the corresponding candidate model. The whole procedure
+$\nuovoc$ is formally defined at the end of this section
+(Definition \ref{def processo}).
+
+
+
+
+% COMMENTARE IL FATTO CHE ABBIAMO ANCHE LE FORMULE PER LA RELAZIONE DI PREFERENZA
+% COMMENTARE SEPARATAMENTE I DUE SOTTO-CALCOLI, CON I DETTAGLI TECNICI (IN \SECONDO
+% NON ABBIAMO COPPIE, MA TRIPLE CON PREF_B, CHE VA DEFINITO)
+
+$\nuovoc$ is based on the notion of a \emph{constraint system}. We
+consider a set of \emph{variables} drawn from a denumerable set
+$\mathcal{V}$. Variables are used to represent individuals not explicitly mentioned in the ABox,
+that is to say implicitly expressed by existential as well as universal restrictions.
+
+
+$\nuovoc$ makes use of labels, which are denoted with $x, y, z,
+\dots$. A label represents either a variable or an individual
+constant occurring in the ABox, that is to say an element of
+$\mathcal{O} \unione \mathcal{V}$.
+
+\begin{definition}[Constraint]
+A \emph{constraint} (or \emph{labelled} formula) is a syntactic
+entity of the form either $x \trans{R} y$ or $y<x$ or $x: C$,
+where $x, y$ are labels, $R$ is a role and $C$ is either an
+extended concept or has the form $\bbox \nott D$ or $\nott \bbox
+\nott D$, where $D$ is a concept.
+\end{definition}
+
+\noindent Intuitively, a constraint of the form $x \trans{R} y$
+says that the individual represented by label $x$ is related to the one
+denoted by $y$ by means of role $R$; a constraint $y<x$ says that the individual denoted by $y$ is ``preferred'' to the individual represented by $x$ with respect to the relation $<$;
+a constraint $x: C$ says that
+the individual denoted by $x$ is an instance of the concept $C$, i.e. it belongs to the extension $C^I$.
+As we will define in Definition \ref{corresponding
+constraint system}, the ABox of a knowledge base can be translated
+into a set of constraints by replacing every membership assertion
+$C(a)$ with the constraint $a: C$ and every role $a R b$ with the
+constraint $a \trans{R} b$.
+
+Let us now separately analyze the two components of the calculus $\nuovoc$, starting with $\primo$.
+
+
+\subsection{The tableau calculus $\primo$}
+
+Let us first define the basic notions of a tableau system in
+$\primo$:
+
+
+\begin{definition}[Tableau of $\primo$]\label{deftableau}
+A tableau of $\primo$ is a tree whose nodes are constraint
+systems, i.e., pairs $\sx S \tc U \dx$, where $S$ is a set of
+constraints, whereas $U$ contains formulas of the form $C
+\sqsubseteq D^L$, representing subsumption relations $C
+\sqsubseteq D$ of the TBox. $L$ is a list of labels\footnote{As we
+will discuss later, this list is used in order to ensure the
+termination of the tableau calculus.}. A branch is a sequence of
+nodes $\sx S_1 \tc U_1 \dx, \sx S_2 \tc U_2 \dx, \dots, \sx S_n
+ \tc U_n \dx \dots$, where each node
+$\sx S_i \tc U_i \dx$ is obtained from its immediate predecessor
+$\sx S_{i-1} \tc U_{i-1} \dx$ by applying a rule of $\primo$ (see
+Figure \ref{immagine calcolo}), having $\sx S_{i-1} \tc U_{i-1}
+\dx$ as the premise and $\sx S_{i} \tc U_{i} \dx$ as one of its
+conclusions. A branch is closed if one of its nodes is an instance \color{black}
+of \emph{clash} (either (Clash) or $(\mbox{Clash})_\top$ or $(\mbox{Clash})_\bot$), \normalcolor otherwise it is open. A tableau is closed if all its
+branches are closed.
+\end{definition}
+
+\noindent In order to check the satisfiability of a KB, we build the
+corresponding constraint system $\sx S \tc U \dx$, and we check
+its satisfiability.
+
+\begin{definition}[Corresponding constraint system]\label{corresponding constraint system}
+Given a knowledge base \emph{KB}=$($TBox,ABox$)$, we define its \emph{corresponding constraint system} $\sx S \tc U \dx$ as follows:
+
+\begin{itemize}
+ \item $S=\{a: C \tc C(a) \in \mbox{ABox}\} \unione \{a \trans{R} b \tc a R b \in \mbox{ABox}\}$
+ \item $U=\{C \sqsubseteq D^{\vuoto} \tc C \sqsubseteq D \in \mbox{TBox}\}$
+\end{itemize}
+
+\end{definition}
+
+\begin{definition}[Model satisfying a constraint system]\label{modello constraint}
+  Let $\emme=\sx \Delta, I, < \dx$ be a model as defined in Definition \ref{Semantics of T}. We define a function $\alpha$
+  which assigns to each variable of $\mathcal{V}$ an element of $\Delta$, and assigns every
+  individual constant $a \in \mathcal{O}$ to $a^{I} \in \Delta$. $\emme$ satisfies  a constraint $F$ under $\alpha$,
+  written $\emme \models_\alpha F$, as follows:
+
+  \begin{itemize}
+    \item $\emme \models_\alpha x: C$  if and only if $\alpha(x) \in C^{I}$
+    \item $\emme \models_\alpha x \trans{R} y$ if and only if $(\alpha(x),\alpha(y)) \in R^{I}$
+    \item $\emme \models_\alpha y < x$ if and only if $\alpha(y) < \alpha(x)$
+  \end{itemize}
+
+  A constraint system $\sx S \tc U \dx$ is satisfiable if there is a model $\emme$ and a function $\alpha$ such that
+   $\emme$ satisfies  every constraint in $S$ under $\alpha$ and that, for all $C \sqsubseteq D^L \in U$ and for all $x \in \Delta$,
+   we have that if $x \in C^I$ then $x \in D^I$.
+\end{definition}
+
+Let us now show that:
+
+\begin{proposition}\label{corresp constr system}
+ KB=(TBox,ABox) is satisfiable in an $\alct$ model if
+and only if its corresponding constraint system $\sx S \tc U \dx$
+is satisfiable in the same model.
+\end{proposition}
+
+%[TODO] Aggiungere riferimento alla dimostrazione
+
+
+\noindent To verify the satisfiability of KB $\unione \ \{ \nott F\}$, we use $\primo$ to check the satisfiability of the constraint system $\sx S \tc U \dx$ obtained
+by adding the constraint corresponding to $\nott F$ to $S'$, where $\sx S' \tc U \dx$ is the corresponding constraint system of KB. To this purpose, the rules of the calculus
+$\primo$ are applied until either a contradiction is generated \color{black}
+(\emph{clash}) \normalcolor or a model satisfying $\sx S \tc U \dx$ can be obtained
+from the resulting constraint system.
+As in the calculus proposed in \cite{FI09}, given a node $\sx S \tc U \dx$, for each subsumption
+$C \sqsubseteq D^L \in U$ and for each label $x$ that appears in
+the tableau, we add to $S$ the constraint $x: \nott C \unioneq D$: we refer to this mechanism as \color{black} \emph{subsumption expansion}.
+As mentioned above, each subsumption $C \sqsubseteq D$ is equipped
+with a list $L$ of labels in which the subsumption has been expanded in the
+current branch. This is needed to avoid multiple expansions of the
+same subsumption by using the same label, generating
+infinite branches.
+\normalcolor
+
+Before introducing the rules of $\primo$ we need some more definitions. First, as in \cite{buchheit-et-al}, we define an ordering relation $\prec$ to keep track of the temporal ordering of insertion of labels in the tableau, that is to say if $y$ is introduced in the tableau, then $x \prec y$ for all labels $x$ that are already in the tableau. Moreover, we need to define the \emph{equivalence} between two labels: intuitively, two labels $x$ and $y$ are equivalent if they label the same set of extended concepts. This notion is stated in the following definition, and it is used in order to apply the blocking machinery described in the following, based on the fact that equivalent labels represent the same element in the model built by $\primo$.
+
+\begin{definition}
+Given a tableau node $\sx S \tc U \dx$ and a label $x$, we define
+$$\sigma(\sx S \tc U \dx,x)=\{C \tc x: C \in S\}.$$
+
+
+\noindent Furthermore, we say that two labels $x$ and $y$ are $S$-\emph{equivalent}, written  $x \equiv_S y$, if they label the same set of concepts, i.e.
+
+$$\sigma(\sx S \tc U \dx,x)=\sigma(\sx S \tc U \dx,y).$$
+\end{definition}
+
+\noindent Last, we define the set of formulas $\Gammam{x}{y}$, that will be used in the rule
+$(\bbox^-)$ when $y<x$, in order to introduce $y: \nott C$ and $y: \bbox \nott C$ for each $x: \bbox \nott C$ in the current branch:
+
+\begin{definition}
+Given a tableau node $\sx S \tc U \dx$ and two labels $x$ and $y$,
+we define
+
+$$\Gammam{x}{y}=\{y: \nott C, y: \bbox \nott C \tc x: \bbox \nott C \in S\}.$$
+\end{definition}
+
+
+\begin{figure}[t]
+{\centerline{
+\includegraphics[angle=0,width=14cm]{primoOK}} }  \caption{The calculus $\primo$. To save space, we omit the rules $(\perogni^-)$ and $(\esiste^-)$, dual to $(\esiste^+)$ and $(\perogni^+)$, respectively.}\label{immagine calcolo}
+\end{figure}
+
+
+\noindent The rules of $\primo$ are presented in Figure \ref{immagine calcolo}.
+Rules $(\esiste^{+})$ and $(\bbox^{-})$ are called \emph{dynamic} since they introduce a new variable in their conclusions. The other rules are called \emph{static}. \color{black} A brief explanation of the rules follows:
+
+\begin{itemize}
+  \item $(\mbox{Clash})$, $(\mbox{Clash})_\top$ and $(\mbox{Clash})_\bot$ are used to detect \emph{clashes}, i.e. unsatisfiable constraint systems;
+  \item rules for $\sqcup$, $\sqcap$, $\nott$, and $\forall$ are similar to the corresponding ones in the tableau calculus for standard $\alc$ \cite{buchheit-et-al}: as an example, the rule $(\sqcup^+)$ is applied to a constraint system of the form $\sx S, x: C \sqcup D \tc U \dx$ in order to deal with the constraint $x: C \sqcup D$ introducing two branches in the tableau construction, to check the two conclusions obtained by adding the constraints $x: C$ and $x: D$, respectively. The side condition of the rules are the usual conditions needed to avoid multiple applications on the same principal formula: concerning the example of $(\sqcup^+)$, it can be applied only if $x: C \not \in S$ and $x: D \not\in S$;
+  \item the rules $(\tip^+)$ and $(\tip^-)$ are used to ``translate'' formulas of the form $\tip(C)$ in the corresponding modal interpretation: for $(\tip^+)$, this corresponds to introduce $x: C \sqcap \bbox \nott C$ to a constraint system containing $x: \tip(C)$, whereas for $(\tip^-)$ a branching is introduced to add either $x: \nott C$ or $x: \nott \bbox \nott C$ in case $x: \nott \tip(C)$ belongs to the constraint system;
+  \item the rule $(\sqsubseteq)$ is used in order to check whether, for all $x$ belonging to a branch, the inclusion relations of the TBox are satisfied: given a label $x$ and an inclusion $C \sqsubseteq D^L \in U$, the branching introduced by the rule ensures that either $x: \nott C$ holds or that $x: D$ holds;
+  \item the rule $(\bbox^-)$, applied to a principal formula $x: \nott \bbox \nott C$ ($x$ is not a typical instance of the concept $C$, i.e. there exists an element $z$ which is a typical instance of $C$ and is more normal than $x$), introduces the constraints $z < x$, $z: C$ and $z: \bbox \nott C$.
+A branching on the choice of the label $z$ to use is introduced, since it can be either a ``new'' label $y$, not occurring in the branch, or one of the labels $v_1, v_2, \dots, v_n$ already belonging to the branch.
+\normalcolor
+We do not need any extra rule for the
+positive occurrences of the $\bbox$ operator, since these are taken
+into account by the computation of $\Gammam{x}{y}$ of $(\bbox^-)$. \color{black} $(\esiste^{+})$ deals with constraints of the form $x: \esiste R.C$ in a similar way.
+ The additional side conditions on $(\esiste^{+})$ and $(\bbox^{-})$ are introduced in order to ensure a terminating proof search, by implementing the standard \emph{blocking} technique described below. Intuitively, they are applied to constraints $x: \esiste R.C$ and $x: \nott \bbox \nott C$, respectively, only if $x$ \emph{is not blocked}, i.e. if there is no label (\emph{witness}) $z$, labelling the same concepts of $x$, such that the rule has been already applied to $z: \esiste R.C$ (resp. $z: \nott \bbox \nott C$). This is formally stated in Definition \ref{witness} below;
+\normalcolor
+\item the $(cut)$ rule ensures that, given any concept $C \in \ellet$, an open branch built by $\primo$ contains either $x: \bbox \nott C$ or $x: \nott \bbox \nott C$
+for each label $x$: this is needed in order to allow $\secondo$ to check the minimality of the model corresponding to the open branch, as we will discuss later.
+\end{itemize}
+
+
+\noindent All the rules of the calculus copy their principal formulas, i.e. the formulas to which the rules are applied, in all their conclusions. As we will discuss later, for the rules $(\esiste^+)$, $(\perogni^-)$ and $(\bbox^-)$ this is used in order to apply the blocking technique, whereas for the rules $(\esiste^-)$, $(\perogni^+)$, $(\sqsubseteq)$, and $(cut)$ this is needed in order to have a complete calculus. Rules for $\sqcap$, $\sqcup$, $\nott$, and $\tip$ also copy their principal formulas in their conclusions for uniformity's sake.
+
+\color{black} In order to ensure the completeness of the calculus, \normalcolor the rules of $\primo$ are applied with the following \emph{standard strategy}:
+\begin{enumerate}
+\item apply a rule to a label $x$ only if no rule is applicable to a label $y$ such that $y \prec x$;
+ \item apply dynamic rules only if no static rule is applicable.
+\end{enumerate}
+
+
+The calculus so
+obtained is sound and complete with respect to the semantics in
+Definition \ref{modello constraint}.
+
+\color{black}
+\begin{definition}[Witness and Blocked label]\label{witness} \normalcolor
+  Given a constraint system $\sx S \tc U \dx$ and two labels $x$ and $y$ occurring in $S$, we say that $x$ is a witness of $y$ if the following conditions hold:
+  \begin{enumerate}
+    \item $x \equiv_S y$;
+    \item $x \prec y$;
+    \item there is no label $z$ s.t. $z \prec x$ and $z$ satisfies conditions 1. and 2., i.e., $x$ is the least label satisfying conditions 1. and 2. w.r.t. $\prec$.
+  \end{enumerate}
+  We say that $y$ is \emph{blocked} by $x$ in $\sx S \tc U \dx$ if $y$ has witness $x$.
+\end{definition}
+
+
+\noindent By the strategy on the application of the rules described above and by Definition \ref{witness}, we can prove the following Lemma:
+
+
+\begin{lemma}\label{esistenza witness}
+  In any constraint system $\sx S \tc U \dx$, if $x$ is blocked, then it has exactly one witness.
+\end{lemma}
+
+%[TODO] Aggiungere riferimento alla dimostrazione
+
+\color{black}
+\noindent As mentioned above, we apply a standard \emph{blocking} technique to control the application of the rules $(\esiste^+)$ and $(\bbox^-)$, in order to ensure the termination of the calculus. Intuitively, we can apply $(\esiste^+)$ to a constraint system of the form $\sx S, x: \esiste R.C \tc U \dx$ only if $x$ \emph{is not blocked}, i.e. it does not have any witness: indeed, in case $x$ has  a witness $z$, by the strategy on the application of the rules described above the rule $(\esiste^+)$ has  already been applied to some $z: \esiste R.C$, and we do not need a further application to $x: \esiste R.C$. This is ensured by the side condition on the application of $(\esiste^+)$, namely if $\not\exists z \prec x$ such that $z \equiv_{S, x: \esiste R.C} x$. The same blocking machinery is used to control the application of $(\bbox^-)$, which can be applied only if $\not\exists z \prec x$ such that $z \equiv_{S, x: \nott \bbox \nott C} x$.
+\normalcolor
+
+
+\subsection{The tableau calculus $\secondo$}
+
+%In order to present the tableau calculus $\secondo$, we need some definitions:
+%
+Let us now introduce the calculus $\secondo$ which, for each open
+branch {\bf B} built by $\primo$,  verifies if $\emme^{\bf B}$ is
+a minimal model of the KB.  \hide{We define: need some
+definitions:}
+
+
+\begin{definition}\label{db e prefb}
+
+  Given an open branch {\bf B} of a tableau built by $\primo$, we define:
+  \begin{itemize}
+  \item $\db$ as the set of labels occurring on {\bf B};
+    \item {\bf B}$^{\bbox^{-}}=\{x: \nott \bbox \nott C \tc x: \nott \bbox \nott C \ \mbox{occurs in {\bf B}}\}$.
+  \end{itemize}
+\end{definition}
+
+
+\hide{\noindent Intuitively, $\db$ is the set of individual
+constants and variables occurring in {\bf B}, whereas {\bf
+B}$^{\bbox^{-}}$ is the set of formulas $x: \nott \bbox \nott C$
+occurring in {\bf B}.}
+
+\noindent  A tableau of $\secondo$ is a tree whose
+nodes are triples of the form $\sx S \tc U \tc K \dx$, where $\sx S \tc U \dx$ is a constraint system, whereas $K$ contains formulas
+of the form $x: \nott \bbox \nott C$, with $C \in \ellet$.
+%For
+%each open branch {\bf B} built by $\primo$, representing a
+%candidate model of KB, $\secondo$ verifies whether it is minimal.
+
+
+
+
+\begin{figure}[t]
+{\centerline{
+\includegraphics[angle=0,width=14cm]{secondoOK}} }  \caption{The calculus $\secondo$. To save space, we omit the rules $(\sqcup^+)$ and $(\sqcup-)$.}\label{immagine secondo}
+\end{figure}
+
+
+
+
+The basic idea of $\secondo$ is as follows. Given an open branch
+{\bf B} built by $\primo$ and corresponding to a model $\emme^{\bf
+B}$ of KB $\unione \ \{\nott F\}$, $\secondo$ checks whether
+$\emme^{\bf B}$ is a minimal model of KB by trying to build a
+model of KB which is preferred to $\emme^{\bf B}$. \hide{Checking
+(un)satisfiability of , allows to verify whether the candidate
+model $\emme^{\bf B}$ is minimal.} Starting from $\sx S \tc U \tc$
+{\bf B}$^{\bbox^-} \dx$ where $\sx S \tc U \dx$ is the
+ constraint system corresponding to the initial KB $\secondo$ tries
+to build an open branch containing  all and only the labels
+appearing on {\bf B}, i.e. those in $\db$, and containing less
+negated boxed formulas than {\bf B} does. To this aim, first the
+dynamic rules use labels in $\db$ instead of introducing new ones
+in their conclusions. Second the negated boxed formulas used in
+{\bf B} are stored in  the additional set $K$ of a tableau node,
+initialized with {\bf B}$^{\bbox^-}$. \hide{, is used in order to
+ensure that any branch {\bf B'} built by $\secondo$ is preferred
+to {\bf B}, that is {\bf B'} only contains  negated boxed formulas
+occurring in {\bf B} and there exists at least a $x: \nott \bbox
+\nott C$ that occurs in {\bf B} and \emph{does not occur} in {\bf
+B'}.} A branch built by $\secondo$ closes if it does not represent
+a model preferred to the candidate model $\emme^{\bf B}$, and this
+happens if the branch contains a contradiction (Clash) or it
+contains at least all the negated boxed formulas contained in {\bf
+B} ((Clash)$_{\bbox^{-}}$ and (Clash)$_{\vuoto}$).
+
+
+\hide{$\secondo$ also contains analogues of the following rules
+from $\primo$ in Figure \ref{immagine calcolo}: $(\nott)$,
+$(\tip^+)$, $(\tip^-)$, $(cut)$, $(\perogni^+)$, where the rules
+in $\secondo$ include the additional\hide{third} component $K$.}
+
+More in detail, the rules of\hide{the calculus} $\secondo$ are
+shown in Figure \ref{immagine secondo}. The rule $(\esiste^+)$ is
+applied to a constraint system containing a formula $x: \esiste
+R.C$; it introduces $x \trans{R} y$ and $y: C$ where $y \in \db$,
+instead of $y$ being a new label. The choice of the label $y$
+introduces a branching in the tableau construction. The rule
+$(\sqsubseteq)$ is applied in the same way as in $\primo$ to \emph{all
+the labels of} $\db$ (and not only to those appearing in the
+branch). The rule $(\bbox^{-})$ is applied to a node $\sx S, x:
+\nott \bbox \nott C \tc U \tc K \dx$, when $x: \nott \bbox \nott
+C\in K$, i.e. when the formula $x: \nott \bbox \nott C$ also
+belongs to the open branch {\bf B}. In this case, the rule
+introduces a branch on the choice of the individual $v_i \in \db$
+which is preferred to $x$ and is such that $C$ and $\bbox \nott C$
+hold in $v_i$.  In case a tableau node has the form $\sx S, x:
+\nott \bbox \nott C \tc U \tc K \dx$, and $x: \nott \bbox \nott C
+\not\in$ {\bf B}$^{\bbox^{-}}$, then $\secondo$ detects a clash, called
+(Clash)$_{\bbox^{-}}$: this corresponds to the situation in which
+$x: \nott \bbox \nott C$ does not belong to {\bf B}, while $S, x:
+\nott \bbox \nott C$ is satisfiable in a model $\emme$ only if
+$\emme$ contains $x: \nott \bbox \nott C$, and hence only if
+$\emme$ is \emph{not} preferred to the model represented by {\bf
+B}.
+
+The calculus $\secondo$ also contains the clash condition
+(Clash)$_{\vuoto}$. Since each application of $(\bbox^{-})$
+removes the principal formula $x: \nott \bbox \nott C$ from the
+set $K$, when $K$ is empty all the negated boxed formulas
+occurring in {\bf B} also belong to the current branch. In this
+case, the model built by $\secondo$ satisfies the same set of
+negated boxed formulas (for all individuals) as {\bf B} and, thus,
+it is not preferred to the one represented by {\bf B}.\\
+
+%%%[FIXME]INIZIO PEZZO ADAM
+$\secondo$
+always terminates. Intuitively, termination is ensured by the fact
+that dynamic rules make use of labels belonging to $\db$, which is finite,
+rather than introducing “new” labels in the tableau.
+%%%FINE PEZZO ADAM
+
+
+\begin{definition}\label{def processo}
+Let KB be a knowledge base whose corresponding constraint system is $\sx S \tc U \dx$. Let $F$ be a query and let $S'$ be the set of
+constraints obtained by adding to $S$ the constraint corresponding to $\nott F$.
+The calculus $\nuovoc$ checks whether a query $F$ can be minimally entailed from a \emph{KB} by means of the following procedure:
+\begin{itemize}
+\item the calculus $\primo$ is applied to $\sx S' \tc U
+\dx$;  \item if, for each branch {\bf B} built by $\primo$,
+either: \subitem{ (i) {\bf B} is closed or} \subitem(ii) {the
+tableau built by the calculus $\secondo$ for $\sx S \tc U \tc {\bf
+B}^{\bbox^{-}} \dx$ is open, } \item[] then the procedure says \textsc{YES}
+\item[] else the procedure says \textsc{NO}
+\end{itemize}
+\end{definition}
+
+\noindent The following theorem shows that the overall procedure is sound
+and complete.
+
+
+\begin{theorem}[Soundness and completeness of $\nuovoc$]\label{Soundness e completeness nuovoc}
+$\nuovoc$ is  a sound and complete decision procedure for
+verifying if KB $\models_{min}^{\ellet} F$.
+\end{theorem}
+
+We provide an upper bound on the complexity of the
+procedure for computing the minimal entailment KB
+$\models_{min}^{\ellet} F$:
+
+\begin{theorem}[Complexity of $\nuovoc$]\label{overall complexity}
+The problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is
+in $\textsc{co-NExp}^\textsc{NP}$.
+\end{theorem}
+
+%[TODO] Aggiungere citazione dell'articolo in cui sono contenute le dimostrazioni
+
+%****************************************************
+%********************   MACROS   ********************
+%****************************************************
+
+\section{Background}
+\section{Logics}
+\section{Implementation}
+
+\subsection{Architecture}
+
+\subsection{Conclusion}
+
+
+
+
+\newpage
+
+%\vskip 0.2in
+\bibliographystyle{elsarticle-harv}
+\bibliography{biblioMarzo2010}
+
+
+
+
+\end{document}
+@
