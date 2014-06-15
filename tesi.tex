@@ -45,8 +45,12 @@
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \setlength{\parindent}{0in}
 
+\newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
+\newcommand{\tab}[1]{\hspace{.2\textwidth}\rlap{#1}}
 
+\newcommand {\ent} {\mathrel{{\scriptstyle\mid\!\sim}}}
 \newcommand{\tip}{{\bf T}}
+\newcommand{\al}{\mathcal{AL}}
 \newcommand{\alc}{\mathcal{ALC}}
 \newcommand{\alct}{\mathcal{ALC}+\tip}
 \newcommand{\alctmin}{\mathcal{ALC}+\tip_{\mbox{\em min}}}
@@ -77,6 +81,7 @@
 \newcommand{\esiste} {\exists}
 
 \newcommand{\db}{\mathcal{D}(\mbox{\bf B})}
+\newcommand{\II} {\mathcal{I}}
 \newcommand{\elle} {\mathcal{L}}
 \newcommand{\ellet} {\mathcal{L}_{\bf T}}
 \newcommand{\emme} {\begin{mathcal}M\end{mathcal}}
@@ -197,7 +202,7 @@ Luca Violanti}
 In this thesis we present the design and implementation of a distributed theorem prover for the non-monotonic description logic $\alctmin$.
 
 Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
-DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science is in bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of nonmonotonic extension of DLs.
+DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science is in bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of non-monotonic extension of DLs.
 
 %[TODO] completare introduzione
 
@@ -207,6 +212,8 @@ DLs are used in artificial intelligence for formal reasoning on the concepts of 
 %\chapter{The problem}
 %\chapter{Automated reasoning}
 %\chapter{State of the art}
+
+\newpage
 
 
 %****************************************************
@@ -219,6 +226,110 @@ While formal, logic-based approaches to representing and working with knowledge 
 Rooted in early AI approaches, Description Logics (DLs) have developed into one of the main knowledge representation formalisms.
 The maturity of the field is also reflected by the adoption of description logics as prior specification paradigm for ontological descriptions - culminating in the standardization of the OWL web ontology language by the World Wide Web Consortium (W3C) - as well as the availability of highly optimized and readily deployable (yet open source) tools for automated inferencing.
 Thanks to this ``dissemination path'', DLs constitute the theoretical backbone for information systems in many disciplines, among which life sciences can be seen as the ``early adopters''\cite{Sidhu05proteinontology, Golbreich:2006:FMA:1222219.1222304, Wolstencroft:2005:LSW:2079844.2079902}.
+
+\subsection{Application domains}
+Description Logics are used in the implementation of many systems that demonstrate their practical effectiveness. Some of these systems have found their way into production use, despite the fact that there was no real commercial platform that could be used for developing them.\\
+
+\textbf{Software engineering.} Software Engineering was one of the first application domains for Description Logics. The basic idea was to use a Description Logic to implement a Software Information System, i.e. a system that would support the software developer by helping him in finding out information about a large software system.\\
+
+\textbf{Configuration management.} One very successful domain for knowledge-based applications built using Description Logics is configuration management, which includes applications that support the design of complex systems created by combining multiple components.
+The main goal of this discipline is finding a proper set of components that can be suitably connected in order to implement a system that meets a given specification.
+For example, choosing computer components in order to build a home PC is a relatively simple configuration task. When the number, the type, and the connectivity of the components grow, the configuration task can become rather complex.
+In particular, computer configuration has been among the application fields of the first Expert Systems and can thus be viewed as a standard application domain for knowledgebased systems.
+Configuration tasks arise in many industrial domains, such as telecommunications, the automotive industry, building construction, etc.
+DL-based knowledge representation systems meet the requirements for the development of configuration applications. In particular, they enable the object-oriented modelling of system components, which combines powerfully with the ability to reason from incomplete specifications and to automatically detect inconsistencies. Using Description Logics one can exploit the ability to classify the components and organize them within a taxonomy.\\
+
+\textbf{Medicine.} Medicine is also a domain where Expert Systems have been developed since the 1980’s, in particular in the field of decision support for medical diagnosis. One focus has been on the construction and maintenance of very large ontologies of medical knowledge, the subject of some large government initiatives.
+In order to cope with the scalability of the knowledge base, the DL language adopted in these applications is often limited to a few basic constructs and the knowledge base turns out to be rather shallow, that is to say the taxonomy does not have very many levels of sub-concepts below the top concepts.\\
+
+\textbf{Data mining.} Description Logics have also been used in data mining applications, where their inferences can help the process of analysing large amounts of data.
+In this kind of application, DL structures can represent views, and DL systems can be used to store and classify such views. The classification mechanism can help in discovering interesting classes of items in the data
+\cite{Nardi:2003:IDL:885746.885748}.
+
+
+\subsection{Basic Description Logics}
+As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic-based semantics.
+Another distinguished feature is the emphasis on reasoning as a central service: reasoning allows one to infer implicitly represented knowledge from the knowledge that is explicitly contained in the knowledge base.
+Description Logics support inference patterns that occur in many applications of intelligent information processing systems, and which are also used by humans to structure and understand the world: classification of concepts and 
+individuals.
+Classification of concepts determines subconcept/superconcept relationships (called subsumption relationships in DL) between the concepts of a given terminology, and thus allows one to structure the terminology in the form of a subsumption hierarchy.
+Classification of individuals (or objects) determines whether a given individual is always an instance of a certain concept (i.e., whether this instance relationship is implied by the description of the individual and the definition of the concept).
+It thus provides useful information on the properties of an individual.
+Moreover, instance relationships may trigger the application of rules that insert additional facts into the knowledge base.
+The implementation of reasoning services requires building procedures that should always terminate, both for positive and for negative answers, but also complexity needs to be taken into consideration.
+Decidability and complexity of the inference problems depend on the expressive power of the DL at hand.
+On the one hand, very expressive DLs are likely to have inference problems of high complexity.
+On the other hand, very weak DLs (with efficient reasoning procedures) may not be sufficiently expressive to represent the important concepts of a given application.
+Investigating this trade-off between the expressivity of DLs and the complexity of their reasoning problems is one of the most important issues in DL research
+\cite{Baader:2003:BDL:885746.885749}.
+
+
+
+
+
+\subsection{The basic description language $\al$}
+A knowledge representation system based on Description Logics provides facilities to set up knowledge bases, to reason about their content, and to manipulate them.
+A knowledge base (KB) comprises two components, the TBox and the ABox.
+The TBox introduces the terminology, i.e., the vocabulary of an application domain, while the ABox contains assertions about named individuals in terms of this vocabulary.
+The vocabulary consists of concepts, which denote sets of individuals, and roles, which denote binary relationships between individuals.
+Elementary descriptions are atomic concepts and atomic roles.
+Complex descriptions can be built from them inductively with concept constructors.
+In abstract notation, we use the letters $A$ and $B$ for atomic concepts, the letter $R$ for atomic roles, and the letters $C$ and $D$ for concept descriptions.
+In the sequel we present the language $\al$ that has been introduced in \cite{Schmidt-SchaubB:1991:ACD:114341.114342} as a minimal language that is of practical interest. The other languages of this family are extensions of $\al$.
+\newpage
+Concept descriptions in $\al$ are formed according to the following syntax rule:\\
+
+\begin{itemize}
+\item[] $C, D \imp$
+\item[] \itab{$A \tc$} \tab{(atomic concept)}
+\item[] \itab{$\vero \tc$} \tab{(top concept)}
+\item[] \itab{$\falso \tc$} \tab{(bottom concept)}
+\item[] \itab{$\neg A \tc$} \tab{(atomic negation)}
+\item[] \itab{$C \mint D \tc$} \tab{(intersection)}
+\item[] \itab{$\forall R.C \tc$} \tab{(value restriction)}
+\item[] \itab{$\exists R.\vero $} \tab{(limited existential quantification)}
+\end{itemize}
+
+
+In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non-empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$. The
+interpretation function is extended to concept descriptions by the following
+inductive definitions:
+
+\begin{itemize}
+\item[] \itab{$\vero^{\II} = \Delta^{\II}$}
+\item[] \itab{$(\neg A)^{\II} = \Delta^{\II} $\textbackslash $A^{\II}$}
+\item[] \itab{$(C \mint D)^{\II} = C^{\II} \mint D^{\II}$}
+\item[] \itab{$(\forall R.C)^{\II} = \left\{x \in \Delta \tc \perogni y.(x, y)\in R^{\II} \imp y \in C^{\II} \right\}$}
+\item[] \itab{$(\exists R.\vero)^{\II} = \left\{x \in \Delta \tc \esiste y.(x, y)\in R^{\II} \right\}$}
+\end{itemize}
+
+We say that two concepts $C$, $D$ are equivalent, and write $C = D$, if $C^{\II} = D^{\II}$ for all interpretations $\II$
+\cite{Baader:2003:BDL:885746.885749}.
+
+
+
+\subsubsection{Non-monotonic reasoning and the operator \tip}
+Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
+The traditional approach is to handle defeasible inheritance by integrating some kind of non-monotonic reasoning mechanism.
+This has led to study non-monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
+However, finding a suitable non-monotonic extension for inheritance reasoning with exceptions is far from obvious.
+To give a brief account, \cite{baader95a} proposes the extension of DL with Reiter's default logic.
+However, the same authors have pointed out that this integration may lead to both semantical and computational difficulties.
+Indeed, the unsatisfactory treatment of open defaults via Skolemization may lead to an undecidable default consequence relation. For this reason, \cite{baader95a} proposes a restricted semantics for open default theories, in which default rules are only applied to individuals explicitly mentioned in the ABox.
+Furthermore, Reiter's default logic does not provide a direct way of modeling inheritance with exceptions.
+This has motivated the study of extensions of DLs with prioritized defaults
+\cite{straccia93,baader95b}.
+A more general approach is undertaken in \cite{donini2002}, where it is proposed an extension of DL with two epistemic operators. This extension allows to encode Reiter's default logic as well as to express epistemic concepts and procedural rules.
+In \cite{bonattilutz} the authors propose an extension of DL with circumscription. One of the motivating applications of circumscription is indeed to express prototypical properties with exceptions, and this is done by introducing ``abnormality'' predicates, whose extension is minimized.
+The authors provide decidability and complexity results based on theoretical analysis.
+A tableau calculus for circumscriptive $\mathcal{ALCO}$ is presented in \cite{hitzlertableau}.
+
+In \cite{casinistraccia2010,stracciaijcai2011} a non-monotonic extension of $\mathcal{ALC}$  based on the application of Lehmann and Magidor's \emph{rational closure} \cite{whatdoes} to $\mathcal{ALC}$ is proposed. The approach is based on the introduction of a consequence relation $\ent$ among concepts and of a consequence relation $\Vdash$ among an unfoldable KB and assertions. The authors show that such consequence relations are \emph{rational}. It is also shown that such relations inherit the same computational complexity of the underlying DL.
+
+Recent works discuss the combination of open and closed world reasoning in DLs. In particular, formalisms have been defined for combining DLs with logic programming rules (see, for instance, \cite{eiter2004} and \cite{rosatiacm}). A grounded circumscription approach for DLs with local closed world capabilities has been defined in \cite{hitzlerdl}.
+
+
+\newpage
 
 %****************************************************
 %******************  DL + T  ************************
@@ -259,10 +370,9 @@ and $aRb$ where $C \in \elle$ is an extended concept, $R \in
 
 
 In order to provide a semantics to the operator $\tip$, we extend the definition of a model used in ``standard''
-%terminological logic $\alc$\footnote{We refer to {\cite[handbook]} for a detailed description of the standard Description Logic $\alc$.}:
 
 \begin{definition}[Semantics of $\tip$ with selection function]\label{Semantics
-with f_tip} A model is any structure $$\langle \Delta, I, f_\tip \rangle$$
+with f_tip} A model is any structure $\langle \Delta, I, f_\tip \rangle$
 where:
 
 \begin{itemize}
@@ -646,16 +756,16 @@ $\models_{min}^{\ellet} F$.
 
 \noindent {\em Example 1}.
 Consider the following KB:
-$$\mbox{KB} \ = \{ \tip(\mathit{Athlet}) \sqset
-\mathit{Confident}, \mathit{Athlet}(\mathit{john}),
+$$\mbox{KB} \ = \{ \tip(\mathit{Athlete}) \sqset
+\mathit{Confident}, \mathit{Athlete}(\mathit{john}),
 \mathit{Finnish}(\mathit{john})\}$$ and ${\ellet}=
-\{\mathit{Athlet}, \mathit{Finnish}\}$. We have $$\mbox{KB} \
+\{\mathit{Athlete}, \mathit{Finnish}\}$. We have $$\mbox{KB} \
 \models_{min}^{\ellet} \mathit{Confident}(\mathit{john})$$
 %If we restrict our attention to minimal models, we derive $T(i)$.
 Indeed, there is no minimal model of KB that contains a non typical instance of some concept (indeed in all minimal models of KB the relation $<$ is empty).
-Hence $\mathit{john}$ is an instance of $\tip(\mathit{Athlet})$
+Hence $\mathit{john}$ is an instance of $\tip(\mathit{Athlete})$
 (it can be easily verified that any model in which $\mathit{john}$
-is not an instance of $\tip(\mathit{Athlet})$ is not minimal).  By
+is not an instance of $\tip(\mathit{Athlete})$ is not minimal).  By
 KB, in all these models, $\mathit{john}$ is an instance of
 $\mathit{Confident}$. Observe that $\mathit{Confident}(\mathit{john})$ is obtained, in spite of the
 presence of the irrelevant assertion
@@ -665,15 +775,15 @@ $\mathit{Finnish}(\mathit{john})$.
 \vspace{0.35cm}
 
 \noindent {\em Example 2}. Consider now the knowledge base KB' obtained by adding to KB the
-formula $\tip(\mathit{Athlet} \mint \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident}$, that is to say:
-$$\mbox{KB'}  = \{ \tip(\mathit{Athlet}) \sqset \mathit{Confident}, \tip(\mathit{Athlet} \ \mint \ \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident},
-\mathit{Athlet}(\mathit{john}), \mathit{Finnish}(\mathit{john})\}$$
+formula $\tip(\mathit{Athlete} \mint \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident}$, that is to say:
+$$\mbox{KB'}  = \{ \tip(\mathit{Athlete}) \sqset \mathit{Confident}, \tip(\mathit{Athlete} \ \mint \ \mathit{Finnish}) \sqsubseteq \neg \mathit{Confident},
+\mathit{Athlete}(\mathit{john}), \mathit{Finnish}(\mathit{john})\}$$
 and to ${\ellet}$ concept
-$\mathit{Athlet} \mint \mathit{Finnish}$. From KB', $\mathit{Confident}(\mathit{john})$ is no longer derivable.
-Instead, we have that $$\mbox{KB}' \models_{min}^{\ellet} \neg \mathit{Confident}(\mathit{john}).$$ Indeed, by reasoning as above it can be shown that in all the minimal models of KB', $\mathit{john}$ is an instance of $\tip(\mathit{Athlet} \mint \mathit{Finnish})$, and it is
-no longer an instance of $\tip(\mathit{Athlet})$. This example shows that, in case of
-conflict (here, $\mathit{john}$ cannot be both a typical instance of $\mathit{Athlet}$ and of
-$\mathit{Athlet} \mint \mathit{Finnish}$), typicality in the more specific concept is
+$\mathit{Athlete} \mint \mathit{Finnish}$. From KB', $\mathit{Confident}(\mathit{john})$ is no longer derivable.
+Instead, we have that $$\mbox{KB}' \models_{min}^{\ellet} \neg \mathit{Confident}(\mathit{john}).$$ Indeed, by reasoning as above it can be shown that in all the minimal models of KB', $\mathit{john}$ is an instance of $\tip(\mathit{Athlete} \mint \mathit{Finnish})$, and it is
+no longer an instance of $\tip(\mathit{Athlete})$. This example shows that, in case of
+conflict (here, $\mathit{john}$ cannot be both a typical instance of $\mathit{Athlete}$ and of
+$\mathit{Athlete} \mint \mathit{Finnish}$), typicality in the more specific concept is
 preferred.
 
 \vspace{0.35cm}
@@ -1079,9 +1189,7 @@ in $\textsc{co-NExp}^\textsc{NP}$.
 
 %[TODO] Aggiungere citazione dell'articolo in cui sono contenute le dimostrazioni
 
-%****************************************************
-%********************   MACROS   ********************
-%****************************************************
+
 
 \section{Background}
 \section{Logics}
@@ -1092,7 +1200,9 @@ in $\textsc{co-NExp}^\textsc{NP}$.
 \subsection{Conclusion}
 
 
-
+%****************************************************
+%********************   BIBLIO   ********************
+%****************************************************
 
 \newpage
 
