@@ -199,10 +199,10 @@ Luca Violanti}
 
 \section{Introduction}
 
-In this thesis we present the design and implementation of a distributed theorem prover for the non-monotonic description logic $\alctmin$.
+In this thesis we present the design and implementation of a distributed theorem prover for the non--monotonic description logic $\alctmin$.
 
 Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
-DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science is in bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of non-monotonic extension of DLs.
+DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science is in bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic extension of DLs.
 
 %[TODO] completare introduzione
 
@@ -222,10 +222,33 @@ DLs are used in artificial intelligence for formal reasoning on the concepts of 
 
 \section{Description Logics}
 
-While formal, logic-based approaches to representing and working with knowledge occur throughout human history, the advent and widespread adoption of programmable computing devices in the 20th century has led to intensified studies of both theoretical and practical aspects of knowledge representation and automated reasoning.
-Rooted in early AI approaches, Description Logics (DLs) have developed into one of the main knowledge representation formalisms.
-The maturity of the field is also reflected by the adoption of description logics as prior specification paradigm for ontological descriptions - culminating in the standardization of the OWL web ontology language by the World Wide Web Consortium (W3C) - as well as the availability of highly optimized and readily deployable (yet open source) tools for automated inferencing.
-Thanks to this ``dissemination path'', DLs constitute the theoretical backbone for information systems in many disciplines, among which life sciences can be seen as the ``early adopters''\cite{Sidhu05proteinontology, Golbreich:2006:FMA:1222219.1222304, Wolstencroft:2005:LSW:2079844.2079902}.
+\subsection{Introduction}
+Description Logics are decidable fragments of the first-order logic formalism used to provide semantics to representation structures like frames and networks.
+Each fragment has different features, leading to computational problems of variable complexity: the use of a more simple language (low computational complexity) rather than a more expressive one (high computational complexity) depends on how complex we want the world description to be.
+
+
+\begin{figure}[htp]
+\centering
+\includegraphics[scale=.33]{img/relationship_network.png}
+\caption{An example of network, showing relationships between concepts.}
+\label{rel_net}
+\end{figure}
+
+Typically, nodes are used to characterize concepts, i.e., sets of individuals, and links are used to characterize relationships among them.
+Concepts can have simple properties, which are typically attached to the corresponding nodes.
+It is rather simple to make a correspondence between network structures and Description Logics because the latter are equipped with unary predicates representing sets of individuals, binary predicates representing relationships among them and a mechanism of inclusion statements to express concept properties.
+Indeed, we can represent concept properties with the inclusion statement $Carnivore \sqsubseteq Animal$ and we can express the following facts about an individual $lion$: 
+
+\begin{itemize}
+	\item $Carnivore(lion)$
+	\item $Hunts(lion, zebra)$
+	\item $Herbivore(elephant)$
+	\item $Eats(elephant, grass)$
+\end{itemize}
+
+It is also possible to use intersection concepts with the syntax $Carnivore \sqcap Plant$ to select individuals which belong to both $Carnivore$ and $Plant$.
+
+\newpage
 
 \subsection{Application domains}
 Description Logics are used in the implementation of many systems that demonstrate their practical effectiveness. Some of these systems have found their way into production use, despite the fact that there was no real commercial platform that could be used for developing them.\\
@@ -246,6 +269,7 @@ In order to cope with the scalability of the knowledge base, the DL language ado
 In this kind of application, DL structures can represent views, and DL systems can be used to store and classify such views. The classification mechanism can help in discovering interesting classes of items in the data
 \cite{Nardi:2003:IDL:885746.885748}.
 
+\newpage
 
 \subsection{Basic Description Logics}
 As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic-based semantics.
@@ -264,8 +288,7 @@ Investigating this trade-off between the expressivity of DLs and the complexity 
 \cite{Baader:2003:BDL:885746.885749}.
 
 
-
-
+\newpage
 
 \subsection{The basic description language $\al$}
 A knowledge representation system based on Description Logics provides facilities to set up knowledge bases, to reason about their content, and to manipulate them.
@@ -276,14 +299,14 @@ Elementary descriptions are atomic concepts and atomic roles.
 Complex descriptions can be built from them inductively with concept constructors.
 In abstract notation, we use the letters $A$ and $B$ for atomic concepts, the letter $R$ for atomic roles, and the letters $C$ and $D$ for concept descriptions.
 In the sequel we present the language $\al$ that has been introduced in \cite{Schmidt-SchaubB:1991:ACD:114341.114342} as a minimal language that is of practical interest. The other languages of this family are extensions of $\al$.
-\newpage
+
 Concept descriptions in $\al$ are formed according to the following syntax rule:\\
 
 \begin{itemize}
 \item[] $C, D \imp$
 \item[] \itab{$A \tc$} \tab{(atomic concept)}
-\item[] \itab{$\vero \tc$} \tab{(top concept)}
-\item[] \itab{$\falso \tc$} \tab{(bottom concept)}
+\item[] \itab{$\vero \tc$} \tab{(top concept - most general)}
+\item[] \itab{$\falso \tc$} \tab{(bottom concept - most specific)}
 \item[] \itab{$\neg A \tc$} \tab{(atomic negation)}
 \item[] \itab{$C \mint D \tc$} \tab{(intersection)}
 \item[] \itab{$\forall R.C \tc$} \tab{(value restriction)}
@@ -306,13 +329,24 @@ inductive definitions:
 We say that two concepts $C$, $D$ are equivalent, and write $C = D$, if $C^{\II} = D^{\II}$ for all interpretations $\II$
 \cite{Baader:2003:BDL:885746.885749}.
 
+\subsection{Complex concept negation: $\alc$}
+A basic extension of $\al$ is the negation of an arbitrary concept:
+\begin{itemize}
+\item[] \itab{$\neg C$} \tab{(concept negation)}
+\end{itemize}
+
+whose semantics is:
+\begin{itemize}
+\item[] \itab{$(\neg C)^{\II} = \Delta^{\II} $\textbackslash $C^{\II}$}
+\end{itemize}
+\cite{obitko}
 
 
-\subsubsection{Non-monotonic reasoning and the operator \tip}
+\subsection{Non--monotonic reasoning and the operator $\tip$}
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
-The traditional approach is to handle defeasible inheritance by integrating some kind of non-monotonic reasoning mechanism.
-This has led to study non-monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
-However, finding a suitable non-monotonic extension for inheritance reasoning with exceptions is far from obvious.
+The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic reasoning mechanism.
+This has led to study non--monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
+However, finding a suitable non--monotonic extension for inheritance reasoning with exceptions is far from obvious.
 To give a brief account, \cite{baader95a} proposes the extension of DL with Reiter's default logic.
 However, the same authors have pointed out that this integration may lead to both semantical and computational difficulties.
 Indeed, the unsatisfactory treatment of open defaults via Skolemization may lead to an undecidable default consequence relation. For this reason, \cite{baader95a} proposes a restricted semantics for open default theories, in which default rules are only applied to individuals explicitly mentioned in the ABox.
@@ -324,10 +358,77 @@ In \cite{bonattilutz} the authors propose an extension of DL with circumscriptio
 The authors provide decidability and complexity results based on theoretical analysis.
 A tableau calculus for circumscriptive $\mathcal{ALCO}$ is presented in \cite{hitzlertableau}.
 
-In \cite{casinistraccia2010,stracciaijcai2011} a non-monotonic extension of $\mathcal{ALC}$  based on the application of Lehmann and Magidor's \emph{rational closure} \cite{whatdoes} to $\mathcal{ALC}$ is proposed. The approach is based on the introduction of a consequence relation $\ent$ among concepts and of a consequence relation $\Vdash$ among an unfoldable KB and assertions. The authors show that such consequence relations are \emph{rational}. It is also shown that such relations inherit the same computational complexity of the underlying DL.
+In \cite{casinistraccia2010,stracciaijcai2011} a non--monotonic extension of $\mathcal{ALC}$  based on the application of Lehmann and Magidor's \emph{rational closure} \cite{whatdoes} to $\mathcal{ALC}$ is proposed. The approach is based on the introduction of a consequence relation $\ent$ among concepts and of a consequence relation $\Vdash$ among an unfoldable KB and assertions. The authors show that such consequence relations are \emph{rational}. It is also shown that such relations inherit the same computational complexity of the underlying DL.
 
 Recent works discuss the combination of open and closed world reasoning in DLs. In particular, formalisms have been defined for combining DLs with logic programming rules (see, for instance, \cite{eiter2004} and \cite{rosatiacm}). A grounded circumscription approach for DLs with local closed world capabilities has been defined in \cite{hitzlerdl}.
 
+\newpage
+
+A non--monotonic extension should have the following characteristics:
+
+\begin{enumerate}
+\item The (non--monotonic) extension must have a clear semantics and should be based on the same semantics as the underlying monotonic DL.
+\item The extension should allow to specify prototypical properties in a natural and direct way.
+\item The extension must be decidable, if  so is the underlying monotonic DL, and standard proof methods for monotonic DL should be generalized to it.
+\end{enumerate}
+
+%%TODO  controllare bene questa parte
+
+Before entering the technical details, let us sketch how the pre--existent work makes use of the typicality operator $\tip$ for inference. The KB is comprised of the standard TBox and ABox, with the addition of a set of assertions of the form $\tip(C)\sqsubseteq D$, where $D$ is a concept not mentioning $\tip$.
+
+For instance, let the TBox contain:
+
+\begin{quote}
+$\tip (\mathit{Student}) \sqset \mathit{\neg IncomeTaxPayer}$\\
+$\tip (\mathit{Student} \mint \mathit{Worker})  \sqset \mathit{IncomeTaxPayer}$\\
+$\tip (\mathit{Student} \mint \mathit{Worker} \mint \mathit{Erasmus})  \sqset \mathit{\neg IncomeTaxPayer}$
+\end{quote}
+
+
+\noindent corresponding to the assertions: typical students don't have to pay income taxes, whereas if a student is also a worker, typically he will pay income taxes; if an Erasmus Programme student is also a worker, he does not have to pay income taxes.
+Suppose  further that the ABox contains alternatively one of the following facts:
+
+\begin{quote}
+1. $\mathit{Student}(\mathit{luca})$ \\
+2. $\mathit{Student}(\mathit{antonio}), \mathit{Worker}(\mathit{antonio})$ \\
+3. $\mathit{Student}(\mathit{marco}), \mathit{Worker}(\mathit{marco}), Erasmus(\mathit{marco})$
+\end{quote}
+
+
+\noindent From the different combinations of TBox and one of the above ABox assertions (either $1$ or $2$ or $3$), we can infer the expected (defeasible) conclusions. These are, respectively:
+
+\begin{quote}
+1. $\mathit{\neg IncomeTaxPayer}(\mathit{luca})$\\
+2. $\mathit{IncomeTaxPayer}(\mathit{antonio})$ \\
+3. $\mathit{\neg IncomeTaxPayer}(\mathit{marco})$
+\end{quote}
+
+\noindent Moreover, we would also like to infer (defeasible) properties of individuals
+implicitly introduced by existential restrictions, for instance,
+if the ABox contains
+
+\begin{quote}
+$\exists \mathit{HasChild}.\mathit{Student(grazia)}$
+\end{quote}
+
+\noindent we would like to infer that:
+\begin{quote}
+$\exists \mathit{HasChild.\neg IncomeTaxPayer(grazia)}$
+\end{quote}
+
+\noindent Finally, adding irrelevant information should not affect the conclusions. From the TBox above, one should be able to infer as well
+
+\begin{quote}
+$\tip (\mathit{Student} \mint \mathit{Tall}) \sqset \mathit{\neg IncomeTaxPayer}$\\
+$\tip (\mathit{Student} \mint \mathit{Worker} \mint \mathit{Tall})  \sqset \mathit{IncomeTaxPayer}$ \\
+$\tip (\mathit{Student} \mint Worker \mint Erasmus \mint \mathit{Tall})  \sqset \mathit{\neg IncomeTaxPayer}$
+\end{quote}
+
+\noindent as  $\mathit{Tall}$ is irrelevant with respect to paying income taxes or not. For the same reason, the conclusion about $\mathit{luca}$ being an instance of $\neg IncomeTaxPayer$ or not should not be influenced by adding $\mathit{Tall}(\mathit{luca})$ to the ABox.\\
+
+Hereinafter we introduce a non--monotonic extension for defeasible reasoning in description logics, called $\alctmin$, which is an extension of $\alct$.
+
+%%TODO fine parte da controllare
 
 \newpage
 
@@ -638,8 +739,7 @@ $\mathit{\mathit{greg}}$? We have already mentioned that if the ABox explicitly 
 $$(*)  \ \tip(\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$$
 
 
-\noindent then, in $\alct$, we can conclude
-that
+\noindent then, in $\alct$, we can conclude that
 
 $$\mathit{LunchAtRestaurant(\mathit{greg})}.$$
 
@@ -650,22 +750,21 @@ in $\alct$ we can no longer draw this conclusion, and indeed we
 cannot make any inference about whether $\mathit{greg}$ spends its
 lunch time at a restaurant or not. The limitation here lies in the
 fact that $\alct$ is {\em monotonic}, whereas we would like to
-make a non-monotonic inference. Indeed, we would like to
-non-monotonically assume, in the absence of information to the
+make a non--monotonic inference. Indeed, we would like to
+non--monotonically assume, in the absence of information to the
 contrary, that $\mathit{greg}$ is a typical instance of the
 concept. In general, we would like to infer that individuals are
 typical instances of the concepts they belong to, if this is
 consistent with the KB.
 
-As a difference with respect to $\alct$, $\alctmin$ is {\em non-monotonic}, and it allows to make this kind of inference. Indeed, in $\alctmin$ if (**) is all the information about $\mathit{greg}$ present in the ABox, we can derive that $\mathit{greg}$ is a typical instance of the concept, and from the inclusions above we conclude that $\mathit{LunchAtRestaurant(\mathit{greg})}.$
- We have already mentioned that we obtain this non-monotonic behaviour by restricting our attention to the  minimal $\alct$ models. As a difference with respect to $\alct$,
+As a difference with respect to $\alct$, $\alctmin$ is {\em non--monotonic}, and it allows to make this kind of inference. Indeed, in $\alctmin$ if (**) is all the information about $\mathit{greg}$ present in the ABox, we can derive that $\mathit{greg}$ is a typical instance of the concept, and from the inclusions above we conclude that $\mathit{LunchAtRestaurant(\mathit{greg})}.$
+ We have already mentioned that we obtain this non--monotonic behaviour by restricting our attention to the  minimal $\alct$ models. As a difference with respect to $\alct$,
  in order to determine what is entailed by  a given knowledge base KB, we do not consider {\em all} models of KB but only the {\em minimal} ones. These are the models that minimize the number of atypical instances of  concepts.
 
 Given a KB, we consider a finite set $\ellet$ of concepts
 occurring in the KB: these are the concepts for which we want to
 minimize the atypical instances.
-%Our purpose is that of maximizing the typicality of all
-%instances of the concepts in $\ellet$,
+
 The minimization of the set of atypical instances will apply to
 individuals explicitly occurring in the ABox as well as to
 implicit individuals. We assume that the set $\ellet$ contains at
@@ -676,12 +775,6 @@ instances of these concepts will be minimized but no extra
 properties will be inferred for the typical instances of the
 concepts, since the KB does not say anything about these
 instances.
-
-% individuals implicitly defined in the KB.
-
-%The preference relation among models, informally, allows a model
-%$\emme$ to be preferred to a model $\enne$, when $\emme$ contains
-%more typical instances of the concepts in {\cal C} than $\enne$.
 
 We have seen that $(\tip(C))^I =(C \sqcap \bbox \neg C)^I$: $x$ is
 a typical instance  of a concept $C$ ($x \in (\tip(C))^I$) when it
@@ -695,8 +788,6 @@ $\tip(C)$. We have adopted this solution since it allows to
 maximize the set of typical instances of $C$ without affecting the
 extension $C^I$ of $C$ (whereas maximizing the extension of
 $\tip(C)$  would imply maximizing also the extension of $C$).
-
-%for those $C \in \ellet$.
 
 We define the set $\emme^{\bbox^-}_{\ellet}$ of negated boxed
 formulas holding in a model, relative to the concepts in
@@ -749,7 +840,7 @@ $\models_{min}^{\ellet} F$.
 \end{definition}
 
 
-\noindent The non-monotonic character of $\alctmin$ also allows to deal with the following examples.
+\noindent The non--monotonic character of $\alctmin$ also allows to deal with the following examples.
 
 \vspace{0.5cm}
 
@@ -761,7 +852,7 @@ $$\mbox{KB} \ = \{ \tip(\mathit{Athlete}) \sqset
 \mathit{Finnish}(\mathit{john})\}$$ and ${\ellet}=
 \{\mathit{Athlete}, \mathit{Finnish}\}$. We have $$\mbox{KB} \
 \models_{min}^{\ellet} \mathit{Confident}(\mathit{john})$$
-%If we restrict our attention to minimal models, we derive $T(i)$.
+
 Indeed, there is no minimal model of KB that contains a non typical instance of some concept (indeed in all minimal models of KB the relation $<$ is empty).
 Hence $\mathit{john}$ is an instance of $\tip(\mathit{Athlete})$
 (it can be easily verified that any model in which $\mathit{john}$
@@ -828,12 +919,6 @@ C$ than the corresponding candidate model. The whole procedure
 $\nuovoc$ is formally defined at the end of this section
 (Definition \ref{def processo}).
 
-
-
-
-% COMMENTARE IL FATTO CHE ABBIAMO ANCHE LE FORMULE PER LA RELAZIONE DI PREFERENZA
-% COMMENTARE SEPARATAMENTE I DUE SOTTO-CALCOLI, CON I DETTAGLI TECNICI (IN \SECONDO
-% NON ABBIAMO COPPIE, MA TRIPLE CON PREF_B, CHE VA DEFINITO)
 
 $\nuovoc$ is based on the notion of a \emph{constraint system}. We
 consider a set of \emph{variables} drawn from a denumerable set
@@ -1041,8 +1126,6 @@ Definition \ref{modello constraint}.
 
 \subsection{The tableau calculus $\secondo$}
 
-%In order to present the tableau calculus $\secondo$, we need some definitions:
-%
 Let us now introduce the calculus $\secondo$ which, for each open
 branch {\bf B} built by $\primo$,  verifies if $\emme^{\bf B}$ is
 a minimal model of the KB.  \hide{We define: need some
@@ -1067,11 +1150,6 @@ occurring in {\bf B}.}
 \noindent  A tableau of $\secondo$ is a tree whose
 nodes are triples of the form $\sx S \tc U \tc K \dx$, where $\sx S \tc U \dx$ is a constraint system, whereas $K$ contains formulas
 of the form $x: \nott \bbox \nott C$, with $C \in \ellet$.
-%For
-%each open branch {\bf B} built by $\primo$, representing a
-%candidate model of KB, $\secondo$ verifies whether it is minimal.
-
-
 
 
 \begin{figure}[t]
@@ -1191,8 +1269,9 @@ in $\textsc{co-NExp}^\textsc{NP}$.
 
 
 
-\section{Background}
-\section{Logics}
+\section{Background work}
+
+
 \section{Implementation}
 
 \subsection{Architecture}
