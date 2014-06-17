@@ -470,7 +470,7 @@ and $aRb$ where $C \in \elle$ is an extended concept, $R \in
 
 
 
-In order to provide a semantics to the operator $\tip$, we extend the definition of a model used in ``standard''
+In order to provide a semantics to the operator $\tip$, we extend the definition of a model used in ``standard'' terminological logic $\alc$:
 
 \begin{definition}[Semantics of $\tip$ with selection function]\label{Semantics
 with f_tip} A model is any structure $\langle \Delta, I, f_\tip \rangle$
@@ -1260,7 +1260,7 @@ We provide an upper bound on the complexity of the
 procedure for computing the minimal entailment KB
 $\models_{min}^{\ellet} F$:
 
-\begin{theorem}[Complexity of $\nuovoc$]\label{overall complexity}
+\begin{theorem}[Complexity of $\nuovoc$]\label{overall_complexity}
 The problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is
 in $\textsc{co-NExp}^\textsc{NP}$.
 \end{theorem}
@@ -1272,7 +1272,36 @@ in $\textsc{co-NExp}^\textsc{NP}$.
 \section{Background work}
 
 
-\section{Implementation}
+\section{Architectural design}
+
+The main goal of our work is to improve the performances of the previously implemented theorem prover. In the previous implementation, especially when using $\alctmin$, the extremely high complexity of the calculus itself \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.} could delay the result of several minutes even for a medium length query formula.
+Our work is a distributed application for theorem proving. In a distributed environment, we can distribute the computational complexity of the calculus amongst different machines.
+
+%%% two phase calculus
+%%%TODO: check!!!
+$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait the result of the elaboration of a branch by the second phase before launching another one.
+Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine and, in case the branch is not closed (we will call it \emph{parallel branch}), launch the second phase on a different machine.
+Meanwhile, the main machine, instead of waiting termination (as it happens in a non--distributed environment) can consider the \emph{parallel branch} as ``suspended'' and continue with the computation of another branch of the first phase.
+If, during the computation, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed and the computation can continue.
+If a \emph{parallel branch} turns out to be closed, the formula cannot be satisfied, so the computation process is interrupted.
+If the main machine reaches the end of its computation, it has to wait the ``answers'' of the parallel branches.
+If all of them result open then the theorem prover answers \emph{yes} (the query entails from the KB).
+If anyone of them results closed, the answer is \emph{no} (the query does not entail from the KB).
+
+
+%%% worker - employer
+%%%TODO: check!!!
+In order to describe the software architecture that we have developed, we refer to the \emph{worker}---\emph{employer} metaphore.
+
+The \emph{employer} implements the first phase of the calculus, while the \emph{workers} implement the second phase of the calculus.
+Initially, each \emph{worker} registers to the \emph{employer}.
+When, during the computation of the first phase calculus, the \emph{employer} needs to verify a \emph{parallel branch}, it can delegate the second phase calculus to one of the registered \emph{workers}, and consequently carry on with its calculations.
+When a \emph{worker} terminates its execution, reports its result back to the employer.
+The employer, at the end of the first phase, collects all the results and yields the definitive answer (\emph{yes} or \emph{no}).
+
+
+\subsection{Implementation}
+The pre--existing theorem prover is %%TODO: completare
 
 \subsection{Architecture}
 
