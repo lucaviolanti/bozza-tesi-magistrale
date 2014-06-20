@@ -1188,6 +1188,56 @@ In the Prolog implementation, if we had
 $Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:\\
 \begin{center}$[...; [Worker \sqsubseteq TaxPayer; [[adam; 1]; [john; 1]]]; ...]$\end{center}
 
+\subsubsection{Structure}
+The theorem prover is separated into modules to improve code readability and maintainability.
+The modules are defined as follows:
+\begin{itemize}
+\item module \texttt{operators}, contains the operators definition as described previously;
+\item module \texttt{alct1}, is the main module implementing the $\primo$ calculus.
+
+This module exposes the top-level predicate \texttt{prove(S,U,F,Tree)} that is called to start the execution of the proof method;
+\item module \texttt{alct2} implements $\secondo$. It contains the definition of a top level predicate called \texttt{phase2(...)}.
+\item module \texttt{helpers}, contains different support predicates used during proof computation, e.g. example the predicate \texttt{generateLabels(...)} described above.
+\end{itemize}
+The top-level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \texttt{alct1}:
+
+\begin{itemize}
+\item \texttt{S} is the list representing the ABox of our knowledge base;
+\item \texttt{U} is the TBox;
+\item \texttt{F} is the query formula;
+\item \texttt{Tree} is a Prolog term representing the proof tree (the proof tree structure and construction will be discussed in the sequel).
+\end{itemize}
+The first three parameters must be specified by the user, while \texttt{Tree} is an output term.\\
+
+Before starting the proof computation, \texttt{prove(S,U,F,Tree)} negates the query formula \texttt{F} and adds it to the \texttt{S} list, constructs the list of labels and extracts other useful information.
+Once these pieces of information are collected in the internal variables, the ``non--top--level'' \texttt{prove(...)} predicate is called.
+
+This predicate has the following structure:
+
+\begin{center}\texttt{prove(S,U,Lt,Labels,ABox,Tree)}\end{center}
+where
+
+\begin{itemize}
+\item \texttt{U} is the same list as before.
+\item \texttt{S} is the previous list except for the fact that it now contains the formula $\neg F$.
+\item \texttt{Lt} is the list of concept of which we want to minimize the atypical instances.
+\item \texttt{Labels} is the list of labels presented in the previous section.
+\item \texttt{ABox} is the ABox as it is before starting the computation (we keep it since it is necessary in second phase of the calculus).
+\item \texttt{Tree} is the output term representing the proof tree.
+\end{itemize}
+Each rule in the tableaux is associated with a \texttt{prove(...)} predicate that computes that rule and calls itself recursively.
+Let’s consider the example of the rule shown in figure 5.2
+This is how the theorem prover works on such a rule:
+
+
+
+
+
+
+
+
+
+\newpage
 
 \section{Architectural design}\label{arch}
 
@@ -1218,8 +1268,8 @@ The \emph{employer} implements the first phase of the calculus, while the \emph{
 
 Initially, each \emph{worker} registers to the \emph{employer}.
 When, during the computation of the first phase calculus, the \emph{employer} needs to verify a \emph{parallel branch}, it can delegate the second phase calculus to one of the registered \emph{workers}, and consequently carry on with its calculations.
-When a \emph{worker} terminates its execution, reports its result back to the employer.
-The employer, at the end of the first phase, collects all the results and yields the definitive answer (\emph{yes} or \emph{no}).
+When a \emph{worker} terminates its execution, reports its result back to the \emph{employer}.
+The \emph{employer}, at the end of the first phase, collects all the results and yields the definitive answer (\emph{yes} or \emph{no}).
 
 
 \subsection{Implementation}
