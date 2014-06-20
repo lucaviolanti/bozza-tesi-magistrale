@@ -24,6 +24,7 @@
 \usepackage{mdframed}
 \usepackage{graphicx}
 \usepackage{lineno}
+\usepackage{bussproofs}
 %\usepackage{times}
 
 \lstset{
@@ -998,7 +999,7 @@ In this case, the model built by $\secondo$ satisfies the same set of negated bo
 
 %%%[FIXME]INIZIO PEZZO ADAM
 $\secondo$ always terminates.
-Intuitively, termination is ensured by the fact that dynamic rules make use of labels belonging to $\db$, which is finite, rather than introducing “new” labels in the tableau.
+Intuitively, termination is ensured by the fact that dynamic rules make use of labels belonging to $\db$, which is finite, rather than introducing ``new'' labels in the tableau.
 %%%FINE PEZZO ADAM
 
 \begin{definition}\label{def processo}
@@ -1040,22 +1041,158 @@ Theorem proving, with its vast combinatorially explosive search spaces and incre
 
 This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
 
-\subsection{The previous theorem prover: PreDeLo}\label{predelo}
-\emph{PreDeLo} \cite{conf/aiia/GiordanoGJOP13} is a theorem prover for Preferential Description Logics, nonmonotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
+\section{The previous theorem prover: PreDeLo}\label{predelo}
+\emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
 
-\emph{PreDeLo} is a Prolog implementation of labelled tableaux calculi for such extensions, and it is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL $DL-Lite_{core}$.
+The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL $DL-Lite_{core}$.
 
-The Prolog implementation is inspired by the “lean” methodology, whose basic idea is that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
+The Prolog implementation is inspired by the ``lean'' methodology, whose basic idea is that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
 Concerning $\alc$, \emph{PreDeLo} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
-In \cite{conf/aiia/GiordanoGJOP13}, a tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
+
+For a complete description of PreDeLo, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to proving and highlight where we changed the implementation in order to distribute the calculus.
+
+In \cite{conf/aiia/GiordanoGJOP13}, the tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
+
+\subsection{The tableaux calculi's implementation}
+
+\subsubsection{Operators}
+
+This implementation makes use of different operators that have been defined to represent the connectives allowed in $\alctmin$:
+
+\begin{itemize}
+\item negation ($\neg$) is represented by \textbf{neg};
+\item modality ($\Box$) is represented by \textbf{box};
+\item typicality ($\tip$) is represented by \textbf{ti};
+\item universal quantification ($\perogni$) is represented by \textbf{fe};
+\item existential quantification ($\esiste$) is represented by \textbf{ex};
+\item intersection ($\sqcap$) is represented by \textbf{and};
+\item disjunction ($\sqcup$) is represented by \textbf{or};
+\item inclusion ($\sqsubseteq$) is represented by \textbf{inc}.
+\end{itemize}
+
+The operators are listed in decreasing priority order.
+Prolog allows to define operators in prefix, postfix and infix precedence.
+Since roles are binary operators expressed in the form $\esiste r.C$, the direct translation into Prolog code of such a statement should look like
+\begin{verbatim}
+    r ex C
+\end{verbatim}
+Since this notation is not natural, potentially error prone and for sake of code readability, the operator \textbf{in} was introduced.
+The operator \textbf{in} was associated to the highest priority and at the same time the quantifiers were kept as infix operators: it can be seen as an infix operator associated with quantifiers $\perogni$ and $\esiste$.
+Using \textbf{in}, statements like the one mentioned before look like:
+\begin{verbatim}
+    ex r in C
+\end{verbatim}
+
+\subsubsection{Labels}
+Labels are defined as two elements lists, like for example:
+\begin{verbatim}
+    [adam; 1]
+\end{verbatim}
+where the first element represents the individual, while the second is its ``age''.
+Intuitively, if two labels have ages $M$ and $N$, with $M < N$, it means that the label with age $M$ has been introduced before the one with age $N$.
+Furthermore, two labels with the same ``name'' but different ages are considered as different labels.\\
+
+Let us make some examples:
+\begin{itemize}
+\item \texttt{[adam; 1]} and \texttt{[john; 2]} are two different labels where \texttt{[adam; 1]} has been introduced before \texttt{[john; 2]}, so we say that \texttt{[adam; 1]} is older than \texttt{[john; 2]};
+
+\item \texttt{[adam; 1]} and \texttt{[adam; 2]}, despite the same ``name'', are two different labels.
+\end{itemize}
+Resuming, we say that a label is identified by both the name and its age.\\
+
+The aging mechanism was introduced for two reasons.
+First, it allows to easily treat the label generation in the dynamic rules of the calculus.
+Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $\Box^-$ rule).
+As it should be clear, at the beginning all labels have age 1. Dynamic rules like $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels(...)}.
+
+The theorem prover keeps a list of current labels in memory.
+
+When invoked, the predicate \texttt{generateLabels} checks this list and returns a new label using the following logic:
+\begin{itemize}
+\item let $N$ be the highest age value in the labels list, a new age $M = N + 1$ is generated;
+\item label names are generated using letters $x,y,z,i,j,k$;
+\item if all of them are already used, the name (e.g., $x$) is kept while the age is increased (as we said, labels are identified by both name and age).
+\end{itemize}
+So that if we had a list of labels
+\begin{verbatim}
+    [[x; 1]; [y; 1]; [z; 2]]
+\end{verbatim}
+the next label would be
+\begin{verbatim}
+    [i; 3]
+\end{verbatim}
+while if we had a list like
+\begin{verbatim}
+    [[x; 1]; [y; 1]; [z; 2]; [i; 3]; [j; 4]; [k; 5]]
+\end{verbatim}
+the next generated label would be
+\begin{verbatim}
+    [x, 6]
+\end{verbatim}
+
+This mechanism was chosen to keep the labels readable to the final user.
+Generally, if we introduced six new labels, it would mean that the dynamic rules had been called six times and a complex proof tree already exists.
+
+\subsubsection{Formulas}
+As presented in the previous chapters, $\alctmin$ formulas represent concepts associated with individuals or concepts relations.
+More in details, formulas (concepts) with labels (individuals), are the elements that we find in the ABox, while the concepts relations can be found in the TBox.
+We can distinguish between two types of formulas: the label-concept formulas and the role formulas.
+\begin{itemize}
+\item A label-concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a couple (list of two elements):
+\begin{verbatim}
+    [x; F]
+\end{verbatim}
+\item A role formula $x \trans{r} y$, where $x$ and $y$ are labels and $r$ is a role, is represented as a a list of three elements:
+\begin{verbatim}
+    [x; r; y]
+\end{verbatim}
+\item A label-order formula $x < y$, where $x$ and $y$ are labels, is represented as a singleton, where labels are separated by the order relation symbol $<$ as in:
+\begin{verbatim}
+    [x < y]
+\end{verbatim}
+\end{itemize}
+Resuming, a label-concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
+\begin{verbatim}
+    [[x;N]; Student and Worker inc TaxPayer]
+\end{verbatim}
+
+where $N$ is a natural number representing the ``age'' of the formula, which depends on the context.
+In $\alctmin$ a sequent is composed by two lists:
+\begin{itemize}
+\item list $S$ that initially represents the ABox;
+\item list $U$ that initially represents the TBox.
+\end{itemize}
+The list $S$ is composed of label-concept formulas, as the one presented in the last example.
+The list $U$ contains formulas describing relations between concepts, e.g. $Worker \sqsubseteq TaxPayer$.
+
+Each element in list $U$ is associated to another list that contains labels.
+This is because the precondition (see figure \ref{fig_inc_rule}) for applying rule $\sqsubseteq$ (unfold) in the calculus states that a formula can be unfolded on a label, unless it has already been done for that label.
+
+\newpage
+
+\begin{figure}[htp]
+\begin{prooftree}
+\AxiomC{$\langle S,\, x\,:\,C \sqcap D\,|\,U \rangle$}
+\RightLabel{$(\sqcap^+)$}
+\UnaryInfC{$\langle S,\, x\,:\,C \sqcap D,\, \,x\,:\,C,\,x\,:\,D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
+\end{prooftree}
+\begin{flushright}\footnotesize if $\{x : C,\,x : D\} \not\subseteq S$. \normalsize\end{flushright}
+\caption{$\primo$ rule for $\sqsubseteq$ and its precondition}
+\label{fig_inc_rule}
+
+\end{figure}
 
 
 
+In the Prolog implementation, if we had
+$Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:\\
+\begin{center}$[...; [Worker \sqsubseteq TaxPayer; [[adam; 1]; [john; 1]]]; ...]$\end{center}
 
 
 \section{Architectural design}\label{arch}
 
-The main goal of our work is to improve the performances of the previously implemented theorem prover. In the previous implementation, especially when using $\alctmin$, the extremely high complexity of the calculus itself
+The main goal of our work is to improve the performances of the previously implemented theorem prover.
+In the previous implementation, especially when using $\alctmin$, the extremely high complexity of the calculus itself
 \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.}
 could delay the result of several minutes even for a medium length query formula.
 We aim to build a distributed application for theorem proving so that, in a distributed environment, we can spread the computational complexity of the calculus amongst different machines.\\
@@ -1091,11 +1228,11 @@ The employer, at the end of the first phase, collects all the results and yields
 
 
 
-The pre--existing theorem prover is %%TODO: completare
+
 
 \subsection{Architecture}
 
-\subsection{Conclusion}
+\section{Conclusion}
 
 
 %****************************************************
