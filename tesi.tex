@@ -250,7 +250,6 @@ A general description of our design idea will be given in Chapter 7.
 
 \section{Description Logics}\label{dl}
 
-\subsection{Introduction}
 Description Logics are decidable fragments of the first-order logic formalism used to provide semantics to representation structures like frames and networks.
 Each fragment has different features, leading to computational problems of variable complexity: the use of a more simple language (low computational complexity) rather than a more expressive one (high computational complexity) depends on how complex we want the world description to be.
 
@@ -1031,19 +1030,27 @@ The problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\tex
 
 \newpage
 
+\section{Background}\label{bg}
+%%% distributed - parallel
+%%%TODO: check!!!
+With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
 
-\section{The previous theorem prover: \emph{PreDeLo}}\label{predelo} \emph{PreDeLo 1.0} is a theorem prover for Preferential Description Logics.
+Theorem proving, with its vast combinatorially explosive search spaces and increasingly complex and bigger problems, can benefit from these new ways of programming and new technologies\cite{conf/ieeehpcs/SripriyaBS09}.
 
-These are nonmonotonic extensions of standard DLs based on a typicality operator T, which enjoys a preferential semantics.
 
-\emph{PreDeLo 1.0} is a Prolog implementation of labelled tableaux calculi for such extensions, and it is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL $DL-Lite_{core}$.
+This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
+
+\subsection{The previous theorem prover: PreDeLo}\label{predelo}
+\emph{PreDeLo} \cite{conf/aiia/GiordanoGJOP13} is a theorem prover for Preferential Description Logics, nonmonotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
+
+\emph{PreDeLo} is a Prolog implementation of labelled tableaux calculi for such extensions, and it is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL $DL-Lite_{core}$.
 
 The Prolog implementation is inspired by the “lean” methodology, whose basic idea is that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
-Concerning $\alc$, \emph{PreDeLo 1.0} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
-In this paper, we also introduce a tableaux calculus for checking entailment in the rational extension of $\alc$.
+Concerning $\alc$, \emph{PreDeLo} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
+In \cite{conf/aiia/GiordanoGJOP13}, a tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
 
 
-\section{Background work}\label{bg}
+
 
 
 \section{Architectural design}\label{arch}
@@ -1079,14 +1086,7 @@ The employer, at the end of the first phase, collects all the results and yields
 
 
 \subsection{Implementation}
-%%% distributed - parallel
-%%%TODO: check!!!
-With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
 
-Theorem proving, with its vast combinatorially explosive search spaces and increasingly complex and bigger problems, can benefit from these new ways of programming and new technologies.
-Also, such new approaches can open up fresh ways of thinking about the problem and the various algorithms used to tackle them.
-
-This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
 
 
 
