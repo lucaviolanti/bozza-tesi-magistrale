@@ -221,16 +221,17 @@ In chapter
 
 \ref{arch}\\
 
-In our implementation we used SICStus Prolog and for this reason we dedicate Chapter 2 to analyse its fundamental concepts.
-The Prolog engine of our application was the first component to be developed. In Chapter 5 we will describe in details the implementations and their structures explaining what considerations driven our choices.
-The theorem prover’s functionalities are accessible through a graphical user interface (GUI) that has been developed in the Java programming language.
-These functionalities are described in detail in Chapter 6.
-We will also provide a brief explanation of how Java and Prolog are interconnected and work together.
-Finally, we will describe what are the possible future improvements.
-Our main idea is to deploy the theorem prover in a distributed environment.
-Since we often have to deal with high complexity calculi, grid computing could offer a solution for distributing such complexity on different computing resources.
-Different approaches for distributed Prolog implementations already exists and they are described in literature.
-A general description of our design idea will be given in Chapter 7.
+%In our implementation we used SICStus Prolog and for this reason we dedicate chapter 2 to analyse its fundamental concepts.
+%The Prolog engine of our application was the first component to be developed.
+%In chapter 5 we will describe in details the implementations and their structures explaining what considerations driven our choices.
+%The theorem prover’s functionalities are accessible through a graphical user interface (GUI) that has been developed in the Java programming language.
+%These functionalities are described in detail in chapter 6.
+%We will also provide a brief explanation of how Java and Prolog are interconnected and work together.
+%Finally, we will describe what are the possible future improvements.
+%Our main idea is to deploy the theorem prover in a distributed environment.
+%Since we often have to deal with high complexity calculi, grid computing could offer a solution for distributing such complexity on different computing resources.
+%Different approaches for distributed Prolog implementations already exists and they are described in literature.
+%A general description of our design idea will be given in chapter 7.
 
 
 %[TODO] completare introduzione
@@ -1171,15 +1172,14 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 \newpage
 
 \begin{figure}[htp]
-\begin{prooftree}
-\AxiomC{$\langle S,\, x\,:\,C \sqcap D\,|\,U \rangle$}
-\RightLabel{$(\sqcap^+)$}
-\UnaryInfC{$\langle S,\, x\,:\,C \sqcap D,\, \,x\,:\,C,\,x\,:\,D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
-\end{prooftree}
-\begin{flushright}\footnotesize if $\{x : C,\,x : D\} \not\subseteq S$. \normalsize\end{flushright}
-\caption{$\primo$ rule for $\sqsubseteq$ and its precondition}
-\label{fig_inc_rule}
-
+	\begin{prooftree}
+		\AxiomC{$\langle S,\, x\,:\,C \sqcap D\,|\,U \rangle$}
+		\RightLabel{$(\sqcap^+)$}
+		\UnaryInfC{$\langle S,\, x\,:\,C \sqcap D,\, \,x\,:\,C,\,x\,:\,D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
+	\end{prooftree}
+	\begin{flushright}\footnotesize if $\{x : C,\,x : D\} \not\subseteq S$. \normalsize\end{flushright}
+	\caption{$\primo$ rule for $\sqsubseteq$ and its precondition.}
+	\label{fig_inc_rule}
 \end{figure}
 
 
@@ -1226,18 +1226,106 @@ where
 \item \texttt{Tree} is the output term representing the proof tree.
 \end{itemize}
 Each rule in the tableaux is associated with a \texttt{prove(...)} predicate that computes that rule and calls itself recursively.
-Let’s consider the example of the rule shown in figure 5.2
+Let’s consider the example of the rule shown in figure \ref{fig_union_rule}.
+
+\begin{figure}[htp]
+	\begin{prooftree}
+		\rootAtTop
+		\AxiomC{$\langle S,\, x : C,\,x\,: C \sqcup D\,|\,U \rangle$}
+		\AxiomC{$\langle S,\, x : D,\,x\,: C \sqcup D\,|\,U \rangle$}
+		\RightLabel{$(\sqcup^+)$}
+		\BinaryInfC{$\langle S,\, x\,: C\sqcup D\,|\,U \rangle$}
+	\end{prooftree}
+	\begin{flushright}if $x : C \notin S$ and $x : D \notin S$.\\\end{flushright}
+	\caption{$\primo$ rule for $\sqcup^+$ and its precondition.}
+	\label{fig_union_rule}
+\end{figure}
+
 This is how the theorem prover works on such a rule:
 
+\begin{itemize}
+\item First checks if list S contains a formula $x : C \sqcup D$;
+\item If no, it skips the rule and try another one.
+\item If yes, checks the precondition specified in figure \ref{fig_union_rule}
+\item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub-tree.
+\end{itemize}
 
+This is how the Prolog code looks like:
 
+\begin{lstlisting}[caption={alct1.pl}, label={lst:zaino}, firstnumber=184]
+/* or + */
+prove(S,U,Lt,Labels,F,ABox,NL) :-
+member([X,C or D],S),
+n +(member([X,C],S)),
+n +(member([X,D],S)),
+(* build the lists for the left and right sub-trees *)
+prove(S11,U,Lt,Labels,F,ABox,NL1),
+prove(S22,U,Lt,Labels,F,ABox,NL1).
+\end{lstlisting}
 
+There is a small difference between how static and dynamic rules are implemented.
+Static rules always introduce at most two branches in the proof tree (like in the previous example).
+This is not true for dynamic rules where the number of branches varies depending on the number of labels present in the tree.
+Figure \ref{fig_box_rule} shows an example.
 
+\begin{figure}[htp]
+\footnotesize
+\begin{prooftree}
+	\rootAtTop
+	\def\defaultHypSeparation{\hskip .02in}
+	\AxiomC{$\langle S, x : \neg \Box \neg C, y < x, y : C, y : \Box \neg C, S^M_{x\rightarrow y}|U \rangle$}
+	\AxiomC{$\langle S, x : \neg \Box \neg C, v_1 < x, v_1 : C, v_1 : \Box \neg C, S^M_{x\rightarrow {v_1}}|U \rangle\,\dots$}
+	\RightLabel{$(\Box^-)$}
+	\BinaryInfC{$\langle S,\, x : \neg \Box \neg C\,|\,U \rangle$}
+\end{prooftree}
 
-
-
+\begin{flushright} with $y$ fresh,\\
+if $\not\exists z \prec x$ s.t. $z \equiv_{S,x:\neg \Box \neg C} x $ and $ \not\exists u$ t.c. $\{u < x, u : C, u : \neg \Box \neg C, S^M_{x\rightarrow u} \} \subseteq S$\\
+$\forall v_i$ occurring in $S$.
+\normalsize
+\end{flushright}
+	\caption{$\primo$ rule for $\Box^-$ and its precondition.}
+	\label{fig_box_rule}
+\end{figure}
 
 \newpage
+
+An additional support predicate for each dynamic rule was introduced to manage the variable number of recursive calls, called \texttt{proveRecBox(...)}.\\
+
+As described in chapter \ref{tab}, the calculus is composed of two phases.
+The first phase is implemented in the Prolog module \texttt{alct1} and can be started invoking predicate \texttt{prove(S,U,F,Tree)}. The Prolog interpreter, then proceeds trying to apply rules of the first phase (corresponding to $\primo$) until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied).
+
+In this case, phase two calculus must be undertaken for the open branch.
+Implementation $\secondo$ is coded in module \texttt{alct2} which exposes the \texttt{prove\_phase2(...)} predicate.
+
+\newpage
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \section{Architectural design}\label{arch}
 
