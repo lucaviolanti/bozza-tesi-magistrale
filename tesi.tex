@@ -162,7 +162,7 @@
 \textsc{\Large Tesi di Laurea Magistrale}\\[2cm]
 
 \HRule \\[0.4cm]
-{ \huge \bfseries Thesis title}\\[0.2cm]
+{ \huge \bfseries DysToPic: a Distributed Theorem Prover for non--monotonic Description Logics}\\[0.2cm]
 \HRule \\[3cm]
 
 % Authors
@@ -183,6 +183,11 @@ Luca Violanti}
 
 %[TODO] scrivere l'abstract
 \section*{Abstract}
+In this work we present a distributed theorem prover for a non-monotonic Description Logic called $\alct$.
+The logic is an extension of the Description Logic ALC, adding a typicality operator $\tip$, which allows to define concepts such as $\textbf{T}(C)$, i.e. selecting the "most typical" or "most normal" instances of the concept $C$. This allows the knowledge bases to contain subsumption relations (e.g. "$\textbf{T}(C) \sqsubseteq D$" - the typical members of $C$ are instances of the concept $D$). Moreover, the use of a "minimal model" semantics (i.e. models that maximise typical instances of concepts), allows new forms of non-monotonic reasoning on prototypical properties and defeasible inheritance.
+Expanding a pre--existing sequential software, the application is based on a SICStus Prolog implementation of the tableaux calculi $\nuovoc$, wrapped by a Java interface which relies on the Java RMI APIs for the distribution.
+The system is designed for scalability and based on a "worker/employer" paradigm: the computational burden for the "employer" can be spread among an arbitrarily high number of "workers" which operate in complete autonomy, so that they can be either deployed on a single machine or on a computer grid.
+
 
 \newpage
 
