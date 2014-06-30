@@ -26,7 +26,13 @@
 \usepackage{lineno}
 \usepackage{bussproofs}
 \usepackage{multicol}
+\usepackage{titlesec}
 %\usepackage{times}
+
+\titleformat{\subsection}
+  {\normalfont\bfseries}{\thesubsubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\fontsize{10}{12}\bfseries}{\thesubsubsection}{1em}{}
 
 \lstset{
 	language=bash,
@@ -1062,7 +1068,7 @@ The core of the software is a Prolog implementation of labelled tableaux calculi
 The Prolog implementation is inspired by the ``lean'' methodology, whose basic idea is that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
 Concerning $\alc$, \emph{PreDeLo} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
 
-For a complete description of PreDeLo, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to proving and highlight where we changed the implementation in order to distribute the calculus.
+For a complete description of \emph{PreDeLo}, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to proving and highlight where we changed the implementation in order to distribute the calculus.
 
 In \cite{conf/aiia/GiordanoGJOP13}, the tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
 
@@ -1085,19 +1091,19 @@ This implementation makes use of different operators that have been defined to r
 
 The operators are listed in decreasing priority order.
 Prolog allows to define operators in prefix, postfix and infix precedence.
-Since roles are binary operators expressed in the form $\esiste r.C$, the direct translation into Prolog code of such a statement should look like
+Since roles are binary operators expressed in the form $\esiste r.C$, the direct translation into Prolog code of such a statement would be syntactically represented as:
 \begin{verbatim}
     r ex C
 \end{verbatim}
-Since this notation is not natural, potentially error prone and for sake of code readability, the operator \textbf{in} was introduced.
+Since this notation is not natural, potentially error prone and also for the sake of code readability, the operator \textbf{in} was introduced.
 The operator \textbf{in} was associated to the highest priority and at the same time the quantifiers were kept as infix operators: it can be seen as an infix operator associated with quantifiers $\perogni$ and $\esiste$.
-Using \textbf{in}, statements like the one mentioned before look like:
+Using \textbf{in}, statements like the one mentioned before are syntactically represented as:
 \begin{verbatim}
     ex r in C
 \end{verbatim}
 
 \subsubsection{Labels}
-Labels are defined as two elements lists, like for example:
+Labels are defined as two elements lists, e.g.:
 \begin{verbatim}
     [adam; 1]
 \end{verbatim}
@@ -1256,13 +1262,13 @@ Let’s consider the example of the rule shown in figure \ref{fig_union_rule}.
 This is how the theorem prover works on such a rule:
 
 \begin{itemize}
-\item First checks if list S contains a formula $x : C \sqcup D$;
-\item If no, it skips the rule and try another one.
-\item If yes, checks the precondition specified in figure \ref{fig_union_rule}
+\item First, it checks if the list S contains a formula $x : C \sqcup D$;
+\item If the answer is no, it skips the rule and tries another one;
+\item If the answer is yes, it checks the precondition specified in figure \ref{fig_union_rule};
 \item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub--tree.
 \end{itemize}
 
-This is how the Prolog code looks like:
+This is translated in the following Prolog code:
 
 \begin{lstlisting}[caption={alct1.pl}, label={lst:zaino}, firstnumber=184]
 /* or + */
@@ -1305,10 +1311,10 @@ $\forall v_i$ occurring in $S$.
 An additional support predicate for each dynamic rule was introduced to manage the variable number of recursive calls, called \texttt{proveRecBox(...)}.\\
 
 As described in chapter \ref{tab}, the calculus is composed of two phases.
-The first phase is implemented in the Prolog module \texttt{alct1} and can be started invoking predicate \texttt{prove(S,U,F,Tree)}. The Prolog interpreter, then proceeds trying to apply rules of the first phase (corresponding to $\primo$) until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied).
+The first phase is implemented in the Prolog module \texttt{alct1} and can be started invoking the predicate \texttt{prove(S,U,F,Tree)}. The Prolog interpreter then proceeds trying to apply rules of the first phase (corresponding to $\primo$), until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied).
 
 In this case, phase two calculus must be undertaken for the open branch.
-Implementation $\secondo$ is coded in module \texttt{alct2} which exposes the \texttt{prove\_phase2(...)} predicate.
+The implementation of $\secondo$ is coded in the module \texttt{alct2}, which exposes the \texttt{prove\_phase2(...)} predicate.
 
 \newpage
 
