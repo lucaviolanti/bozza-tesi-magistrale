@@ -30,7 +30,8 @@
 %\usepackage{times}
 
 \titleformat{\subsection}
-  {\normalfont\bfseries}{\thesubsubsection}{1em}{}
+  {\normalfont\bfseries}
+{\thesubsection}{1em}{}
 \titleformat{\subsubsection}
   {\normalfont\fontsize{10}{12}\bfseries}{\thesubsubsection}{1em}{}
   
@@ -1026,12 +1027,13 @@ Let KB be a knowledge base whose corresponding constraint system is $\sx S \tc U
 The calculus $\nuovoc$ checks whether a query $F$ can be minimally entailed from a \emph{KB} by means of the following procedure:
 \begin{itemize}
 \item the calculus $\primo$ is applied to $\sx S' \tc U \dx$;
-\item if, for each branch {\bf B} built by $\primo$, either:
-	\subitem{ (i) {\bf B} is closed or}
+\item \textbf{if}, for each branch {\bf B} built by $\primo$, either:
+	\subitem{ (i) {\bf B} is closed;}
 	\subitem(ii) {the tableau built by the calculus $\secondo$ for $\sx S \tc U \tc {\bf
-B}^{\bbox^{-}} \dx$ is open, }
-\item[] then the procedure says \textsc{YES}
-\item[] else the procedure says \textsc{NO}
+B}^{\bbox^{-}} \dx$ is open;
+
+\verb$    $\textbf{then} the procedure answers \emph{yes};}
+\item[] \textbf{else} the procedure answers \emph{no}.
 \end{itemize}
 \end{definition}
 
@@ -1358,12 +1360,12 @@ We aim to build a distributed application for theorem proving so that, in a dist
 
 %%% two phase calculus
 %%%TODO: check!!!
-$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait the result of the elaboration of a branch by the second phase before launching another one instance.
+$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait for the result of one elaboration of a branch by the second phase before launching another  instance.
 Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine and, in case the branch is not closed (we will call it \emph{parallel branch}), launch every second phase on a different machine.
 Meanwhile, the main machine, instead of waiting for the termination (as it would happen in a sequential program), can consider the \emph{parallel branch} as ``suspended'' and continue with the computation of another branch of the first phase.
-If, during the computation, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed and the computation can continue.
-If a \emph{parallel branch} turns out to be closed, the formula cannot be satisfied, so the computation process is interrupted.
-If the main machine reaches the end of its computation, it doesn't have to wait the ``answers'' of the parallel branches in every case:
+If, during the computation of the first phase, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed and the computation can continue.
+If a \emph{parallel branch} turns out to be closed, the formula cannot be satisfied, so the computation process can be interrupted early.
+If the first phase reaches the end of its computation, it doesn't have to wait the ``answers'' of the parallel branches in every case:
 \begin{itemize}
 \item if all of them remain open (i.e. all the parallel branches answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the KB);
 \item if any of them is closed (i.e. any parallel branch answers \emph{no}), the answer is \emph{no} (which means the query does not entail from the KB).
@@ -1371,12 +1373,15 @@ If the main machine reaches the end of its computation, it doesn't have to wait 
 
 %%% worker - employer
 %%%TODO: check!!!
-\subsection{Worker-employer}
+\subsection{Worker-employer}\label{workemp}
 
-In order to describe the software architecture that we have developed, we refer to the \emph{worker}-\emph{employer} metaphore.
+In order to describe the software architecture that we have developed, we refer to the \emph{worker}-\emph{employer} metaphor.
 
-The \emph{employer} implements the first phase of the calculus, while the \emph{workers} implement the second phase of the calculus.
-
+The system is composed of:
+\begin{itemize}
+\item a single \emph{employer}, which is in charge of launching the query and yielding the final result. It implements the first phase of the calculus;
+\item an unlimited number of \emph{workers}, which implement the second phase of the calculus.
+\end{itemize}
 Initially, each \emph{worker} registers to the \emph{employer}.
 
 When presented with a query, the employer begins to analyse it through the first phase calculus.
@@ -1386,16 +1391,66 @@ When a \emph{worker} terminates its execution, it reports its result back to the
 
 The \emph{employer}, at the end of its first phase, waits for the answers from the \emph{workers} and finally yields the definitive answer (\emph{yes} or \emph{no}).
 
+\newpage
+
+\subsection{Technologies used}
+
+%%%%%%%%%%%% SICSTUS %%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Calculus implementation - SICStus Prolog}
+
+Prolog is a simple but powerful programming language developed at the University of Marseille, as a practical tool for programming in logic. From a user's point of view the major attraction of the language is ease of programming. Clear, readable, concise programs can be written quickly with few errors.\\
+
+SICStus is a Prolog system developed at the Swedish Institute of Computer Science. Parts of the system were developed by the project “Industrialization of SICStus Prolog” in collaboration with Ericsson Telecom AB, NobelTech Systems AB, Infologics AB and Televerket\cite{sicstus_intro}.\\
+
+Both the employer and the worker nodes of our system rely on Prolog for their internal computing core: the former implements
+
+%%%%%%%%%%%% JASPER %%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Interface between Prolog and Java - Jasper}\label{ssec_jasper}
+
+Jasper is a bi-directional interface between Java and SICStus. The Java-side of the interface consists of a Java package (\verb$se.sics.jasper$) containing classes representing the SICStus runtime system (\verb$SICStus$, \verb$SPTerm$, etc). The Prolog part is designed as a library module (\verb$library(jasper)$).
+
+The library module \verb$library(jasper)$  provides functionality for controlling the loading and unloading the JVM (Java Virtual Machine), method call functionality (\verb$jasper_call/4$), and predicates for managing object references.\\
+
+Jasper can be used in two modes, depending on which system acts as \emph{parent application}.
+\begin{itemize}
+\item If Java is the parent application, the SICStus runtime kernel will be loaded into the JVM using the \verb$System.loadLibrary()$ method (this is done indirectly when instantiating a SICStus object). In this mode, SICStus is loaded as a runtime system.
+
+\item If SICStus is the parent application, Java will be loaded as a foreign resource using the query \verb$use_module(library(jasper))$. The Java engine is initialized using \verb$jasper_initialize/[1,2]$\cite{sicstus_jasper}.
+\end{itemize}
+
+Our implementation uses both these modes with the purpose of decoupling the two phases of the calculus.
+
+%%%%%%%%%%%% CONCURRENCY %%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Concurrency - Java threads}
+Parallel computing is a form of computation in which many calculations are carried out simultaneously, operating on the principle that large problems can often be divided into smaller ones, which are then solved concurrently ("in parallel")\cite{Almasi:1989:HPC:160438}.\\
+
+The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.\\
+
+%FIXME
+Concurrency is the main goal of our implementation, since we want the first phase of the calculus to be independent from the second.
+
+Java natively supports concurrency via multithreading.
+
+%%%%%%%%%%%% RMI %%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{System distribution - Java RMI}
+
+The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection.\cite{wiki_rmi}
+
+It enables to create distributed Java technology-based to Java technology-based applications, in which the methods of remote Java objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.\\
+
+%FIXME
+As stated in \ref{ssec_jasper}, since the implementation relies on a Java interface to Prolog, it was natural to design also the distribution feature around Java APIs\footnote{With Java versions before Java 5.0 developers had to compile RMI stubs in a separate compilation step using \texttt{rmic}. Version 5.0 of Java and beyond no longer require this step.}.
+
 
 \subsection{Implementation}
 
-In order to 
-
-
-
-
-
-\subsection{Architecture}
+As described in section \ref{workemp}, we developed our application around a \emph{worker-employer} metaphor.
+This corresponds
+%FIXME
 
 \section{Conclusion}
 
