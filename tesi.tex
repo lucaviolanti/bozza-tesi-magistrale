@@ -25,6 +25,7 @@
 \usepackage{graphicx}
 \usepackage{lineno}
 \usepackage{bussproofs}
+\usepackage{multicol}
 %\usepackage{times}
 
 \lstset{
@@ -159,18 +160,26 @@
 \end{figure}
 
 \textsc{\LARGE Università degli studi di Torino}\\[2cm]
-\textsc{\Large Tesi di Laurea Magistrale}\\[2cm]
+\textsc{\Large Tesi di Laurea Magistrale}\\[3cm]
+
 
 \HRule \\[0.4cm]
 { \huge \bfseries DysToPic: a Distributed Theorem Prover for non--monotonic Description Logics}\\[0.2cm]
 \HRule \\[3cm]
 
+\vfill
+
 % Authors
+\begin{multicols}{2}
 \begin{flushleft}
-{\Large
-Candidato:\\[0.5cm]
-Luca Violanti}
+	{\Large Candidato: Luca Violanti}
 \end{flushleft}
+\columnbreak
+\begin{flushright}
+	{\Large Relatore: Gian Luca Pozzato\\[0.5cm]
+	Controrelatore: Alberto Martelli }
+\end{flushright}
+\end{multicols}
 
 \end{center}
 \end{titlepage}
@@ -180,14 +189,12 @@ Luca Violanti}
 %*****************  ABSTRACT  ***********************
 %****************************************************
 
-
-%[TODO] scrivere l'abstract
 \section*{Abstract}
-In this work we present a distributed theorem prover for a non-monotonic Description Logic called $\alct$.
-The logic is an extension of the Description Logic ALC, adding a typicality operator $\tip$, which allows to define concepts such as $\textbf{T}(C)$, i.e. selecting the "most typical" or "most normal" instances of the concept $C$. This allows the knowledge bases to contain subsumption relations (e.g. "$\textbf{T}(C) \sqsubseteq D$" - the typical members of $C$ are instances of the concept $D$). Moreover, the use of a "minimal model" semantics (i.e. models that maximise typical instances of concepts), allows new forms of non-monotonic reasoning on prototypical properties and defeasible inheritance.
-Expanding a pre--existing sequential software, the application is based on a SICStus Prolog implementation of the tableaux calculi $\nuovoc$, wrapped by a Java interface which relies on the Java RMI APIs for the distribution.
-The system is designed for scalability and based on a "worker/employer" paradigm: the computational burden for the "employer" can be spread among an arbitrarily high number of "workers" which operate in complete autonomy, so that they can be either deployed on a single machine or on a computer grid.
 
+In this work we present a distributed theorem prover for a non--monotonic Description Logic called $\alct$.
+The logic is an extension of the Description Logic $\alc$, adding a typicality operator $\tip$, which allows to define concepts such as $\tip(C)$, i.e. selecting the "most typical" or "most normal" instances of the concept $C$. This allows the knowledge bases to contain subsumption relations (e.g. $T(C) \sqsubseteq D$ - the typical members of $C$ are instances of the concept $D$). Moreover, the use of a "minimal model" semantics (i.e. models that maximise typical instances of concepts), allows new forms of non--monotonic reasoning on prototypical properties and defeasible inheritance.
+Expanding a pre--existing sequential software, the application is based on a \emph{SICStus Prolog} implementation of the tableaux calculi $\nuovoc$, wrapped by a Java interface which relies on the Java RMI APIs for the distribution.
+The system is designed for scalability and based on a "worker/employer" paradigm: the computational burden for the "employer" can be spread among an arbitrarily high number of "workers" which operate in complete autonomy, so that they can be either deployed on a single machine or on a computer grid.
 
 \newpage
 
@@ -295,12 +302,12 @@ For example, choosing computer components in order to build a home PC is a relat
 When the number, the type, and the connectivity of the components grow, the configuration task can become rather complex.
 In particular, computer configuration has been among the application fields of the first Expert Systems and can thus be viewed as a standard application domain for knowledgebased systems.
 Configuration tasks arise in many industrial domains, such as telecommunications, the automotive industry, building construction, etc.
-DL-based knowledge representation systems meet the requirements for the development of configuration applications.
-In particular, they enable the object-oriented modelling of system components, which combines powerfully with the ability to reason from incomplete specifications and to automatically detect inconsistencies.
+DL--based knowledge representation systems meet the requirements for the development of configuration applications.
+In particular, they enable the object--oriented modelling of system components, which combines powerfully with the ability to reason from incomplete specifications and to automatically detect inconsistencies.
 Using Description Logics one can exploit the ability to classify the components and organize them within a taxonomy.\\
 
 \textbf{Medicine.} Medicine is also a domain where Expert Systems have been developed since the 1980’s, in particular in the field of decision support for medical diagnosis. One focus has been on the construction and maintenance of very large ontologies of medical knowledge, the subject of some large government initiatives.
-In order to cope with the scalability of the knowledge base, the DL language adopted in these applications is often limited to a few basic constructs and the knowledge base turns out to be rather shallow, that is to say the taxonomy does not have very many levels of sub-concepts below the top concepts.\\
+In order to cope with the scalability of the knowledge base, the DL language adopted in these applications is often limited to a few basic constructs and the knowledge base turns out to be rather shallow, that is to say the taxonomy does not have very many levels of sub--concepts below the top concepts.\\
 
 \textbf{Data mining.} Description Logics have also been used in data mining applications, where their inferences can help the process of analysing large amounts of data.
 In this kind of application, DL structures can represent views, and DL systems can be used to store and classify such views. The classification mechanism can help in discovering interesting classes of items in the data
@@ -309,7 +316,7 @@ In this kind of application, DL structures can represent views, and DL systems c
 \newpage
 
 \subsection{Basic Description Logics}
-As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic-based semantics.
+As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic--based semantics.
 Another distinguished feature is the emphasis on reasoning as a central service: reasoning allows one to infer implicitly represented knowledge from the knowledge that is explicitly contained in the knowledge base.
 Description Logics support inference patterns that occur in many applications of intelligent information processing systems, and which are also used by humans to structure and understand the world: classification of concepts and individuals.
 Classification of concepts determines subconcept/superconcept relationships (called subsumption relationships in DL) between the concepts of a given terminology, and thus allows one to structure the terminology in the form of a subsumption hierarchy.
@@ -320,7 +327,7 @@ The implementation of reasoning services requires building procedures that shoul
 Decidability and complexity of the inference problems depend on the expressive power of the DL at hand.
 On the one hand, very expressive DLs are likely to have inference problems of high complexity.
 On the other hand, very weak DLs (with efficient reasoning procedures) may not be sufficiently expressive to represent the important concepts of a given application.
-Investigating this trade-off between the expressivity of DLs and the complexity of their reasoning problems is one of the most important issues in DL research
+Investigating this trade--off between the expressivity of DLs and the complexity of their reasoning problems is one of the most important issues in DL research
 \cite{Baader:2003:BDL:885746.885749}.
 
 
@@ -350,7 +357,7 @@ Concept descriptions in $\al$ are formed according to the following syntax rule:
 \end{itemize}
 
 
-In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non-empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$. The
+In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$. The
 interpretation function is extended to concept descriptions by the following
 inductive definitions:
 
@@ -550,7 +557,7 @@ In \cite{FI09}, it is shown that one can give an equivalent, alternative semanti
 The idea is that there is a global, irreflexive and transitive relation among individuals and that the typical members of a concept $C$ (i.e., those selected by $f_\tip(C^I)$) are the minimal elements of $C$ with respect to this relation.
 Observe that this notion is \emph{global}, that is to say, it does not compare individuals with respect to a specific concept.
 For this reason,  we cannot express the fact that $y$ is more typical than $x$ with respect to concept $C$, whereas $x$ is more typical than $y$ with respect to another concept $D$.
-All what we can say is that either $x$ is incomparable with $y$ or $x$ is more typical than $y$ or $y$ is more typical than $x$.
+All we can say is that either $x$ is incomparable with $y$ or $x$ is more typical than $y$ or $y$ is more typical than $x$.
 In this framework, an element $x \in \Delta$ is a {\em typical instance} of some concept $C$ if $x \in C^I$ and there is no $C$-element in $\Delta$ {\em more typical} than $x$.
 The typicality preference relation is partial since it is not always possible to establish given two element which one of the two is more typical.
 Following KLM, the preference relation also satisfies a \emph{Smoothness Condition}, which is related to the well known \emph{Limit Assumption} in Conditional Logics \cite{Nute80}
@@ -793,7 +800,7 @@ The above fact  is  a consequence of the \emph{finite model property} of the log
 In this section we present a tableau calculus for deciding whether a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
 We introduce a labelled tableau calculus  called $\nuovoc$, which extends the calculus $\calcolo$ presented in \cite{FI09}, and allows to reason about minimal models.
 
-$\nuovoc$ performs a two-phase computation in order to check whether a query $F$ is minimally entailed from the initial KB.
+$\nuovoc$ performs a two--phase computation in order to check whether a query $F$ is minimally entailed from the initial KB.
 In particular, the procedure tries to build an open branch representing a minimal model satisfying KB $\unione \ \{\nott F\}$.
 
 \noindent In the first phase, a tableau calculus, called $\primo$, simply verifies whether KB $ \unione \ \{\nott F\}$ is satisfiable in an $\alct$ model, building candidate models.
@@ -1142,9 +1149,9 @@ Generally, if we introduced six new labels, it would mean that the dynamic rules
 \subsubsection{Formulas}
 As presented in the previous chapters, $\alctmin$ formulas represent concepts associated with individuals or concepts relations.
 More in details, formulas (concepts) with labels (individuals), are the elements that we find in the ABox, while the concepts relations can be found in the TBox.
-We can distinguish between two types of formulas: the label-concept formulas and the role formulas.
+We can distinguish between two types of formulas: the label--concept formulas and the role formulas.
 \begin{itemize}
-\item A label-concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a couple (list of two elements):
+\item A label--concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a couple (list of two elements):
 \begin{verbatim}
     [x; F]
 \end{verbatim}
@@ -1152,12 +1159,12 @@ We can distinguish between two types of formulas: the label-concept formulas and
 \begin{verbatim}
     [x; r; y]
 \end{verbatim}
-\item A label-order formula $x < y$, where $x$ and $y$ are labels, is represented as a singleton, where labels are separated by the order relation symbol $<$ as in:
+\item A label--order formula $x < y$, where $x$ and $y$ are labels, is represented as a singleton, where labels are separated by the order relation symbol $<$ as in:
 \begin{verbatim}
     [x < y]
 \end{verbatim}
 \end{itemize}
-Resuming, a label-concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
+Resuming, a label--concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
 \begin{verbatim}
     [[x;N]; Student and Worker inc TaxPayer]
 \end{verbatim}
@@ -1168,7 +1175,7 @@ In $\alctmin$ a sequent is composed by two lists:
 \item list $S$ that initially represents the ABox;
 \item list $U$ that initially represents the TBox.
 \end{itemize}
-The list $S$ is composed of label-concept formulas, as the one presented in the last example.
+The list $S$ is composed of label--concept formulas, as the one presented in the last example.
 The list $U$ contains formulas describing relations between concepts, e.g. $Worker \sqsubseteq TaxPayer$.
 
 Each element in list $U$ is associated to another list that contains labels.
@@ -1200,11 +1207,11 @@ The modules are defined as follows:
 \item module \texttt{operators}, contains the operators definition as described previously;
 \item module \texttt{alct1}, is the main module implementing the $\primo$ calculus.
 
-This module exposes the top-level predicate \texttt{prove(S,U,F,Tree)} that is called to start the execution of the proof method;
+This module exposes the top--level predicate \texttt{prove(S,U,F,Tree)} that is called to start the execution of the proof method;
 \item module \texttt{alct2} implements $\secondo$. It contains the definition of a top level predicate called \texttt{phase2(...)}.
 \item module \texttt{helpers}, contains different support predicates used during proof computation, e.g. example the predicate \texttt{generateLabels(...)} described above.
 \end{itemize}
-The top-level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \texttt{alct1}:
+The top--level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \texttt{alct1}:
 
 \begin{itemize}
 \item \texttt{S} is the list representing the ABox of our knowledge base;
@@ -1252,7 +1259,7 @@ This is how the theorem prover works on such a rule:
 \item First checks if list S contains a formula $x : C \sqcup D$;
 \item If no, it skips the rule and try another one.
 \item If yes, checks the precondition specified in figure \ref{fig_union_rule}
-\item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub-tree.
+\item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub--tree.
 \end{itemize}
 
 This is how the Prolog code looks like:
