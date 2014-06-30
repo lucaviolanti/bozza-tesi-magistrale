@@ -33,7 +33,7 @@
   {\normalfont\bfseries}{\thesubsubsection}{1em}{}
 \titleformat{\subsubsection}
   {\normalfont\fontsize{10}{12}\bfseries}{\thesubsubsection}{1em}{}
-
+  
 \lstset{
 	language=bash,
 	basicstyle=\small\ttfamily,
@@ -1113,24 +1113,24 @@ Furthermore, two labels with the same ``name'' but different ages are considered
 
 Let us make some examples:
 \begin{itemize}
-\item \texttt{[adam; 1]} and \texttt{[john; 2]} are two different labels where \texttt{[adam; 1]} has been introduced before \texttt{[john; 2]}, so we say that \texttt{[adam; 1]} is older than \texttt{[john; 2]};
+\item \texttt{[adam; 1]} and \texttt{[john; 2]} are two different labels where \texttt{[adam; 1]} has been introduced before \texttt{[john; 2]}, so that we can state that \texttt{[adam; 1]} is ``older'' than \texttt{[john; 2]};
 
 \item \texttt{[adam; 1]} and \texttt{[adam; 2]}, despite the same ``name'', are two different labels.
 \end{itemize}
-Resuming, we say that a label is identified by both the name and its age.\\
+Resuming, we say that a label is identified by both its name and its age.\\
 
-The aging mechanism was introduced for two reasons.
+The ageing mechanism was introduced for two reasons.
 First, it allows to easily treat the label generation in the dynamic rules of the calculus.
 Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $\Box^-$ rule).
-As it should be clear, at the beginning all labels have age 1. Dynamic rules like $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels(...)}.
+As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels(...)}.
 
 The theorem prover keeps a list of current labels in memory.
 
-When invoked, the predicate \texttt{generateLabels} checks this list and returns a new label using the following logic:
+When invoked, the predicate \texttt{generateLabels()} checks this list and returns a new label using the following logic:
 \begin{itemize}
-\item let $N$ be the highest age value in the labels list, a new age $M = N + 1$ is generated;
+\item let $N$ be the highest age value in the labels list; a new age $M = N + 1$ is generated;
 \item label names are generated using letters $x,y,z,i,j,k$;
-\item if all of them are already used, the name (e.g., $x$) is kept while the age is increased (as we said, labels are identified by both name and age).
+\item in case all of them were already used, the name (e.g., $x$) is kept, while the age is increased (as we said, labels are identified by both name and age).
 \end{itemize}
 So that if we had a list of labels
 \begin{verbatim}
@@ -1157,11 +1157,11 @@ As presented in the previous chapters, $\alctmin$ formulas represent concepts as
 More in details, formulas (concepts) with labels (individuals), are the elements that we find in the ABox, while the concepts relations can be found in the TBox.
 We can distinguish between two types of formulas: the label--concept formulas and the role formulas.
 \begin{itemize}
-\item A label--concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a couple (list of two elements):
+\item A label--concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a list of two elements:
 \begin{verbatim}
     [x; F]
 \end{verbatim}
-\item A role formula $x \trans{r} y$, where $x$ and $y$ are labels and $r$ is a role, is represented as a a list of three elements:
+\item A role formula $x \trans{r} y$, where $x$ and $y$ are labels and $r$ is a role, is represented as a list of three elements:
 \begin{verbatim}
     [x; r; y]
 \end{verbatim}
@@ -1172,14 +1172,14 @@ We can distinguish between two types of formulas: the label--concept formulas an
 \end{itemize}
 Resuming, a label--concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
 \begin{verbatim}
-    [[x;N]; Student and Worker inc TaxPayer]
+[[x;N]; Student and Worker inc TaxPayer]
 \end{verbatim}
 
 where $N$ is a natural number representing the ``age'' of the formula, which depends on the context.
 In $\alctmin$ a sequent is composed by two lists:
 \begin{itemize}
-\item list $S$ that initially represents the ABox;
-\item list $U$ that initially represents the TBox.
+\item the list $S$ that initially represents the ABox;
+\item the list $U$ that initially represents the TBox.
 \end{itemize}
 The list $S$ is composed of label--concept formulas, as the one presented in the last example.
 The list $U$ contains formulas describing relations between concepts, e.g. $Worker \sqsubseteq TaxPayer$.
@@ -1203,19 +1203,19 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 
 
 In the Prolog implementation, if we had
-$Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:\\
-\begin{center}$[...; [Worker \sqsubseteq TaxPayer; [[adam; 1]; [john; 1]]]; ...]$\end{center}
+$Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on the labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:
+\begin{verbatim}[...; [Worker \sqsubseteq TaxPayer; [[adam; 1]; [john; 1]]]; ...]\end{verbatim}
 
 \subsubsection{Structure}
 The theorem prover is separated into modules to improve code readability and maintainability.
 The modules are defined as follows:
 \begin{itemize}
-\item module \texttt{operators}, contains the operators definition as described previously;
-\item module \texttt{alct1}, is the main module implementing the $\primo$ calculus.
+\item the module \texttt{operators}, which contains the definition of the operators, as described previously;
+\item the module \texttt{alct1}, which is the main module, implementing the $\primo$ calculus.
 
 This module exposes the top--level predicate \texttt{prove(S,U,F,Tree)} that is called to start the execution of the proof method;
-\item module \texttt{alct2} implements $\secondo$. It contains the definition of a top level predicate called \texttt{phase2(...)}.
-\item module \texttt{helpers}, contains different support predicates used during proof computation, e.g. example the predicate \texttt{generateLabels(...)} described above.
+\item the module \texttt{alct2}, which implements $\secondo$.\\It contains the definition of a top level predicate called \texttt{phase2(...)}.
+\item the module \texttt{helpers}, which contains different support predicates used during proof computation, e.g. the predicate \texttt{generateLabels(...)} described above.
 \end{itemize}
 The top--level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \texttt{alct1}:
 
@@ -1227,7 +1227,7 @@ The top--level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \t
 \end{itemize}
 The first three parameters must be specified by the user, while \texttt{Tree} is an output term.\\
 
-Before starting the proof computation, \texttt{prove(S,U,F,Tree)} negates the query formula \texttt{F} and adds it to the \texttt{S} list, constructs the list of labels and extracts other useful information.
+Before starting the proof computation, \texttt{prove(S,U,F,Tree)} negates the query formula \texttt{F} and adds it to the \texttt{S} list, constructs the list of labels and extracts further useful information.
 Once these pieces of information are collected in the internal variables, the ``non--top--level'' \texttt{prove(...)} predicate is called.
 
 This predicate has the following structure:
@@ -1244,7 +1244,7 @@ where
 \item \texttt{Tree} is the output term representing the proof tree.
 \end{itemize}
 Each rule in the tableaux is associated with a \texttt{prove(...)} predicate that computes that rule and calls itself recursively.
-Let’s consider the example of the rule shown in figure \ref{fig_union_rule}.
+Let us consider the example of the rule shown in figure \ref{fig_union_rule}.
 
 \begin{figure}[htp]
 	\begin{prooftree}
@@ -1263,8 +1263,8 @@ This is how the theorem prover works on such a rule:
 
 \begin{itemize}
 \item First, it checks if the list S contains a formula $x : C \sqcup D$;
-\item If the answer is no, it skips the rule and tries another one;
-\item If the answer is yes, it checks the precondition specified in figure \ref{fig_union_rule};
+\item If the answer is \emph{no}, it skips the rule and tries another one;
+\item If the answer is \emph{yes}, it checks the precondition specified in figure \ref{fig_union_rule};
 \item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub--tree.
 \end{itemize}
 
@@ -1311,9 +1311,12 @@ $\forall v_i$ occurring in $S$.
 An additional support predicate for each dynamic rule was introduced to manage the variable number of recursive calls, called \texttt{proveRecBox(...)}.\\
 
 As described in chapter \ref{tab}, the calculus is composed of two phases.
-The first phase is implemented in the Prolog module \texttt{alct1} and can be started invoking the predicate \texttt{prove(S,U,F,Tree)}. The Prolog interpreter then proceeds trying to apply rules of the first phase (corresponding to $\primo$), until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied).
 
-In this case, phase two calculus must be undertaken for the open branch.
+The first phase is implemented in the Prolog module \texttt{alct1} and can be started invoking the predicate \texttt{prove(S,U,F,Tree)}.
+
+The Prolog interpreter then proceeds trying to apply rules of the first phase (corresponding to $\primo$), until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied). 
+In this case, the second phase calculus must be undertaken for the open branch.
+
 The implementation of $\secondo$ is coded in the module \texttt{alct2}, which exposes the \texttt{prove\_phase2(...)} predicate.
 
 \newpage
@@ -1355,32 +1358,38 @@ We aim to build a distributed application for theorem proving so that, in a dist
 
 %%% two phase calculus
 %%%TODO: check!!!
-$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait the result of the elaboration of a branch by the second phase before launching another one.
-Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine and, in case the branch is not closed (we will call it \emph{parallel branch}), launch the second phase on a different machine.
-Meanwhile, the main machine, instead of waiting termination (as it happens in a non--distributed environment) can consider the \emph{parallel branch} as ``suspended'' and continue with the computation of another branch of the first phase.
+$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait the result of the elaboration of a branch by the second phase before launching another one instance.
+Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine and, in case the branch is not closed (we will call it \emph{parallel branch}), launch every second phase on a different machine.
+Meanwhile, the main machine, instead of waiting for the termination (as it would happen in a sequential program), can consider the \emph{parallel branch} as ``suspended'' and continue with the computation of another branch of the first phase.
 If, during the computation, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed and the computation can continue.
 If a \emph{parallel branch} turns out to be closed, the formula cannot be satisfied, so the computation process is interrupted.
-If the main machine reaches the end of its computation, it has to wait the ``answers'' of the parallel branches:
+If the main machine reaches the end of its computation, it doesn't have to wait the ``answers'' of the parallel branches in every case:
 \begin{itemize}
-\item if all of them result as open then the theorem prover answers \emph{yes} (which means the query entails from the KB);
-\item if any of them results as closed, the answer is \emph{no} (which means the query does not entail from the KB).
+\item if all of them remain open (i.e. all the parallel branches answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the KB);
+\item if any of them is closed (i.e. any parallel branch answers \emph{no}), the answer is \emph{no} (which means the query does not entail from the KB).
 \end{itemize}
 
 %%% worker - employer
 %%%TODO: check!!!
-In order to describe the software architecture that we have developed, we refer to the \emph{worker}---\emph{employer} metaphore.
+\subsection{Worker-employer}
+
+In order to describe the software architecture that we have developed, we refer to the \emph{worker}-\emph{employer} metaphore.
 
 The \emph{employer} implements the first phase of the calculus, while the \emph{workers} implement the second phase of the calculus.
 
 Initially, each \emph{worker} registers to the \emph{employer}.
-When, during the computation of the first phase calculus, the \emph{employer} needs to verify a \emph{parallel branch}, it can delegate the second phase calculus to one of the registered \emph{workers}, and consequently carry on with its calculations.
-When a \emph{worker} terminates its execution, reports its result back to the \emph{employer}.
-The \emph{employer}, at the end of the first phase, collects all the results and yields the definitive answer (\emph{yes} or \emph{no}).
+
+When presented with a query, the employer begins to analyse it through the first phase calculus.
+If, during the computation of the first phase calculus, the \emph{employer} needs to verify a \emph{parallel branch} via the second phase calculus, it delegates it to one of the registered \emph{workers}, and consequently proceeds with its calculations on other branches.
+
+When a \emph{worker} terminates its execution, it reports its result back to the \emph{employer}.
+
+The \emph{employer}, at the end of its first phase, waits for the answers from the \emph{workers} and finally yields the definitive answer (\emph{yes} or \emph{no}).
 
 
 \subsection{Implementation}
 
-
+In order to 
 
 
 
