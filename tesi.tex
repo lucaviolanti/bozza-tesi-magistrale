@@ -224,14 +224,13 @@ In this thesis we present the design and implementation of a distributed theorem
 Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
 DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science are in the field of bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic extension of DLs.
 
-In chapter \ref{dl} we introduce the Description Logics and briefly describe some proposals for non--monotonic extensions, while in chapter \ref{dlt} we describe the non--monotonic logic $alctmin$.\\
+In chapter \ref{dl} we introduce the Description Logics and briefly describe some proposals for non--monotonic extensions, while in chapter \ref{dlt} we describe the non--monotonic logic $\alctmin$.
 
-Our implementation is based on the tableaux proof method that is a mechanism that allows to demonstrate the validity of a formula in a given logical system.
+Our implementation is based on the tableaux proof method, which is a mechanism that allows to demonstrate the validity of a formula in a given logical system.
 The tableaux calculus allows us to conclude that a formula is valid (or not) just by applying the tableaux computation rules, i.e., without appealing to the semantics.
 Proof methods can be implemented in many different programming languages, but logic programming languages offer a better solution since in this paradigm we make use of mathematical logic for computer programming.
-Logic programming in the first and wider sense gave rise to a large number of implementations. Foster and Elcock’s Absys (1969), was probably the first language to be explicitly developed as an assertional programming language. Logic programming in the narrower sense can be traced back to debates in the late 1960s and early 1970s about declarative versus procedural representations of knowledge in Artificial Intelligence.
 
-In chapter \ref{tab} we introduce the tableaux calculus for $\alctmin$, which is at the base of our theorem prover\ref{arch}.\\
+In chapter \ref{tab} we introduce the tableaux calculus for $\alctmin$, which is at the base of our theorem prover\ref{arch}.
 
 Since our work is an expansion of a previous theorem prover called PreDeLo, chapter \ref{predelo} is dedicated to its description. In chapter \ref{bg} we 
 
@@ -272,7 +271,7 @@ In chapter
 \section{Description Logics}\label{dl}
 
 Description Logics are decidable fragments of the first-order logic formalism used to provide semantics to representation structures like frames and networks.
-Each fragment has different features, leading to computational problems of variable complexity: the use of a more simple language (low computational complexity) rather than a more expressive one (high computational complexity) depends on how complex we want the world description to be.
+Each fragment has different features, leading to computational problems of variable complexity: the use of a simpler language (which comes with lower computational complexity) rather than a more expressive one (high computational complexity) depends on how complex we want our world's description to be.
 
 
 \begin{figure}[htp]
@@ -284,8 +283,8 @@ Each fragment has different features, leading to computational problems of varia
 
 Typically, nodes are used to characterize concepts, i.e., sets of individuals, and links are used to characterize relationships among them.
 Concepts can have simple properties, which are typically attached to the corresponding nodes.
-It is rather simple to make a correspondence between network structures and Description Logics because the latter are equipped with unary predicates representing sets of individuals, binary predicates representing relationships among them and a mechanism of inclusion statements to express concept properties.
-Indeed, we can represent concept properties with the inclusion statement $Carnivore \sqsubseteq Animal$ and we can express the following facts about an individual $lion$: 
+It is rather simple to make a correspondence between network structures and Description Logics because the latter are equipped with unary predicates representing sets of individuals, binary predicates representing relationships among them, and a mechanism of inclusion statements to express concept properties.
+Indeed, we can represent concept properties with the inclusion statement $Carnivore \sqsubseteq Animal$, and we can express the following facts about an individual $lion$: 
 
 \begin{itemize}
 	\item $Carnivore(lion)$
@@ -307,11 +306,12 @@ Description Logics are used in the implementation of many systems that demonstra
 The main goal of this discipline is finding a proper set of components that can be suitably connected in order to implement a system that meets a given specification.
 For example, choosing computer components in order to build a home PC is a relatively simple configuration task.
 When the number, the type, and the connectivity of the components grow, the configuration task can become rather complex.
-In particular, computer configuration has been among the application fields of the first Expert Systems and can thus be viewed as a standard application domain for knowledgebased systems.
+In particular, computer configuration has been among the application fields of the first Expert Systems and can thus be viewed as a standard application domain for knowledge based systems.
+
 Configuration tasks arise in many industrial domains, such as telecommunications, the automotive industry, building construction, etc.
 DL--based knowledge representation systems meet the requirements for the development of configuration applications.
 In particular, they enable the object--oriented modelling of system components, which combines powerfully with the ability to reason from incomplete specifications and to automatically detect inconsistencies.
-Using Description Logics one can exploit the ability to classify the components and organize them within a taxonomy.\\
+Using Description Logics, one can exploit the ability to classify the components and organize them within a taxonomy.\\
 
 \textbf{Medicine.} Medicine is also a domain where Expert Systems have been developed since the 1980’s, in particular in the field of decision support for medical diagnosis. One focus has been on the construction and maintenance of very large ontologies of medical knowledge, the subject of some large government initiatives.
 In order to cope with the scalability of the knowledge base, the DL language adopted in these applications is often limited to a few basic constructs and the knowledge base turns out to be rather shallow, that is to say the taxonomy does not have very many levels of sub--concepts below the top concepts.\\
@@ -350,7 +350,7 @@ Complex descriptions can be built from them inductively with concept constructor
 In abstract notation, we use the letters $A$ and $B$ for atomic concepts, the letter $R$ for atomic roles, and the letters $C$ and $D$ for concept descriptions.
 In the sequel we present the language $\al$ that has been introduced in \cite{Schmidt-SchaubB:1991:ACD:114341.114342} as a minimal language that is of practical interest. The other languages of this family are extensions of $\al$.
 
-Concept descriptions in $\al$ are formed according to the following syntax rule:\\
+Concept descriptions in $\al$ are formed according to the following syntax rule:
 
 \begin{itemize}
 \item[] $C, D \imp$
@@ -364,8 +364,9 @@ Concept descriptions in $\al$ are formed according to the following syntax rule:
 \end{itemize}
 
 
-In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$. The
-interpretation function is extended to concept descriptions by the following
+In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$.
+
+The interpretation function is extended to concept descriptions by the following
 inductive definitions:
 
 \begin{itemize}
@@ -973,7 +974,7 @@ Given a constraint system $\sx S \tc U \dx$ and two labels $x$ and $y$ occurring
 
 
 
-\subsection{The tableau calculus $\secondo$}
+\subsection{The tableau calculus $\secondo$}\label{tableau_ph2}
 
 Let us now introduce the calculus $\secondo$ which, for each open branch {\bf B} built by $\primo$,  verifies if $\emme^{\bf B}$ is a minimal model of the KB.  \hide{We define: need some definitions:}
 
@@ -1056,7 +1057,6 @@ The problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\tex
 %%% distributed - parallel
 %%%TODO: check!!!
 With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
-
 Theorem proving, with its vast combinatorially explosive search spaces and increasingly complex and bigger problems, can benefit from these new ways of programming and new technologies\cite{conf/ieeehpcs/SripriyaBS09}.
 
 
@@ -1065,9 +1065,9 @@ This work investigates the application of a concurrent/collaborative approach to
 \section{The previous theorem prover: PreDeLo}\label{predelo}
 \emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
 
-The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL $DL-Lite_{core}$.
+The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL called $DL-Lite_{core}$.
 
-The Prolog implementation is inspired by the ``lean'' methodology, whose basic idea is that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
+The Prolog implementation is inspired by the ``lean'' methodology, with the idea that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
 Concerning $\alc$, \emph{PreDeLo} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
 
 For a complete description of \emph{PreDeLo}, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to proving and highlight where we changed the implementation in order to distribute the calculus.
@@ -1107,7 +1107,7 @@ Using \textbf{in}, statements like the one mentioned before are syntactically re
 \subsubsection{Labels}
 Labels are defined as two elements lists, e.g.:
 \begin{verbatim}
-    [adam; 1]
+    [adam, 1]
 \end{verbatim}
 where the first element represents the individual, while the second is its ``age''.
 Intuitively, if two labels have ages $M$ and $N$, with $M < N$, it means that the label with age $M$ has been introduced before the one with age $N$.
@@ -1115,20 +1115,20 @@ Furthermore, two labels with the same ``name'' but different ages are considered
 
 Let us make some examples:
 \begin{itemize}
-\item \texttt{[adam; 1]} and \texttt{[john; 2]} are two different labels where \texttt{[adam; 1]} has been introduced before \texttt{[john; 2]}, so that we can state that \texttt{[adam; 1]} is ``older'' than \texttt{[john; 2]};
+\item \texttt{[adam, 1]} and \texttt{[john, 2]} are two different labels where \texttt{[adam, 1]} has been introduced before \texttt{[john, 2]}, so that we can state that \texttt{[adam, 1]} is ``older'' than \texttt{[john, 2]};
 
-\item \texttt{[adam; 1]} and \texttt{[adam; 2]}, despite the same ``name'', are two different labels.
+\item \texttt{[adam, 1]} and \texttt{[adam, 2]}, despite the same ``name'', are two different labels.
 \end{itemize}
 Resuming, we say that a label is identified by both its name and its age.\\
 
 The ageing mechanism was introduced for two reasons.
 First, it allows to easily treat the label generation in the dynamic rules of the calculus.
 Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $\Box^-$ rule).
-As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels(...)}.
+As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels/3}.
 
 The theorem prover keeps a list of current labels in memory.
 
-When invoked, the predicate \texttt{generateLabels()} checks this list and returns a new label using the following logic:
+When invoked, the predicate \texttt{generateLabels/3} checks this list and returns a new label using the following logic:
 \begin{itemize}
 \item let $N$ be the highest age value in the labels list; a new age $M = N + 1$ is generated;
 \item label names are generated using letters $x,y,z,i,j,k$;
@@ -1136,15 +1136,15 @@ When invoked, the predicate \texttt{generateLabels()} checks this list and retur
 \end{itemize}
 So that if we had a list of labels
 \begin{verbatim}
-    [[x; 1]; [y; 1]; [z; 2]]
+    [[x, 1], [y, 1], [z, 2]]
 \end{verbatim}
 the next label would be
 \begin{verbatim}
-    [i; 3]
+    [i, 3]
 \end{verbatim}
 while if we had a list like
 \begin{verbatim}
-    [[x; 1]; [y; 1]; [z; 2]; [i; 3]; [j; 4]; [k; 5]]
+    [[x, 1], [y, 1], [z, 2], [i, 3], [j, 4], [k, 5]]
 \end{verbatim}
 the next generated label would be
 \begin{verbatim}
@@ -1161,11 +1161,11 @@ We can distinguish between two types of formulas: the label--concept formulas an
 \begin{itemize}
 \item A label--concept formula $x : F$, where $x$ is the label and $F$ the formula, is represented as a list of two elements:
 \begin{verbatim}
-    [x; F]
+    [x, F]
 \end{verbatim}
 \item A role formula $x \trans{r} y$, where $x$ and $y$ are labels and $r$ is a role, is represented as a list of three elements:
 \begin{verbatim}
-    [x; r; y]
+    [x, r, y]
 \end{verbatim}
 \item A label--order formula $x < y$, where $x$ and $y$ are labels, is represented as a singleton, where labels are separated by the order relation symbol $<$ as in:
 \begin{verbatim}
@@ -1174,7 +1174,7 @@ We can distinguish between two types of formulas: the label--concept formulas an
 \end{itemize}
 Resuming, a label--concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
 \begin{verbatim}
-[[x;N]; Student and Worker inc TaxPayer]
+[[x,N], Student and Worker inc TaxPayer]
 \end{verbatim}
 
 where $N$ is a natural number representing the ``age'' of the formula, which depends on the context.
@@ -1206,7 +1206,7 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 
 In the Prolog implementation, if we had
 $Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on the labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:
-\begin{verbatim}[...; [Worker \sqsubseteq TaxPayer; [[adam; 1]; [john; 1]]]; ...]\end{verbatim}
+\begin{verbatim}[..., [Worker inc TaxPayer, [[adam, 1], [john, 1]]], ...]\end{verbatim}
 
 \subsubsection{Structure}
 The theorem prover is separated into modules to improve code readability and maintainability.
@@ -1355,20 +1355,32 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 The main goal of our work is to improve the performances of the previously implemented theorem prover.
 In the previous implementation, especially when using $\alctmin$, the extremely high complexity of the calculus itself
 \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.}
-could delay the result of several minutes even for a medium length query formula.
-We aim to build a distributed application for theorem proving so that, in a distributed environment, we can spread the computational complexity of the calculus amongst different machines.\\
+could delay the result of several minutes even for a query formula of medium length.
+We aim to build a distributed application for theorem proving so that it can spread its computational burden amongst different machines which can work in parallel.
 
-%%% two phase calculus
+\subsection{A two--phase calculus}\label{calc_2ph}
+
 %%%TODO: check!!!
-$\nuovoc$ is designed as a two--phase calculus so, intuitively, there is no need for the first phase of the calculus to wait for the result of one elaboration of a branch by the second phase before launching another  instance.
-Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine and, in case the branch is not closed (we will call it \emph{parallel branch}), launch every second phase on a different machine.
-Meanwhile, the main machine, instead of waiting for the termination (as it would happen in a sequential program), can consider the \emph{parallel branch} as ``suspended'' and continue with the computation of another branch of the first phase.
-If, during the computation of the first phase, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed and the computation can continue.
-If a \emph{parallel branch} turns out to be closed, the formula cannot be satisfied, so the computation process can be interrupted early.
-If the first phase reaches the end of its computation, it doesn't have to wait the ``answers'' of the parallel branches in every case:
+$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in each model of the $KB$.\\
+To do so, we try to build a model of $KB \unione \neg F$ (a counterexample). If we fail, then the query entails from the KB, otherwise it does not.\\
+
+The process is designed as a two--phase calculus.
+
+The first phase generates models of the $KB$. The ones in which $F$ holds cannot be counterexamples and so are discarded. A model of the $KB$ in which $F$ does not hold, instead, could be a counterexample: it is considered promising and will be further verified by the second phase of the calculus.
+The second phase, indeed, uses \ref{tableau_ph2}: in order for a model to be a counterexample, it has to be a $minimal$ model of the $KB$.
+This whole process can be seen as the generation and traversal of a tree.
+The first phase generates the branches and uses $\primo$ to accept or refuse them.
+A branch is considered $open$ until it is verified, and if it does not represent a counterexample is called $closed$. The models which, after the first phase, require further verification by $\secondo$ will be processed by the second phase.\\
+
+Intuitively, there is no need for the first phase of the calculus to wait for the result of one elaboration of the second phase on an open branch before generating another branch.
+Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine; every time that a branch remains open after the first phase, we can launch the execution of the second phase for this branch on a different machine.
+Meanwhile, the main machine, instead of waiting for the termination (as it would happen in a sequential program), can consider that branch as ``suspended'' and continue with the computation of the first phase (potentially generating other branches).
+If, during the computation of the second phase, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed.
+If a \emph{parallel branch} turns out to be closed, the whole formula cannot be satisfied (we have therefore found a counterexample), so the computation process can be interrupted early.
+If the first phase reaches the end of its computation (meaning that it has generated every model of the KB), it doesn't have to wait the ``answers'' of the parallel branches in every case:
 \begin{itemize}
-\item if all of them remain open (i.e. all the parallel branches answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the KB);
-\item if any of them is closed (i.e. any parallel branch answers \emph{no}), the answer is \emph{no} (which means the query does not entail from the KB).
+\item if all the branches remain open (i.e. all the parallel branches answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the KB);
+\item if any of them is closed (i.e. any parallel branch answers \emph{no}), the global answer is \emph{no} (which means the query does not entail from the KB).
 \end{itemize}
 
 %%% worker - employer
@@ -1403,7 +1415,7 @@ Prolog is a simple but powerful programming language developed at the University
 
 SICStus is a Prolog system developed at the Swedish Institute of Computer Science. Parts of the system were developed by the project “Industrialization of SICStus Prolog” in collaboration with Ericsson Telecom AB, NobelTech Systems AB, Infologics AB and Televerket\cite{sicstus_intro}.\\
 
-Both the employer and the worker nodes of our system rely on Prolog for their internal computing core: the former implements
+Both the employer and the worker nodes of our system rely on Prolog for their computing core: the former implements the first phase ($\primo$), while the latter implement the second phase of the calculus ($\secondo$).
 
 %%%%%%%%%%%% JASPER %%%%%%%%%%%%%%%%%%%%%
 
@@ -1430,7 +1442,7 @@ Parallel computing is a form of computation in which many calculations are carri
 The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.\\
 
 %FIXME
-Concurrency is the main goal of our implementation, since we want the first phase of the calculus to be independent from the second.
+Concurrency is the main goal of our implementation, since we want the execution of the first phase of the calculus to be independent from the second.
 
 Java natively supports concurrency via multithreading.
 
@@ -1440,7 +1452,7 @@ Java natively supports concurrency via multithreading.
 
 The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection.\cite{wiki_rmi}
 
-It enables to create distributed Java technology-based to Java technology-based applications, in which the methods of remote Java objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.\\
+It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.\\
 
 %FIXME
 As stated in \ref{ssec_jasper}, since the implementation relies on a Java interface to Prolog, it was natural to design also the distribution feature around Java APIs\footnote{With Java versions before Java 5.0 developers had to compile RMI stubs in a separate compilation step using \texttt{rmic}. Version 5.0 of Java and beyond no longer require this step.}.
