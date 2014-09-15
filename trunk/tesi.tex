@@ -1124,11 +1124,11 @@ Resuming, we say that a label is identified by both its name and its age.\\
 The ageing mechanism was introduced for two reasons.
 First, it allows to easily treat the label generation in the dynamic rules of the calculus.
 Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $\Box^-$ rule).
-As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{generateLabels/3}.
+As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{genLabel/3}.
 
 The theorem prover keeps a list of current labels in memory.
 
-When invoked, the predicate \texttt{generateLabels/3} checks this list and returns a new label using the following logic:
+When invoked, the predicate \texttt{genLabel/3} checks this list and returns a new label using the following logic:
 \begin{itemize}
 \item let $N$ be the highest age value in the labels list; a new age $M = N + 1$ is generated;
 \item label names are generated using letters $x,y,z,i,j,k$;
@@ -1173,9 +1173,7 @@ We can distinguish between two types of formulas: the label--concept formulas an
 \end{verbatim}
 \end{itemize}
 Resuming, a label--concept formula as $x : (Student \sqcup Worker) \sqsubseteq TaxPayer$ will be represented as:
-\begin{verbatim}
-[[x,N], Student and Worker inc TaxPayer]
-\end{verbatim}
+\begin{center}\texttt{[[x,N], Student and Worker inc TaxPayer]}\end{center}
 
 where $N$ is a natural number representing the ``age'' of the formula, which depends on the context.
 In $\alctmin$ a sequent is composed by two lists:
@@ -1206,7 +1204,7 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 
 In the Prolog implementation, if we had
 $Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on the labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:
-\begin{verbatim}[..., [Worker inc TaxPayer, [[adam, 1], [john, 1]]], ...]\end{verbatim}
+\begin{center}\texttt{[..., [Worker inc TaxPayer, [[adam, 1], [john, 1]]], ...]}\end{center}
 
 \subsubsection{Structure}
 The theorem prover is separated into modules to improve code readability and maintainability.
@@ -1216,8 +1214,8 @@ The modules are defined as follows:
 \item the module \texttt{alct1}, which is the main module, implementing the $\primo$ calculus.
 
 This module exposes the top--level predicate \texttt{prove(S,U,F,Tree)} that is called to start the execution of the proof method;
-\item the module \texttt{alct2}, which implements $\secondo$.\\It contains the definition of a top level predicate called \texttt{phase2(...)}.
-\item the module \texttt{helpers}, which contains different support predicates used during proof computation, e.g. the predicate \texttt{generateLabels(...)} described above.
+\item the module \texttt{alct2}, which implements $\secondo$.\\It contains the definition of a top level predicate called \texttt{prove\_phase2/6}.
+\item the module \texttt{helpers}, which contains different support predicates used during proof computation, e.g. the predicate \texttt{genLabel/3} described above.
 \end{itemize}
 The top--level predicate \texttt{prove(S,U,F,Tree)} is declared in the module \texttt{alct1}:
 
@@ -1310,7 +1308,7 @@ $\forall v_i$ occurring in $S$.
 
 \newpage
 
-An additional support predicate for each dynamic rule was introduced to manage the variable number of recursive calls, called \texttt{proveRecBox(...)}.\\
+An additional support predicate for each dynamic rule was introduced to manage the variable number of recursive calls, called \texttt{proveRecB/10}.\\
 
 As described in chapter \ref{tab}, the calculus is composed of two phases.
 
@@ -1319,7 +1317,7 @@ The first phase is implemented in the Prolog module \texttt{alct1} and can be st
 The Prolog interpreter then proceeds trying to apply rules of the first phase (corresponding to $\primo$), until the theorem is proved or in case an unclosed branch in the proof tree is found (so that no other rule in phase one can be applied). 
 In this case, the second phase calculus must be undertaken for the open branch.
 
-The implementation of $\secondo$ is coded in the module \texttt{alct2}, which exposes the \texttt{prove\_phase2(...)} predicate.
+The implementation of $\secondo$ is coded in the module \texttt{alct2}, which exposes the \texttt{prove\_phase2/6} predicate.
 
 \newpage
 
@@ -1418,7 +1416,7 @@ Prolog is a simple but powerful programming language developed at the University
 
 SICStus is a Prolog system developed at the Swedish Institute of Computer Science. Parts of the system were developed by the project “Industrialization of SICStus Prolog” in collaboration with Ericsson Telecom AB, NobelTech Systems AB, Infologics AB and Televerket\cite{sicstus_intro}.\\
 
-Both the employer and the worker nodes of our system rely on Prolog for their computing core: the former implements the first phase ($\primo$), while the latter implement the second phase of the calculus ($\secondo$).
+Both the employer and the worker of our system rely on Prolog for their computing cores: \verb$alct1.pl$ and \verb$alct2.pl$. The former implements the first phase ($\primo$), while the latter implements the second phase of the calculus ($\secondo$).
 
 %%%%%%%%%%%% JASPER %%%%%%%%%%%%%%%%%%%%%
 
@@ -1429,25 +1427,32 @@ Jasper is a bi-directional interface between Java and SICStus. The Java-side of 
 The library module \verb$library(jasper)$  provides functionality for controlling the loading and unloading the JVM (Java Virtual Machine), method call functionality (\verb$jasper_call/4$), and predicates for managing object references.\\
 
 Jasper can be used in two modes, depending on which system acts as \emph{parent application}.
-\begin{itemize}
+\begin{enumerate}
 \item If Java is the parent application, the SICStus runtime kernel will be loaded into the JVM using the \verb$System.loadLibrary()$ method (this is done indirectly when instantiating a SICStus object). In this mode, SICStus is loaded as a runtime system.
 
 \item If SICStus is the parent application, Java will be loaded as a foreign resource using the query \verb$use_module(library(jasper))$. The Java engine is initialized using \verb$jasper_initialize/[1,2]$\cite{sicstus_jasper}.
-\end{itemize}
+\end{enumerate}
 
-Our implementation uses both these modes with the purpose of decoupling the two phases of the calculus.
+Our implementation uses both of these modes with the purpose of decoupling the two phases of the calculus.
+
+The \emph{employer} handles the query in \verb$Emplojer.java$, a piece of Java code which presents it to \verb$alct1.pl$, the Prolog core implementing $\primo$ (case 1). Every time that an open branch is generated, \verb$alct1.pl$ calls (case 2) \verb$Phase1RMIStub.java$, another Java code which will send it to the correct \emph{worker}.
+
+The \emph{workers} will then have to process the open branches with $\secondo$, which is implemented in \verb$alct2.pl$. They will do so in \verb$SolverThread.java$ (case 1).
 
 %%%%%%%%%%%% CONCURRENCY %%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Concurrency - Java threads}
-Parallel computing is a form of computation in which many calculations are carried out simultaneously, operating on the principle that large problems can often be divided into smaller ones, which are then solved concurrently ("in parallel")\cite{Almasi:1989:HPC:160438}.\\
+Parallel computing is a form of computation in which many calculations are carried out simultaneously, operating on the principle that large problems can often be divided into smaller ones, which are then solved concurrently (``in parallel'')\cite{Almasi:1989:HPC:160438}.
 
-The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.\\
+The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.
 
 %FIXME
-Concurrency is the main goal of our implementation, since we want the execution of the first phase of the calculus to be independent from the second.
+Concurrency is the main goal of our implementation, since we want the execution of the first phase of the calculus to be independent from the second. Java natively supports concurrency via multithreading.\\
 
-Java natively supports concurrency via multithreading.
+The \emph{employer} uses a separate thread (implemented in \verb$Phase1Thread.java$) to perform the actual invocation of $\primo$ on the query, while its main thread polls the \emph{repository} waiting for termination\footnote{Let us recall the reader that a global termination can be reached when the first counterexample is found, even if not all of the branches have been explored.}.\\
+During $\primo$, every time that the \emph{employer} wants to ask a \emph{worker} to verify a branch (this happens in \verb$Phase1RMIStub.java$), a new thread is spawned (\verb$PrologWorker.java$).\\
+
+The \emph{worker} itself uses threads: its main thread (\verb$Phase2Worker.java$) simply enqueues each request coming from the \emph{employer} (in \verb$Solver.java$) and spawns a new thread, \verb$SolverThread.java$, which performs $\secondo$.
 
 %%%%%%%%%%%% RMI %%%%%%%%%%%%%%%%%%%%%
 
@@ -1455,19 +1460,44 @@ Java natively supports concurrency via multithreading.
 
 The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection.\cite{wiki_rmi}
 
-It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.\\
+It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.
 
 %FIXME
-As stated in \ref{ssec_jasper}, since the implementation relies on a Java interface to Prolog, it was natural to design also the distribution feature around Java APIs\footnote{With Java versions before Java 5.0 developers had to compile RMI stubs in a separate compilation step using \texttt{rmic}. Version 5.0 of Java and beyond no longer require this step.}.
+As stated in \ref{ssec_jasper}, since \emph{DysToPic} relies on a Java interface to Prolog, it was natural to design also the distribution feature around Java APIs\footnote{With Java versions before Java 5.0 developers had to compile RMI stubs in a separate compilation step using \texttt{rmic}. Version 5.0 of Java and beyond no longer require this step.}.\\
 
+The RMI architecture makes use of a \emph{Registry} (\verb$java.rmi.registry.Registry$) that provides methods for storing and retrieving remote object references bound with arbitrary string names.\\
 
-\subsection{Implementation}
+The \emph{repository} (which runs on the same machine as the \emph{employer}) will begin its execution by asking the RMI registry to bind itself (\verb$AnswersRepository.java$) as ``Repository''.
+Due to a limitation in the RMI protocol, we had to make the repository expose a method called \texttt{proxyRebind(String name, Remote stub)}, which binds the Remote object that is supplied to it to the local RMI registry.
+\footnote{This is required since by default one cannot bind a service on a RMI registry which is on a remote machine.}
 
-As described in section \ref{workemp}, we developed our application around a \emph{worker-employer} metaphor.
-This corresponds
-%FIXME
+Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository} and uses \texttt{proxyRebind} bind itself to the RMI registry as ``Worker\#'', where \# is an ascending number.
 
-\section{Conclusion}
+When the \emph{employer} starts, it retrieves the list of all the \emph{workers} which are currently bound to the RMI registry and consults it every time it needs a \emph{worker}.
+
+\section{An example of execution}
+
+The RMI registry is launched on the machine 'A' on port 'x'.
+The repository (AnswersRepository.java) is then executed on the same machine. It binds itself on the RMI registry and goes idle.
+
+Then an arbitrary number of workers (Phase2Worker.java) is launched on an arbitrary number of machines (let's say machines 'B' to 'N') - for instance one worker per CPU\footnote{We chose to use the convention that each worker has a different name, which has to be a string starting with "Worker" (i.e. "Worker1", "Worker2", and so on).}.
+Each worker binds itself (through the proxyRebind() method of AnswersRepository.java) to the RMI registry and then starts its single instance of SolverThread.
+SolverThread.java creates a SICStus object with the code of alct2.pl (which corresponds to $\secondo$) and then waits until a request (Request.java) comes from the employer.
+
+The employer (Emloyer.java) is then started on the machine 'A', and receives from the user a queryString (which contains both the KB and the actual query to be verified). It retrieves a list of each worker bound to the RMI registry and writes it onto a file workersList.txt (it will be necessary for alct1.pl). Then it spawns a new thread (Phase1Thread.java) which creates a SICStus object with the code of alct1.pl (implementing $\primo$) and feeds it the queryString (via Jasper).
+The control passes to the Prolog code, which manipulates the queryString and generates various branches ($\primo$). Some may be closed, others may be open. If every branch is closed, the computation ends affirmatively: the query does entail from the KB. Otherwise, alct1.pl invokes (via Jasper) the method solveViaRMI(String workerName, String query) of Phase1RMIStub.java. The query corresponds to the branch to be verified, while the workerName is extracted from workersList.txt\footnote{This is done FIFO, reading a name from the top of the file, and writing it on the bottom, and allows a simple form of load balancing.}.
+Phase1RMIStub.java's main thread, then spawns a new thread (PrologWorker.java) and increases the counter of the open branches (Counter.java).
+PrologWorker.java is the employer's side stub of a worker, which the employer can use to solve the query, i.e. to ask the worker whether the branch is open or closed.
+Meanwhile, the employer's main thread (just after spawning Phase1Thread.java) enters a loop in which polls the repository until a global answer can be found. This happens when:
+\begin{itemize}
+\item one worker has answered 'false', invalidating the whole entailment (the method tell() returns false) - here the Employer answers 'NO';
+\item all the open branches (counted by Counter.java) have been tested and every worker has answered 'true' (the method tell() still returns false) - here the Employer answers 'YES'.
+\end{itemize}
+Until then, the employer just remains in a busy wait condition.
+
+When the PrologWorker thread of the employer calls solve(String remoteQuery) on a worker, for instance "Worker2", the latter just asks its solver (Solver.java) to enqueue the request.
+The SolverThread, then, will then take the request from the queue and elaborate it through alct2.pl.
+This elaboration yields an answer of the form 'true' or 'false', which is then sent (through the method store(Boolean answer)) to the repository. The SolverThread then restarts its infinite loop and looks for another request that may or may not have come from the employer in the meantime.
 
 
 %****************************************************
