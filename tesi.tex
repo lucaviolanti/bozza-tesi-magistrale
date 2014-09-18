@@ -27,6 +27,7 @@
 \usepackage{bussproofs}
 \usepackage{multicol}
 \usepackage{titlesec}
+\usepackage{slashed}
 %\usepackage{times}
 
 \titleformat{\subsection}
@@ -707,8 +708,8 @@ In general, we would like to infer that individuals are typical instances of the
 As a difference with respect to $\alct$, $\alctmin$ is {\em non--monotonic}, and it allows to make this kind of inference.
 Indeed, in $\alctmin$ if (**) is all the information about $\mathit{greg}$ present in the ABox, we can derive that $\mathit{greg}$ is a typical instance of the concept, and from the inclusions above we conclude that $\mathit{LunchAtRestaurant(\mathit{greg})}.$
 We have already mentioned that we obtain this non--monotonic behaviour by restricting our attention to the  minimal $\alct$ models.
-As a difference with respect to $\alct$, in order to determine what is entailed by  a given knowledge base KB, we do not consider {\em all} models of KB but only the {\em minimal} ones.
-These are the models that minimize the number of atypical instances of  concepts.
+As a difference with respect to $\alct$, in order to determine what is entailed by a given knowledge base KB, we do not consider {\em all} models of KB but only the {\em minimal} ones.
+These are the models that minimize the number of atypical instances of concepts.
 
 Given a KB, we consider a finite set $\ellet$ of concepts occurring in the KB: these are the concepts for which we want to minimize the atypical instances.
 
@@ -808,12 +809,12 @@ The above fact  is  a consequence of the \emph{finite model property} of the log
 In this section we present a tableau calculus for deciding whether a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
 We introduce a labelled tableau calculus  called $\nuovoc$, which extends the calculus $\calcolo$ presented in \cite{FI09}, and allows to reason about minimal models.
 
-$\nuovoc$ performs a two--phase computation in order to check whether a query $F$ is minimally entailed from the initial KB.
-In particular, the procedure tries to build an open branch representing a minimal model satisfying KB $\unione \ \{\nott F\}$.
+$\nuovoc$ performs a two--phase computation in order to check whether a query $F$ is minimally entailed from the initial $KB$.
+In particular, the procedure tries to build an open branch representing a minimal model satisfying $KB \unione \ \{\nott F\}$.
 
-\noindent In the first phase, a tableau calculus, called $\primo$, simply verifies whether KB $ \unione \ \{\nott F\}$ is satisfiable in an $\alct$ model, building candidate models.
-In the second phase another tableau calculus, called $\secondo$, checks whether the candidate models found in the first phase are \emph{minimal} models of KB.
-To this purpose for each open branch of the first phase, $\secondo$ tries to build a ``smaller'' model of KB, i.e. a model whose individuals satisfy less formulas $\nott \bbox \nott C$ than the corresponding candidate model.
+\noindent In the first phase, a tableau calculus, called $\primo$, simply verifies whether $KB \unione \ \{\nott F\}$ is satisfiable in an $\alct$ model, building candidate models.
+In the second phase another tableau calculus, called $\secondo$, checks whether the candidate models found in the first phase are \emph{minimal} models of $KB$.
+To this purpose for each open branch of the first phase, $\secondo$ tries to build a ``smaller'' model of $KB$, i.e. a model whose individuals satisfy less formulas $\nott \bbox \nott C$ than the corresponding candidate model.
 The whole procedure $\nuovoc$ is formally defined at the end of this section (Definition \ref{def processo}).
 
 $\nuovoc$ is based on the notion of a \emph{constraint system}.
@@ -847,7 +848,7 @@ A branch is closed if one of its nodes is an instance of \emph{clash} (either (C
 A tableau is closed if all its branches are closed.
 \end{definition}
 
-\noindent In order to check the satisfiability of a KB, we build the corresponding constraint system $\sx S \tc U \dx$, and we check its satisfiability.
+\noindent In order to check the satisfiability of a $KB$, we build the corresponding constraint system $\sx S \tc U \dx$, and we check its satisfiability.
 
 \begin{definition}[Corresponding constraint system]\label{corresponding constraint system}
 Given a knowledge base \emph{KB}=$($TBox,ABox$)$, we define its \emph{corresponding constraint system} $\sx S \tc U \dx$ as follows:
@@ -882,7 +883,7 @@ and only if its corresponding constraint system $\sx S \tc U \dx$ is satisfiable
 %[TODO] Aggiungere riferimento alla dimostrazione
 
 
-\noindent To verify the satisfiability of KB $\unione \ \{ \nott F\}$, we use $\primo$ to check the satisfiability of the constraint system $\sx S \tc U \dx$ obtained by adding the constraint corresponding to $\nott F$ to $S'$, where $\sx S' \tc U \dx$ is the corresponding constraint system of KB. To this purpose, the rules of the calculus $\primo$ are applied until either a contradiction is generated (\emph{clash}) or a model satisfying $\sx S \tc U \dx$ can be obtained from the resulting constraint system.
+\noindent To verify the satisfiability of $KB \unione \ \{ \nott F\}$, we use $\primo$ to check the satisfiability of the constraint system $\sx S \tc U \dx$ obtained by adding the constraint corresponding to $\nott F$ to $S'$, where $\sx S' \tc U \dx$ is the corresponding constraint system of $KB$. To this purpose, the rules of the calculus $\primo$ are applied until either a contradiction is generated (\emph{clash}) or a model satisfying $\sx S \tc U \dx$ can be obtained from the resulting constraint system.
 As in the calculus proposed in \cite{FI09}, given a node $\sx S \tc U \dx$, for each subsumption $C \sqsubseteq D^L \in U$ and for each label $x$ that appears in the tableau, we add to $S$ the constraint $x: \nott C \unioneq D$: we refer to this mechanism as \emph{subsumption expansion}.
 As mentioned above, each subsumption $C \sqsubseteq D$ is equipped with a list $L$ of labels in which the subsumption has been expanded in the current branch.
 This is needed to avoid multiple expansions of the same subsumption by using the same label, generating infinite branches.
@@ -1001,9 +1002,9 @@ Let us now introduce the calculus $\secondo$ which, for each open branch {\bf B}
 
 
 
-The basic idea of $\secondo$ is as follows. Given an open branch {\bf B} built by $\primo$ and corresponding to a model $\emme^{\bf B}$ of KB $\unione \ \{\nott F\}$, $\secondo$ checks whether $\emme^{\bf B}$ is a minimal model of KB by trying to build a model of KB which is preferred to $\emme^{\bf B}$.
+The basic idea of $\secondo$ is as follows. Given an open branch {\bf B} built by $\primo$ and corresponding to a model $\emme^{\bf B}$ of $KB \unione \ \{\nott F\}$, $\secondo$ checks whether $\emme^{\bf B}$ is a minimal model of $KB$ by trying to build a model of $KB$ which is preferred to $\emme^{\bf B}$.
 \hide{Checking (un)satisfiability of , allows to verify whether the candidate model $\emme^{\bf B}$ is minimal.}
-Starting from $\sx S \tc U \tc$ {\bf B}$^{\bbox^-} \dx$ where $\sx S \tc U \dx$ is the  constraint system corresponding to the initial KB $\secondo$ tries to build an open branch containing  all and only the labels appearing on {\bf B}, i.e. those in $\db$, and containing less negated boxed formulas than {\bf B} does.
+Starting from $\sx S \tc U \tc$ {\bf B}$^{\bbox^-} \dx$ where $\sx S \tc U \dx$ is the  constraint system corresponding to the initial $KB$ $\secondo$ tries to build an open branch containing  all and only the labels appearing on {\bf B}, i.e. those in $\db$, and containing less negated boxed formulas than {\bf B} does.
 To this aim, first the dynamic rules use labels in $\db$ instead of introducing new ones in their conclusions.
 Second the negated boxed formulas used in {\bf B} are stored in  the additional set $K$ of a tableau node, initialized with {\bf B}$^{\bbox^-}$.
 A branch built by $\secondo$ closes if it does not represent a model preferred to the candidate model $\emme^{\bf B}$, and this happens if the branch contains a contradiction (Clash) or it contains at least all the negated boxed formulas contained in {\bf B} ((Clash)$_{\bbox^{-}}$ and (Clash)$_{\vuoto}$).
@@ -1024,7 +1025,7 @@ Intuitively, termination is ensured by the fact that dynamic rules make use of l
 %%%FINE PEZZO ADAM
 
 \begin{definition}\label{def processo}
-Let KB be a knowledge base whose corresponding constraint system is $\sx S \tc U \dx$. Let $F$ be a query and let $S'$ be the set of constraints obtained by adding to $S$ the constraint corresponding to $\nott F$.
+Let $KB$ be a knowledge base whose corresponding constraint system is $\sx S \tc U \dx$. Let $F$ be a query and let $S'$ be the set of constraints obtained by adding to $S$ the constraint corresponding to $\nott F$.
 The calculus $\nuovoc$ checks whether a query $F$ can be minimally entailed from a \emph{KB} by means of the following procedure:
 \begin{itemize}
 \item the calculus $\primo$ is applied to $\sx S' \tc U \dx$;
@@ -1040,13 +1041,13 @@ B}^{\bbox^{-}} \dx$ is open;
 
 \noindent The following theorem shows that the overall procedure is sound and complete.
 
-\begin{theorem}[Soundness and completeness of $\nuovoc$]\label{Soundness e completeness nuovoc} $\nuovoc$ is  a sound and complete decision procedure for verifying if KB $\models_{min}^{\ellet} F$.
+\begin{theorem}[Soundness and completeness of $\nuovoc$]\label{Soundness e completeness nuovoc} $\nuovoc$ is  a sound and complete decision procedure for verifying if $KB \models_{min}^{\ellet} F$.
 \end{theorem}
 
-We provide an upper bound on the complexity of the procedure for computing the minimal entailment KB $\models_{min}^{\ellet} F$:
+We provide an upper bound on the complexity of the procedure for computing the minimal entailment $KB \models_{min}^{\ellet} F$:
 
 \begin{theorem}[Complexity of $\nuovoc$]\label{overall_complexity}
-The problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.
+The problem of deciding whether $KB \models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.
 \end{theorem}
 
 %[TODO] Aggiungere citazione dell'articolo in cui sono contenute le dimostrazioni
@@ -1351,34 +1352,36 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 \section{Architectural design}\label{arch}
 
 The main goal of our work is to improve the performances of the previously implemented theorem prover.
-In the previous implementation, especially when using $\alctmin$, the extremely high complexity of the calculus itself
+In the previous software, especially when using $\alctmin$, the extremely high complexity of the calculus itself
 \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.}
 could delay the result of several minutes even for a query formula of medium length.
-We aim to build a distributed application for theorem proving so that it can spread its computational burden amongst different machines which can work in parallel.
+We aim to build a distributed application for theorem proving, so that it can spread its computational burden amongst different machines which can work in parallel.
 
 \subsection{A two--phase calculus}\label{calc_2ph}
 
 %%%TODO: check!!!
-$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in each model of the $KB$.\\
-To do so, we try to build a model of $KB \unione \neg F$ (a counterexample). If we fail, then the query entails from the KB, otherwise it does not.\\
+$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the models of the $KB$.\\
+To do so, the calculus tries to build a model of $KB \unione \neg F$ (a counterexample). If it fails, then the query entails from the $KB$, otherwise it does not.\\
 
 The process is designed as a two--phase calculus.
 
-The first phase generates models of the $KB$. The ones in which $F$ holds cannot be counterexamples and so are discarded. A model of the $KB$ in which $F$ does not hold, instead, could be a counterexample: it is considered promising and will be further verified by the second phase of the calculus.
-The second phase, indeed, uses \ref{tableau_ph2}: in order for a model to be a counterexample, it has to be a $minimal$ model of the $KB$.
-This whole process can be seen as the generation and traversal of a tree.
-The first phase generates the branches and uses $\primo$ to accept or refuse them.
-A branch is considered $open$ until it is verified, and if it does not represent a counterexample is called $closed$. The models which, after the first phase, require further verification by $\secondo$ will be processed by the second phase.\\
+The first phase generates models of $KB \unione \{\nott F\}$. The ones in which $F$ holds cannot be counterexamples, thus they are discarded. A model $\emme_i$ of $KB \unione \{\nott F\}$ in which $F$ does not hold, instead, could be a counterexample: it is considered promising and will be further verified by the second phase of the calculus.\\
+The second phase, indeed, uses $\secondo$: in order for a model $\emme_i$ of $KB \unione \{\nott F\}$ to be a counterexample of the entailment, it has to be a $minimal$ model of the $KB$. As stated in section \ref{tableau_ph2}, this means that, for each candidate model $\emme_i$, the second phase tries to build a model of the $KB$, $\emme_j^{KB}$, which is preferred to $\emme_i$. If every attempt of the second phase fails (i.e. no $\emme_j^{KB} \prec \emme_i$), then that candidate $\emme_i$ is the minimal model (i.e. the counterexample): this means that $KB \models_{min} F$.
+Conversely, in case even a single $\emme_j^{KB}$ is found to be preferred to an $\emme_i$, that $\emme_i$ cannot be the counterexample.
+If every $\emme_i$ has at least one corresponding $\emme_j^{KB}$ so that $\emme_j^{KB} \prec \emme_i$, then the whole research for a counterexample has failed, which means that $KB \unione \neg F$ has no models, and $KB \models_{min} F$.\\
 
-Intuitively, there is no need for the first phase of the calculus to wait for the result of one elaboration of the second phase on an open branch before generating another branch.
-Indeed, in order to prove whether a query entails from a KB, we can start computing the first phase on a machine; every time that a branch remains open after the first phase, we can launch the execution of the second phase for this branch on a different machine.
-Meanwhile, the main machine, instead of waiting for the termination (as it would happen in a sequential program), can consider that branch as ``suspended'' and continue with the computation of the first phase (potentially generating other branches).
-If, during the computation of the second phase, a \emph{parallel branch} turns out to be open, its status is changed from ``suspended'' to closed.
-If a \emph{parallel branch} turns out to be closed, the whole formula cannot be satisfied (we have therefore found a counterexample), so the computation process can be interrupted early.
-If the first phase reaches the end of its computation (meaning that it has generated every model of the KB), it doesn't have to wait the ``answers'' of the parallel branches in every case:
+This procedure can be seen as the generation and traversal of a tree.
+The first phase generates branches \textbf{B}$_i$, corresponding to models $\emme($\textbf{B}$_i)$, and uses $\primo$ to accept or refuse them.
+A branch is considered $open$ until it is verified and, if it does not represent a counterexample, it is $closed$. The branches which are still \emph{open} after the first phase require further verification by $\secondo$, therefore they will be processed by the second phase.\\
+
+Intuitively, there is no need for the first phase of the calculus to wait for the result of one elaboration of the second phase on an open branch, before generating another candidate branch.
+Indeed, in order to prove whether a query entails from a $KB$, the first phase can be executed on a machine; every time that a branch remains open after the first phase, the execution of the second phase for this branch can be performed in parallel, on a different machine.
+Meanwhile, the main machine, instead of waiting for the termination of the second phase on that branch (as it happened in the sequential program), can carry on with the computation of the first phase (potentially generating other branches).
+If, after the verification of the second phase, a branch remains open, then the whole entailment cannot be satisfied (we have therefore found a counterexample), so the computation process can be interrupted early.
+This way, if the first phase reaches the end of its computation (meaning that it has generated every model of the $KB$), it doesn't have to wait for the ``answers'' of each second phase in every case:
 \begin{itemize}
-\item if all the branches remain open (i.e. all the parallel branches answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the KB);
-\item if any of them is closed (i.e. any parallel branch answers \emph{no}), the global answer is \emph{no} (which means the query does not entail from the KB).
+\item if all the branches generated in the first phase remain open (i.e. all the branches generated in the second phase answer \emph{yes}), then the theorem prover answers \emph{yes} (which means the query entails from the $KB$);
+\item if any of them is closed (i.e. any branch generated in the second phase answers \emph{no}), the global answer is \emph{no} (which means the query does not entail from the $KB$).
 \end{itemize}
 
 %%% worker - employer
@@ -1484,8 +1487,8 @@ Then an arbitrary number of workers (Phase2Worker.java) is launched on an arbitr
 Each worker binds itself (through the proxyRebind() method of AnswersRepository.java) to the RMI registry and then starts its single instance of SolverThread.
 SolverThread.java creates a SICStus object with the code of alct2.pl (which corresponds to $\secondo$) and then waits until a request (Request.java) comes from the employer.
 
-The employer (Emloyer.java) is then started on the machine 'A', and receives from the user a queryString (which contains both the KB and the actual query to be verified). It retrieves a list of each worker bound to the RMI registry and writes it onto a file workersList.txt (it will be necessary for alct1.pl). Then it spawns a new thread (Phase1Thread.java) which creates a SICStus object with the code of alct1.pl (implementing $\primo$) and feeds it the queryString (via Jasper).
-The control passes to the Prolog code, which manipulates the queryString and generates various branches ($\primo$). Some may be closed, others may be open. If every branch is closed, the computation ends affirmatively: the query does entail from the KB. Otherwise, alct1.pl invokes (via Jasper) the method solveViaRMI(String workerName, String query) of Phase1RMIStub.java. The query corresponds to the branch to be verified, while the workerName is extracted from workersList.txt\footnote{This is done FIFO, reading a name from the top of the file, and writing it on the bottom, and allows a simple form of load balancing.}.
+The employer (Emloyer.java) is then started on the machine 'A', and receives from the user a queryString (which contains both the $KB$ and the actual query to be verified). It retrieves a list of each worker bound to the RMI registry and writes it onto a file workersList.txt (it will be necessary for alct1.pl). Then it spawns a new thread (Phase1Thread.java) which creates a SICStus object with the code of alct1.pl (implementing $\primo$) and feeds it the queryString (via Jasper).
+The control passes to the Prolog code, which manipulates the queryString and generates various branches ($\primo$). Some may be closed, others may be open. If every branch is closed, the computation ends affirmatively: the query does entail from the $KB$. Otherwise, alct1.pl invokes (via Jasper) the method solveViaRMI(String workerName, String query) of Phase1RMIStub.java. The query corresponds to the branch to be verified, while the workerName is extracted from workersList.txt\footnote{This is done FIFO, reading a name from the top of the file, and writing it on the bottom, and allows a simple form of load balancing.}.
 Phase1RMIStub.java's main thread, then spawns a new thread (PrologWorker.java) and increases the counter of the open branches (Counter.java).
 PrologWorker.java is the employer's side stub of a worker, which the employer can use to solve the query, i.e. to ask the worker whether the branch is open or closed.
 Meanwhile, the employer's main thread (just after spawning Phase1Thread.java) enters a loop in which polls the repository until a global answer can be found. This happens when:
