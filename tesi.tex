@@ -1,4 +1,5 @@
 \documentclass[a4paper, 11pt, oneside]{duthesis}
+
 \usepackage{listings}
 \usepackage{graphicx} \pdfcompresslevel=9
 \usepackage[usenames,dvipsnames]{color}
@@ -27,6 +28,8 @@
 \usepackage{multicol}
 \usepackage{titlesec}
 \usepackage{slashed}
+
+\usepackage{turnstile}
 %\usepackage{times}
 
 \titleformat{\subsection}
@@ -457,7 +460,11 @@ The system is designed for scalability and based on a "worker/employer" paradigm
 In this thesis we present the design and implementation of a distributed theorem prover for the non--monotonic description logic $\alctmin$.
 
 Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
-DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science are in the field of bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arise. The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic extension of DLs.
+DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science are in the field of bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arises. The traditional approach is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery.
+
+
+%%%%%TODO: Aggiungere già qui qualche parola su ALC+T e ALC+Tmin
+%%%%TODO: Metti qualcosa sul fatto che il calcolo è a due fasi, che è il punto di partenza del tuo lavoro
 
 In chapter \ref{dl} we introduce the Description Logics and briefly describe some proposals for non--monotonic extensions, while in chapter \ref{dlt} we describe the non--monotonic logic $\alctmin$.
 
@@ -598,8 +605,12 @@ Concept descriptions in $\al$ are formed according to the following syntax rule:
 \item[] \itab{$\exists R.\vero $} \tab{(limited existential quantification)}
 \end{itemize}
 
+%%%TODO: TBox: definire bene, con inclusioni
+%%% metti esempio di reasoning, qui o all'inizio
+%%% metti bene i modelli mu = <delta^I>
 
-In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role R a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$.
+
+In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role $R$ a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$.
 
 The interpretation function is extended to concept descriptions by the following
 inductive definitions:
@@ -806,11 +817,14 @@ The typicality preference relation is partial since it is not always possible to
 Following KLM, the preference relation also satisfies a \emph{Smoothness Condition}, which is related to the well known \emph{Limit Assumption} in Conditional Logics \cite{Nute80}
 \footnote{More precisely, the Limit Assumption entails the Smoothness Condition (i.e. that there are no infinite $<$ descending chains). Both properties come for free in finite models.};
 this condition ensures that, if the extension $C^I$ of a concept $C$ is not empty, then there is at least one \emph{minimal} element of $C^I$.
+
+%%TODO: mettere un disegnino, col modello, ad esempio animali,...
+
 This is stated in a rigorous manner in the following definition:
 
 \begin{definition}\label{Definition of $<$} Given an irreflexive and transitive relation  $<$ over a domain $\Delta$, called \emph{preference relation}, for all $S \subseteq \Delta$, we define
 
-$Min_<(S)= \{x \in S \tc \nexists y \in S \ \mbox{s.t.} \ y < x \}$
+\begin{center}$Min_<(S)= \{x \in S \tc \nexists y \in S \ \mbox{s.t.} \ y < x \}$\end{center}
 
 \noindent We say that $<$ satisfies the {\em Smoothness Condition} if for all $S \subseteq \Delta$, for all $x \in S$, either $x \in Min_<(S)$ or $\exists y \in  Min_<(S)$ such that $y < x$.
 \end{definition}
@@ -842,6 +856,9 @@ Furthermore, $I$ is extended as in Definition \ref{Semantics with f_tip} with th
 \noindent Let us now introduce the notion of satisfiability of an $\alct$ knowledge base.
 In order to define the semantics of the assertions of the ABox, we  extend the function $I$ to individual constants;  we assign to each individual constant $a \in \mathcal{O}$ a \emph{distinct} domain element $a^I \in \Delta$, that is to say we enforce the \emph{unique name assumption}.
 As usual, the adoption of the  unique name assumption greatly simplifies reasoning about prototypical properties of individuals denoted by different individual constants.
+
+%%%TODO: mettere anche qui il disegnino con i Min_<(C^I)
+
 Considering the example of department staff having lunches, if (in addition to the TBox) the ABox only contains the following facts about Greg and Sara:
 
 \begin{quote}
@@ -933,6 +950,7 @@ $\mathit{\mathit{greg}}$? We have already mentioned that if the ABox explicitly 
 
 $(*)  \ \tip(\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$
 
+%%%TODO: reindentare con più respiro
 
 \noindent then, in $\alct$, we can conclude that
 
@@ -955,7 +973,7 @@ The minimization of the set of atypical instances will apply to individuals expl
 We assume that the set $\ellet$ contains at least all concepts $C$ such that $\tip(C)$ occurs in the KB.
 Notice that in case $\ellet$ contains more concepts than those occurring in the scope of $\tip$ in KB, the atypical instances of these concepts will be minimized but no extra properties will be inferred for the typical instances of the concepts, since the KB does not say anything about these instances.
 
-We have seen that $(\tip(C))^I =(C \sqcap \bbox \neg C)^I$: $x$ isa typical instance  of a concept $C$ ($x \in (\tip(C))^I$) when it is an instance of $C$  and there is no other instance of $C$ preferred to $x$, i.e. $x \in (C \sqcap \bbox \neg C)^I$.
+We have seen that $(\tip(C))^I =(C \sqcap \bbox \neg C)^I$: $x$ is a typical instance  of a concept $C$ ($x \in (\tip(C))^I$) when it is an instance of $C$  and there is no other instance of $C$ preferred to $x$, i.e. $x \in (C \sqcap \bbox \neg C)^I$.
 By contraposition an instance of $C$ is atypical if $x \in (\neg \bbox \neg C)^I$ therefore in order to minimize the atypical instances of $C$, we minimize the instances of $\neg \bbox \neg C$.
 Notice that this is different from maximizing the instances of $\tip(C)$.
 We have adopted this solution since it allows to maximize the set of typical instances of $C$ without affecting the extension $C^I$ of $C$ (whereas maximizing the extension of $\tip(C)$  would imply maximizing also the extension of $C$).
@@ -1026,6 +1044,8 @@ From KB', $\mathit{Confident}(\mathit{john})$ is no longer derivable.
 Instead, we have that $\mbox{KB}' \models_{min}^{\ellet} \neg \mathit{Confident}(\mathit{john}).$ Indeed, by reasoning as above it can be shown that in all the minimal models of KB', $\mathit{john}$ is an instance of $\tip(\mathit{Athlete} \mint \mathit{Finnish})$, and it is no longer an instance of $\tip(\mathit{Athlete})$.
 This example shows that, in case of conflict (here, $\mathit{john}$ cannot be both a typical instance of $\mathit{Athlete}$ and of $\mathit{Athlete} \mint \mathit{Finnish}$), typicality in the more specific concept is preferred.
 
+%%%TODO: reindentare con più respiro
+
 \vspace{0.35cm}
 
 \noindent In general, a knowledge base KB may have no minimal model or more than one minimal model, with respect to a given $\ellet$. The following property holds.
@@ -1044,7 +1064,7 @@ The above fact  is  a consequence of the \emph{finite model property} of the log
 
 \chapter{A tableaux calculus for $\alctmin$}\label{tab}
 
-In this section we present a tableau calculus for deciding whether a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
+In this chapter we present a tableau calculus for deciding whether a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
 We introduce a labelled tableau calculus  called $\nuovoc$, which extends the calculus $\calcolo$ presented in \cite{FI09}, and allows to reason about minimal models.
 
 $\nuovoc$ performs a two--phase computation in order to check whether a query $F$ is minimally entailed from the initial $KB$.
@@ -1070,7 +1090,7 @@ A \emph{constraint} (or \emph{labelled} formula) is a syntactic entity of the fo
 \noindent Intuitively, a constraint of the form $x \trans{R} y$ says that the individual represented by label $x$ is related to the one denoted by $y$ by means of role $R$; a constraint $y<x$ says that the individual denoted by $y$ is ``preferred'' to the individual represented by $x$ with respect to the relation $<$; a constraint $x: C$ says that the individual denoted by $x$ is an instance of the concept $C$, i.e. it belongs to the extension $C^I$.
 As we will define in Definition \ref{corresponding constraint system}, the ABox of a knowledge base can be translated into a set of constraints by replacing every membership assertion $C(a)$ with the constraint $a: C$ and every role $a R b$ with the constraint $a \trans{R} b$.
 
-Let us now separately analyze the two components of the calculus $\nuovoc$, starting with $\primo$.
+Let us now separately analyse the two components of the calculus $\nuovoc$, starting with $\primo$.
 
 \section{The tableau calculus $\primo$}
 
@@ -1302,7 +1322,9 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 
 \newpage
 
-\chapter{Background}\label{bg}
+\chapter{The distributed theorem prover: DysToPic}\label{chap_dystopic}
+
+\section{Background}\label{bg}
 %%% distributed - parallel
 %%%TODO: check!!!
 With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
@@ -1311,7 +1333,7 @@ Theorem proving, with its vast combinatorially explosive search spaces and incre
 
 This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
 
-\chapter{The previous theorem prover: PreDeLo}\label{predelo}
+\section{The previous theorem prover: PreDeLo}\label{predelo}
 \emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
 
 The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL called $DL-Lite_{core}$.
@@ -1319,7 +1341,7 @@ The core of the software is a Prolog implementation of labelled tableaux calculi
 The Prolog implementation is inspired by the ``lean'' methodology, with the idea that each axiom or rule of the tableaux calculi is implemented by a Prolog clause of the program.
 Concerning $\alc$, \emph{PreDeLo} considers two extensions based, respectively, on Kraus, Lehmann and Magidor’s preferential and rational entailment.
 
-For a complete description of \emph{PreDeLo}, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to proving and highlight where we changed the implementation in order to distribute the calculus.
+For a complete description of \emph{PreDeLo}, the reader should refer to \cite{conf/aiia/GiordanoGJOP13}: in the sequel we will sketch its general approach to prove and highlight where we changed the implementation in order to distribute the calculus.
 
 In \cite{conf/aiia/GiordanoGJOP13}, the tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
 
@@ -1372,11 +1394,13 @@ Resuming, we say that a label is identified by both its name and its age.\\
 
 The ageing mechanism was introduced for two reasons.
 First, it allows to easily treat the label generation in the dynamic rules of the calculus.
-Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $\Box^-$ rule).
-As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $\Box^-$, $\perogni^-$ and $\esiste^+$ generate new labels using the support predicate \texttt{genLabel/3}.
+Second, it is used in the blocking mechanism to decide whether a rule should be applied or not (e.g., the $(\Box^-)$ rule).
+As it should be clear, at the beginning all labels have age 1. Dynamic rules such as $(\Box^-)$, $(\perogni^-)$ and $(\esiste^+)$ generate new labels using the support predicate \texttt{genLabel/3}.
 
 The theorem prover keeps a list of current labels in memory.
 
+
+%%%TODO: mettere a posto, tenendosi più sul generale (introdurre a parole)
 When invoked, the predicate \texttt{genLabel/3} checks this list and returns a new label using the following logic:
 \begin{itemize}
 \item let $N$ be the highest age value in the labels list; a new age $M = N + 1$ is generated;
@@ -1438,18 +1462,19 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 
 \newpage
 
+
+%%TODO: CHECK !!!
+
 \begin{figure}[htp]
-	\begin{prooftree}
-		\AxiomC{$\langle S,\, x\,:\,C \sqcap D\,|\,U \rangle$}
-		\RightLabel{$(\sqcap^+)$}
-		\UnaryInfC{$\langle S,\, x\,:\,C \sqcap D,\, \,x\,:\,C,\,x\,:\,D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
-	\end{prooftree}
-	\begin{flushright}\footnotesize if $\{x : C,\,x : D\} \not\subseteq S$. \normalsize\end{flushright}
-	\caption{$\primo$ rule for $\sqsubseteq$ and its precondition.}
+\begin{prooftree}
+\AxiomC{$\langle S\,|\,U,\,C\sqsubseteq D^L \rangle$}
+\RightLabel{$(\sqsubseteq)$}
+\UnaryInfC{$\langle S, \,x : \neg C \sqcup D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
+\end{prooftree}
+	\begin{flushright}\footnotesize if $x$ occurs in $S$ and $x \notin L$. \normalsize\end{flushright}
+	\caption{$\primo$ rule for $(\sqsubseteq)$ and its precondition.}
 	\label{fig_inc_rule}
 \end{figure}
-
-
 
 In the Prolog implementation, if we had
 $Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on the labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:
@@ -1504,7 +1529,7 @@ Let us consider the example of the rule shown in figure \ref{fig_union_rule}.
 		\BinaryInfC{$\langle S,\, x\,: C\sqcup D\,|\,U \rangle$}
 	\end{prooftree}
 	\begin{flushright}if $x : C \notin S$ and $x : D \notin S$.\\\end{flushright}
-	\caption{$\primo$ rule for $\sqcup^+$ and its precondition.}
+	\caption{$\primo$ rule for $(\sqcup^+)$ and its precondition.}
 	\label{fig_union_rule}
 \end{figure}
 
@@ -1514,20 +1539,21 @@ This is how the theorem prover works on such a rule:
 \item First, it checks if the list S contains a formula $x : C \sqcup D$;
 \item If the answer is \emph{no}, it skips the rule and tries another one;
 \item If the answer is \emph{yes}, it checks the precondition specified in figure \ref{fig_union_rule};
-\item If the precondition is satisfied, it calls prove(...) recursively two times, one for each sub--tree.
+\item If the precondition is satisfied, it calls prove(...) recursively two times, one for each conclusion.
 \end{itemize}
 
 This is translated in the following Prolog code:
 
-\begin{lstlisting}[caption={alct1.pl}, label={lst:zaino}, firstnumber=184]
+\begin{lstlisting}[caption={alct1.pl}, label={lst:zaino}, firstnumber=175]
 /* or + */
-prove(S,U,Lt,Labels,F,ABox,NL) :-
-member([X,C or D],S),
-n +(member([X,C],S)),
-n +(member([X,D],S)),
-(* build the lists for the left and right sub-trees *)
-prove(S11,U,Lt,Labels,F,ABox,NL1),
-prove(S22,U,Lt,Labels,F,ABox,NL1).
+prove(S,U,Lt,Labels,ABOX,Tree) :-
+    member([X,C or D],S),
+    \+(member([X,C],S)),
+    \+(member([X,D],S)),!,
+    /* build the lists for the left and right sub-trees */
+    prove([[X,C]|S],U,Lt,Labels,ABOX,Tree1),!,
+    prove([[X,D]|S],U,Lt,Labels,ABOX,Tree2),!,
+    buildTree('ph1','or+',S,U,[Tree1,Tree2],Tree),!.
 \end{lstlisting}
 
 There is a small difference between how static and dynamic rules are implemented.
@@ -1551,7 +1577,7 @@ if $\not\exists z \prec x$ s.t. $z \equiv_{S,x:\neg \Box \neg C} x $ and $ \not\
 $\forall v_i$ occurring in $S$.
 \normalsize
 \end{flushright}
-	\caption{$\primo$ rule for $\Box^-$ and its precondition.}
+	\caption{$\primo$ rule for $(\Box^-)$ and its precondition.}
 	\label{fig_box_rule}
 \end{figure}
 
@@ -1599,6 +1625,8 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 
 \chapter{Architectural design}\label{arch}
 
+%%%TODO: Mettere in evidenza che si tratta del contributo originale
+
 The main goal of our work is to improve the performances of the previously implemented theorem prover.
 In the previous software, especially when using $\alctmin$, the extremely high complexity of the calculus itself
 \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.}
@@ -1607,8 +1635,7 @@ We aim to build a distributed application for theorem proving, so that it can sp
 
 \section{A two--phase calculus}\label{calc_2ph}
 
-%%%TODO: check!!!
-$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the models of the $KB$.\\
+$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the minimal models of the $KB$.\\
 To do so, the calculus tries to build a model of $KB \unione \neg F$ (a counterexample). If it fails, then the query entails from the $KB$, otherwise it does not.\\
 
 The process is designed as a two--phase calculus.
@@ -1617,6 +1644,8 @@ The first phase generates models of $KB \unione \{\nott F\}$. The ones in which 
 The second phase, indeed, uses $\secondo$: in order for a model $\emme_i$ of $KB \unione \{\nott F\}$ to be a counterexample of the entailment, it has to be a $minimal$ model of the $KB$. As stated in section \ref{tableau_ph2}, this means that, for each candidate model $\emme_i$, the second phase tries to build a model of the $KB$, $\emme_j^{KB}$, which is preferred to $\emme_i$. If every attempt of the second phase fails (i.e. no $\emme_j^{KB} \prec \emme_i$), then that candidate $\emme_i$ is the minimal model (i.e. the counterexample): this means that $KB \models_{min} F$.
 Conversely, in case even a single $\emme_j^{KB}$ is found to be preferred to an $\emme_i$, that $\emme_i$ cannot be the counterexample.
 If every $\emme_i$ has at least one corresponding $\emme_j^{KB}$ so that $\emme_j^{KB} \prec \emme_i$, then the whole research for a counterexample has failed, which means that $KB \unione \neg F$ has no models, and $KB \models_{min} F$.\\
+
+%%%TODO: fare un disegno
 
 This procedure can be seen as the generation and traversal of a tree.
 The first phase generates branches \textbf{B}$_i$, corresponding to models $\emme($\textbf{B}$_i)$, and uses $\primo$ to accept or refuse them.
@@ -1646,7 +1675,7 @@ The system is composed of:
 \end{itemize}
 Initially, each \emph{worker} registers to the \emph{employer}.
 
-When presented with a query, the employer begins to analyse it through the first phase calculus.
+When presented with a query, the employer begins to analyse it through the first phase of the calculus.
 If, during the computation of the first phase calculus, the \emph{employer} needs to verify a \emph{parallel branch} via the second phase calculus, it delegates it to one of the registered \emph{workers}, and consequently proceeds with its calculations on other branches.
 
 When a \emph{worker} terminates its execution, it reports its result to the \emph{repository}.
@@ -1697,7 +1726,6 @@ Parallel computing is a form of computation in which many calculations are carri
 
 The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.
 
-%FIXME
 Concurrency is the main goal of our implementation, since we want the execution of the first phase of the calculus to be independent from the second. Java natively supports concurrency via multithreading.\\
 
 The \emph{employer} uses a separate thread (implemented in \verb$Phase1Thread.java$) to perform the actual invocation of $\primo$ on the query, while its main thread polls the \emph{repository} waiting for termination\footnote{Let us recall the reader that a global termination can be reached when the first counterexample is found, even if not all of the branches have been explored.}.
@@ -1709,10 +1737,11 @@ The \emph{worker} itself uses threads: its main thread (\verb$Phase2Worker.java$
 
 \subsection{System distribution - Java RMI}
 
+%%TODO: mettere il codice significativo!
+
 The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection \cite{wiki_rmi}.
 It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.
 
-%FIXME
 As stated in \ref{ssec_jasper}, since \emph{DysToPic} relies on a Java interface to Prolog, it was natural to design the distribution feature around Java APIs, too\footnote{With Java versions before Java 5.0 developers had to compile RMI stubs in a separate compilation step using \texttt{rmic}. Version 5.0 of Java and beyond no longer require this step.}.
 
 The RMI architecture makes use of a \emph{Registry} (\verb$java.rmi.registry.Registry$) that provides methods for storing (methods \texttt{bind}, \texttt{unbind}, \texttt{rebind}) and retrieving (methods \texttt{list} and \texttt{lookup}) remote object references bound with arbitrary string names.\\
@@ -1761,6 +1790,14 @@ Until then, the \emph{employer} just remains in a busy wait condition.
 The \texttt{SolverThread} will then take the request from the queue and elaborate it through \texttt{alct2.pl}.
 This elaboration yields an answer of the form \texttt{true} or \texttt{false}, which is then sent (through the method \texttt{store(Boolean answer)}) to the repository. The \texttt{SolverThread} then restarts its infinite loop and looks for another request that may or may not have come from the \emph{employer} in the meantime.
 \end{enumerate}
+
+%%%TODO: Sezione test
+
+\chapter{Conclusions and future issues}
+
+%%TODO: riassumere il mio contributo
+%%TODO: mettere possibili sviluppi futuri
+
 
 %****************************************************
 %********************   BIBLIO   ********************
