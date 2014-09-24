@@ -1,5 +1,4 @@
-\documentclass[a4paper, 11pt, oneside]{elsarticle}
-
+\documentclass[a4paper, 11pt, oneside]{duthesis}
 \usepackage{listings}
 \usepackage{graphicx} \pdfcompresslevel=9
 \usepackage[usenames,dvipsnames]{color}
@@ -106,6 +105,241 @@
 
 %\newcommand{\qed}{{\hspace*{\fill} \rule{2.2mm}{2.2mm}}}
 
+\newcommand{\mprule}{$({\bf MP})$}
+\newcommand{\cemrule}{$({\bf CEM})$}
+
+\newcommand{\el}{\mathcal{EL}^{+^\bot}}
+\newcommand{\elt}{\mathcal{EL}^{+^\bot}\tip}
+\newcommand{\elpiu}{\mathcal{EL}}
+\newcommand{\composto}{\circ}
+\newcommand {\leanCK} {\textsf{lean}CK}
+\newcommand {\reali} {\mathds{R}}
+\newcommand {\naturali} {\mathds{N}}
+\newcommand {\razionali} {\mathds{Q}}
+\newcommand {\sat} {\mathit{SAT}}
+\newcommand {\dia} {\Diamond}
+\newcommand {\until} {{\bf U}}
+\newcommand {\ie} {i.e.}
+
+\newcommand {\cond} {\Rightarrow}
+\newcommand {\orr} {\vee}
+\newcommand {\andd} {\land}
+\newcommand {\prova} {\vdash}
+\newcommand {\GI} {\mathcal{G}}
+\newcommand {\spazio} {\vspace {1cm}}
+\newcommand {\quadrato} {\mathcal{O}}
+\newcommand {\effe} {\mathcal{F}}
+\newcommand {\WW} {\mathcal{W}}
+\newcommand {\AAA} {\mathcal{A}}
+%\newcommand {\I} {\mathcal{I}}
+\newcommand {\B} {\mathcal{B}}
+\newcommand {\pr} {\circ}
+\newcommand {\tr} {\nabla}
+\newcommand {\finedim} {\begin{flushright} $\Box$ \end{flushright}}
+
+
+
+\newcommand {\SECC} {{\bf SeqCK}}
+\newcommand {\calB} {{\cal  B}}
+
+\newcommand {\SECK} {{\bf Seq}$S$}
+\newcommand{\MM}{\mbox{$\mathcal{M}$}}
+\newcommand{\BB}{\mbox{$\mathcal{B}$}}
+\newcommand{\CC}{\mbox{$\mathcal{C}$}}
+\newcommand{\EE}{\mbox{$\mathcal{E}$}}
+
+\newcommand{\CK}{{\bf CK}}
+\newcommand{\AC}{{\bf AC}}
+\newcommand{\ID}{{\bf ID}}
+\newcommand{\MP}{{\bf MP}}
+\newcommand{\OR}{{\bf OR}}
+\newcommand{\CEM}{{\bf CEM}}
+\newcommand{\NR}{{\bf NR}}
+\newcommand{\DR}{{\bf DR}}
+\newcommand{\CUT}{{\bf CUT}}
+\newcommand{\NN}{{\bf N}}
+\newcommand{\CS}{{\bf CS}}
+\newcommand{\CV}{{\bf CV}}
+\newcommand{\MOD}{{\bf MOD}}
+
+
+%\newcommand{\mathcal}[1]{\cal{#1}}
+
+\newcommand{\ff}[1]{\stackrel{#1}{\longrightarrow}}
+\newcommand{\urule}[2]
+{\shortstack{$#1$ \\
+\mbox{}\hrulefill\mbox{}\\
+$#2$}}
+\newcommand{\be}{\begin{enumerate}}
+\newcommand{\ee}{\end{enumerate}}
+
+
+\newcommand{\Set}[1]{\left\{ \, #1 \, \right\}}
+\newcommand{\tup}[1]{\left\langle \, #1 \, \right\rangle}
+%\newcommand{\qed}{{\hspace*{\fill} \rule{2.2mm}{2.2mm}}}
+\newcommand{\aproofof}[1]{\begin{array}[b]{c}\vdots\\#1\end{array}}
+\newcommand{\lan}{{\cal L}}
+\newcommand{\lres}{{\cal L}^\res}
+\newcommand{\prop}{{\it Prop\/}}
+\newcommand{\res}{{\it res}}
+\newcommand{\nec}{{\bf L}}
+\newcommand{\pos}{{\bf M}}
+\newcommand{\T}{{\cal T}}
+\newcommand{\irule}[3]
+{\prooftree{#1}\justifies{#2}\using{\:#3}\endprooftree}
+\newcommand{\drule}[3] {\prooftree{#1 : #2}\justifies{#3}\endprooftree}
+\newcommand{\dflt}[2]
+{\frac{#1}{#2}\vphantom{\left[\frac{#1}{#2}\right._{j_j}}}
+%\newcommand{\th}{{\rm Th\/}}
+\newcommand{\aseq}{\not\vdash}
+
+
+\newcommand {\calcoloP} {{\bf \mathcal{T}P}}
+\newcommand {\calcoloPterminante} {{\bf \mathcal{T}P^{T}}}
+\newcommand {\calcoloCL} {{\bf \mathcal{T}CL}}
+\newcommand {\calcoloC} {{\bf \mathcal{T}C}}
+\newcommand {\calcoloCLterminante} {{\bf \mathcal{T}CL^{T}}}
+\newcommand {\calcoloR} {{\bf \mathcal{T}R}}
+\newcommand {\calcoloRterminante} {{\bf \mathcal{T}R^{T}}}
+\newcommand {\Cu} {{\bf C}}
+\newcommand {\Ra} {{\bf R}}
+\newcommand {\Cl} {{\bf CL}}
+
+\newcommand {\lineacortissima} {\vspace{0.2cm} \begin{footnotesize} \noindent ------------------------------------------------------------------------------------------------------------------ \end{footnotesize}}
+\newcommand {\linea} {\vspace{0.5cm} \begin{footnotesize} \noindent --------------------------------------------------------------------------------------------------------------------- \end{footnotesize}}
+\newcommand {\lineacorta} {\vspace{0.2cm} \begin{footnotesize} \noindent ------------------------------------------------------------------------------------------------------------------ \end{footnotesize}}
+\newcommand {\tratteggio} {\vspace{0.1cm} \begin{center}  \ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots\ldots \end{center} \vspace{0.3cm}}
+\newcommand {\lineapri} {\begin{footnotesize} \vspace{0.5cm} \noindent --------------------------------------------------------------------------------------------------------------------- \vspace{-0.5cm}\end{footnotesize}}
+\newcommand {\lineachiudi} {\begin{footnotesize} \noindent --------------------------------------------------------------------------------------------------------------------- \end{footnotesize}}
+
+
+\hide{
+% ENVIRONMENTS
+
+
+\newenvironment{proof}
+{\begin{trivlist} \item[] {\bf Proof:}}%
+{\qed \end{trivlist}}
+
+\newenvironment{proofof}[2]
+{\begin{trivlist} \item[] {\bf Proof of #1~\protect{\ref{#2}}.}}%
+{\qed \end{trivlist}}
+
+\newenvironment{definition}
+{\begin{defi} \rm}{\qed \end{defi}}
+
+\newenvironment{example}
+{\begin{exa} \rm}{\qed \end{exa}}
+
+\newenvironment{remark}
+{\begin{rem} \rm}{\end{rem}}
+
+% AUXILIARY ENVIRONMENTS
+}% end hide
+
+
+%MACRO NICOLA
+
+
+\newcommand {\SeCK} {{s\bf CK}}
+\newcommand {\caL} {{\cal L}}
+
+
+\newcommand {\alf} {{\cal A}}
+\newcommand {\spaz}{\vspace{0.5cm}}
+\newcommand {\foto}[3]{#1 = #2, \ldots, #3}
+\def \cases{\left \{\begin{array}{l}}
+\def \endcases{\end{array}\right .}
+\newcommand {\cla}[1] {\noindent {\bf #1}}
+\newcommand {\vuo} {\emptyset}
+\newcommand {\sotto} {\subseteq}
+\newcommand {\Ti} {{\bf T}}
+\newcommand {\Fe} {{\bf F}}
+\newcommand {\Rea} {{\bf R}}
+\newcommand {\Pe} {{\bf P}}
+\newcommand {\Qe} {{\bf Q}}
+\newcommand {\Do} {\downarrow}
+\newcommand {\ri} {\rightarrow}
+\newcommand {\Ri} {\Rightarrow}
+\newcommand {\Le} {\Leftarrow}
+\newcommand {\bibi}{\bibitem}
+\newcommand {\sse} {\leftrightarrow}
+\newcommand {\Sse} {\Leftrightarrow}
+\newcommand {\mo} {\models}
+\newcommand {\bes} {\begin{description}}
+\newcommand{\ens} {\end{description}}
+\newcommand {\la} {\langle}
+\newcommand {\ra} {\rangle}
+\newcommand {\tder} {{\vdash}_t}
+\newcommand {\fder} {{\vdash}_f}
+\newcommand {\beq} {\begin{quote}}
+\newcommand {\enq} {\end{quote}}
+\newcommand {\bit} {\begin{itemize}}
+\newcommand {\enit} {\end{itemize}}
+\newcommand {\para} {\par\noindent}
+\newcommand {\thr} {{\rm Th^\res}}
+\newcommand {\UU} {$\mathcal{U}$}
+\newcommand {\leanTAP} {\textsf{lean}\emph{T\raisebox{1.2mm}{A}P}}
+
+
+\newcommand{\Mod}[1]{\mbox{$[\mid \hspace{-0.1cm}#1\hspace{-0.1cm}\mid ]$}}
+
+\newcommand{\green}[1]{{\color{green} #1 \normalcolor} }
+\newcommand{\red}[1]{{\color{red} #1 \normalcolor} } %Modifiche reviewer A e generali
+\newcommand{\blue}[1]{{\color{blue} #1 \normalcolor} } %Modifiche reviewer B
+\newcommand{\magenta}[1]{{\color{magenta} #1 \normalcolor} } %Modifiche al weakening implicito
+\newcommand{\cyan}[1]{{\color{cyan} #1 \normalcolor} } %Modifiche reviewer C
+
+\newenvironment{frase}{\center\vspace{0.2cm}\scshape}{\\\normalfont\vspace{0.6cm}}
+
+
+\newcommand {\Tkt} {${\bf \mathcal{T}}K^{\bf{T}}$}
+
+\newcommand {\Gammas} {\Gamma^{\ent^{\pm}},\Gamma^{\bbox^{\freccia}}}
+
+\newcommand {\freccia} {\downarrow}
+\newcommand {\provagoal} {\prova_{GD}}
+
+\newcommand {\uck} {\textsc{GoalD}\UU CK}
+
+\newcommand {\sottosezione}{\vspace{0.4cm}}
+\newcommand {\sezione}{\vspace{1cm}}
+
+
+%\documentclass[oneside,a4paper,11pt,titlepage]{book}
+\usepackage{prooftree}
+
+
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\usepackage{color}
+
+
+\usepackage{colortbl}
+\usepackage{fancyhdr}
+
+\newenvironment{ultimissimi}{\color{black}}{\color{black}} %Modifiche reviewer cattivo
+\newenvironment{rosso}{\color{black}}{\color{black}} %Modifiche reviewer cattivo
+\newenvironment{blu}{\color{black}}{\color{black}} %Modifiche reviewer buono e aggiunta di R
+\newcommand {\provafatto}[1]{\begin{flushright}$\bbox$ \emph{Fact #1}\end{flushright}}
+\newcommand {\ellep}[1]{\elle^{\Gamma_0}_{\bbox^{#1}}}
+
+
+\newtheorem{teorema}{Theorem}[chapter]
+\newtheorem{proposizione}[teorema]{Proposition}
+\newtheorem{corollario}[teorema]{Corollary}
+\newtheorem{lemmaPosu}[teorema]{Lemma}
+\newtheorem{fatto}[teorema]{Fact}
+\newtheorem{definizione}[teorema]{Definition}
+\newtheorem{esempio}[teorema]{Example}
+\newtheorem{rimarco}[teorema]{Remark}
+
+\newenvironment{provaposu}{\noindent \emph{Proof.}}{\begin{flushright}$\blacksquare$\end{flushright}}
+\newenvironment{provaallettore}{\noindent \emph{Proof.}}{\vspace{0.5cm}}
+\newenvironment{provaspecifica}[1]{\noindent \emph{#1}.}{\vspace{0.5cm}}
+
 %****************************************************
 %******************  ENVIRONMENTS  ******************
 %****************************************************
@@ -131,8 +365,8 @@
 }
 
 \newtheorem{theorem}{Theorem}
-\newdefinition{definition}{Definition}
-\newdefinition{example}{Example}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 %\newproof{proof}{Proof}
@@ -218,7 +452,7 @@ The system is designed for scalability and based on a "worker/employer" paradigm
 %***************  INTRODUCTION  *********************
 %****************************************************
 
-\section{Introduction}
+\chapter{Introduction}
 
 In this thesis we present the design and implementation of a distributed theorem prover for the non--monotonic description logic $\alctmin$.
 
@@ -269,7 +503,7 @@ In chapter
 %*********************  DL  *************************
 %****************************************************
 
-\section{Description Logics}\label{dl}
+\chapter{Description Logics}\label{dl}
 
 Description Logics are decidable fragments of the first-order logic formalism used to provide semantics to representation structures like frames and networks.
 Each fragment has different features, leading to computational problems of variable complexity: the use of a simpler language (which comes with lower computational complexity) rather than a more expressive one (high computational complexity) depends on how complex we want our world's description to be.
@@ -298,7 +532,7 @@ It is also possible to use intersection concepts with the syntax $Carnivore \sqc
 
 \newpage
 
-\subsection{Application domains}
+\section{Application domains}
 Description Logics are used in the implementation of many systems that demonstrate their practical effectiveness. Some of these systems have found their way into production use, despite the fact that there was no real commercial platform that could be used for developing them.\\
 
 \textbf{Software engineering.} Software Engineering was one of the first application domains for Description Logics. The basic idea was to use a Description Logic to implement a Software Information System, i.e. a system that would support the software developer by helping him in finding out information about a large software system.\\
@@ -323,7 +557,7 @@ In this kind of application, DL structures can represent views, and DL systems c
 
 \newpage
 
-\subsection{Basic Description Logics}
+\section{Basic Description Logics}
 As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic--based semantics.
 Another distinguished feature is the emphasis on reasoning as a central service: reasoning allows one to infer implicitly represented knowledge from the knowledge that is explicitly contained in the knowledge base.
 Description Logics support inference patterns that occur in many applications of intelligent information processing systems, and which are also used by humans to structure and understand the world: classification of concepts and individuals.
@@ -341,7 +575,7 @@ Investigating this trade--off between the expressivity of DLs and the complexity
 
 \newpage
 
-\subsection{The basic description language $\al$}
+\section{The basic description language $\al$}
 A knowledge representation system based on Description Logics provides facilities to set up knowledge bases, to reason about their content, and to manipulate them.
 A knowledge base (KB) comprises two components, the TBox and the ABox.
 The TBox introduces the terminology, i.e., the vocabulary of an application domain, while the ABox contains assertions about named individuals in terms of this vocabulary.
@@ -381,7 +615,7 @@ inductive definitions:
 We say that two concepts $C$, $D$ are equivalent, and write $C = D$, if $C^{\II} = D^{\II}$ for all interpretations $\II$
 \cite{Baader:2003:BDL:885746.885749}.
 
-\subsection{Complex concept negation: $\alc$}
+\section{Complex concept negation: $\alc$}
 A basic extension of $\al$ is the negation of an arbitrary concept:
 \begin{itemize}
 \item[] \itab{$\neg C$} \tab{(concept negation)}
@@ -394,7 +628,7 @@ whose semantics is:
 \cite{obitko}
 
 
-\subsection{Non--monotonic reasoning and the operator $\tip$}
+\section{Non--monotonic reasoning and the operator $\tip$}
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
 The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic reasoning mechanism.
 This has led to study non--monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
@@ -488,9 +722,9 @@ Hereinafter we introduce a non--monotonic extension for defeasible reasoning in 
 %******************  DL + T  ************************
 %****************************************************
 
-\section{Description Logics for typicality}\label{dlt}
+\chapter{Description Logics for typicality}\label{dlt}
 
-\subsection{The logic $\alct$}\label{alct}
+\section{The logic $\alct$}\label{alct}
 
 
 In this section, we recall the original $\alct$, which is an extension of $\alc$ by a typicality operator $\tip$ introduced in \cite{FI09}. Given an alphabet of concept names $\mathcal{C}$, of role names $\mathcal{R}$, and of individual constants $\mathcal{O}$, the language $\elle$ of the logic $\alct$ is defined by distinguishing \emph{concepts} and \emph{extended concepts} as follows:
@@ -682,7 +916,7 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 
 
 
-\subsection{The logic $\alctmin$}\label{alctmin}
+\section{The logic $\alctmin$}\label{alctmin}
 
 As mentioned in the Introduction, the logic $\alct$ presented in \cite{FI09} allows  to reason about typicality.
 As a difference with respect to standard $\alc$, in $\alct$ we can consistently express, for instance, the fact that three different concepts, like {\em Department member}, {\em Temporary Department Member} and {\em Temporary Department member having restaurant tickets}, have a different status with respect to {\em Have lunch at a restaurant}. This can be consistently expressed by including in a knowledge base the three formulas:
@@ -808,7 +1042,7 @@ The above fact  is  a consequence of the \emph{finite model property} of the log
 %****************************************************
 
 
-\section{A tableaux calculus for $\alctmin$}\label{tab}
+\chapter{A tableaux calculus for $\alctmin$}\label{tab}
 
 In this section we present a tableau calculus for deciding whether a query $F$ is minimally entailed by a knowledge base (TBox,ABox).
 We introduce a labelled tableau calculus  called $\nuovoc$, which extends the calculus $\calcolo$ presented in \cite{FI09}, and allows to reason about minimal models.
@@ -838,7 +1072,7 @@ As we will define in Definition \ref{corresponding constraint system}, the ABox 
 
 Let us now separately analyze the two components of the calculus $\nuovoc$, starting with $\primo$.
 
-\subsection{The tableau calculus $\primo$}
+\section{The tableau calculus $\primo$}
 
 Let us first define the basic notions of a tableau system in $\primo$:
 
@@ -983,7 +1217,7 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 
 
 
-\subsection{The tableau calculus $\secondo$}\label{tableau_ph2}
+\section{The tableau calculus $\secondo$}\label{tableau_ph2}
 
 Let us now introduce the calculus $\secondo$ which, for each open branch {\bf B} built by $\primo$,  verifies if $\emme^{\bf B}$ is a minimal model of the KB.  \hide{We define: need some definitions:}
 
@@ -1068,7 +1302,7 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 
 \newpage
 
-\section{Background}\label{bg}
+\chapter{Background}\label{bg}
 %%% distributed - parallel
 %%%TODO: check!!!
 With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
@@ -1077,7 +1311,7 @@ Theorem proving, with its vast combinatorially explosive search spaces and incre
 
 This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
 
-\section{The previous theorem prover: PreDeLo}\label{predelo}
+\chapter{The previous theorem prover: PreDeLo}\label{predelo}
 \emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
 
 The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL called $DL-Lite_{core}$.
@@ -1089,9 +1323,9 @@ For a complete description of \emph{PreDeLo}, the reader should refer to \cite{c
 
 In \cite{conf/aiia/GiordanoGJOP13}, the tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
 
-\subsection{The tableaux calculi's implementation}
+\section{The tableaux calculi's implementation}
 
-\subsubsection{Operators}
+\subsection{Operators}
 
 This implementation makes use of different operators that have been defined to represent the connectives allowed in $\alctmin$:
 
@@ -1119,7 +1353,7 @@ Using \textbf{in}, statements like the one mentioned before are syntactically re
     ex r in C
 \end{verbatim}
 
-\subsubsection{Labels}
+\subsection{Labels}
 Labels are defined as two elements lists, e.g.:
 \begin{verbatim}
     [adam, 1]
@@ -1169,7 +1403,7 @@ the next generated label would be
 This mechanism was chosen to keep the labels readable to the final user.
 Generally, if we introduced six new labels, it would mean that the dynamic rules had been called six times and a complex proof tree already exists.
 
-\subsubsection{Formulas}
+\subsection{Formulas}
 As presented in the previous chapters, $\alctmin$ formulas represent concepts associated with individuals or concepts relations.
 More in details, formulas (concepts) with labels (individuals), are the elements that we find in the ABox, while the concepts relations can be found in the TBox.
 We can distinguish between two types of formulas: the label--concept formulas and the role formulas.
@@ -1221,7 +1455,7 @@ In the Prolog implementation, if we had
 $Worker \sqsubseteq TaxPayer$, and the $\sqsubseteq$ (unfold) rule had already been applied on the labels \texttt{[adam; 1]} and \texttt{[john; 1]}, the corresponding list would be:
 \begin{center}\texttt{[..., [Worker inc TaxPayer, [[adam, 1], [john, 1]]], ...]}\end{center}
 
-\subsubsection{Structure}
+\subsection{Structure}
 The theorem prover is separated into modules to improve code readability and maintainability.
 The modules are defined as follows:
 \begin{itemize}
@@ -1363,7 +1597,7 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 
 
 
-\section{Architectural design}\label{arch}
+\chapter{Architectural design}\label{arch}
 
 The main goal of our work is to improve the performances of the previously implemented theorem prover.
 In the previous software, especially when using $\alctmin$, the extremely high complexity of the calculus itself
@@ -1371,7 +1605,7 @@ In the previous software, especially when using $\alctmin$, the extremely high c
 could delay the result of several minutes even for a query formula of medium length.
 We aim to build a distributed application for theorem proving, so that it can spread its computational burden amongst different machines which can work in parallel.
 
-\subsection{A two--phase calculus}\label{calc_2ph}
+\section{A two--phase calculus}\label{calc_2ph}
 
 %%%TODO: check!!!
 $\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the models of the $KB$.\\
@@ -1400,7 +1634,7 @@ This way, if the first phase reaches the end of its computation (meaning that it
 
 %%% worker - employer
 %%%TODO: check!!!
-\subsection{Worker-employer}\label{workemp}
+\section{Worker-employer}\label{workemp}
 
 In order to describe the software architecture that we have developed, we refer to the \emph{worker}-\emph{employer} metaphor.
 
@@ -1423,11 +1657,11 @@ This means that the \emph{employer} has to keep a continuous dialogue with the \
 
 \newpage
 
-\subsection{Technologies used}
+\section{Technologies used}
 
 %%%%%%%%%%%% SICSTUS %%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Calculus implementation - SICStus Prolog}
+\subsection{Calculus implementation - SICStus Prolog}
 
 Prolog is a declarative programming language developed at the University of Marseille, as a practical tool for programming in logic. The program logic is expressed in terms of relations, represented as facts and rules. A computation is initiated by running a query over these relations\cite{Lloyd:1984:FLP:2214}.
 
@@ -1437,7 +1671,7 @@ Both the employer and the workers of our system rely on Prolog for their computi
 
 %%%%%%%%%%%% JASPER %%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Interface between Prolog and Java - Jasper}\label{ssec_jasper}
+\subsection{Interface between Prolog and Java - Jasper}\label{ssec_jasper}
 
 Jasper is a bi-directional interface between Java and SICStus. The Java-side of the interface consists of a Java package (\verb$se.sics.jasper$) containing classes representing the SICStus runtime system (\verb$SICStus$, \verb$SPTerm$, etc). The Prolog part is designed as a library module (\verb$library(jasper)$).
 
@@ -1458,7 +1692,7 @@ The \emph{workers} will then have to process the open branches with $\secondo$, 
 
 %%%%%%%%%%%% CONCURRENCY %%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{Concurrency - Java threads}
+\subsection{Concurrency - Java threads}
 Parallel computing is a form of computation in which many calculations are carried out simultaneously, operating on the principle that large problems can often be divided into smaller ones, which are then solved concurrently (``in parallel'')\cite{Almasi:1989:HPC:160438}.
 
 The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs\cite{oracle_thread}.
@@ -1473,7 +1707,7 @@ The \emph{worker} itself uses threads: its main thread (\verb$Phase2Worker.java$
 
 %%%%%%%%%%%% RMI %%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{System distribution - Java RMI}
+\subsection{System distribution - Java RMI}
 
 The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection \cite{wiki_rmi}.
 It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.
@@ -1491,7 +1725,7 @@ Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository
 
 When the \emph{employer} starts, it retrieves the list of all the \emph{workers} which are currently bound to the RMI registry and consults it every time it needs a \emph{worker}.
 
-\section{An example of execution}
+\chapter{An example of execution}
 \begin{enumerate}
 
 \item The RMI registry is launched on the machine `A' on port `x': every other machine will have to perform their requests to it.
@@ -1535,7 +1769,7 @@ This elaboration yields an answer of the form \texttt{true} or \texttt{false}, w
 \newpage
 
 %\vskip 0.2in
-\bibliographystyle{elsarticle-harv}
+\bibliographystyle{ieeetr}
 \bibliography{biblioMarzo2010}
 
 
