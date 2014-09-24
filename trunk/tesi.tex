@@ -464,7 +464,20 @@ DLs are used in artificial intelligence for formal reasoning on the concepts of 
 
 
 %%%%%TODO: Aggiungere già qui qualche parola su ALC+T e ALC+Tmin
-%%%%TODO: Metti qualcosa sul fatto che il calcolo è a due fasi, che è il punto di partenza del tuo lavoro
+%[cosa vuol dire fare le inferenze? rappresentiamo delle inclusioni, ad esempio diciamo che i pinguini sono inclusi nell'insieme degli uccelli, se tom è un pinguino allora è anche un uccello] > mettere un raccordo con quello che si dirà dopo: le DL hanno il grosso limite di non poter rappresentare l'ereditarietà con cancellazione -> se abbiamo un'eccezione la KB diventa triviale, viceversa se gli studenti lavoratori pagano le tasse e gli altri no la KB è consistente solo se non ci sono studenti lavoratori
+
+%%%%%TODO: Metti qualcosa sul fatto che il calcolo è a due fasi, che è il punto di partenza del tuo lavoro
+% - KB, voler ragionare tulle eccezioni, soluzione basata sull'operatore di tipicalità;
+% -   NO: modelli, funzione di selezione, ecc
+% -   SI: da dove salta fuori T, cosa formalizzo (INCLUSIONI); esempi di inclusioni in DL
+%		TABLEAU in 2 FASI: dov'è il mio contributo => stiamo parlando di DL con la tipicalità, io arrivo perchè c'è un tableau in 2 fasi che però è implementato in modo che le 2 fasi siano fatte in fila
+% da subito diciamo che del tableau (di cui non diciamo ancora nient'altro oltre al fatto che è un tableau in 2 fasi) c'è un'implementazione che però fa sì che fase 1 faccia così... però le fasi 2 potrebbero essere mandate in esecuzione senza aspettare l'esito della fase2 del primo ramo che resta aperto
+% il mio contributo è un'implementazione in questo senso
+%
+% -> espandere la descrizione di ALC+T e in generale di cosa facciamo con le DL (ragionamenti che facciamo con la tipicalità)
+% -> il tableau a 2 fasi (non ci interessano le singole regole), ci interessa l'idea che questo costruisce il ramo in fase1 che è un candidato [vedere dopo], ma che gli serve fase2 per verificare se davvero è un contromodello => queste cose possono essere fatte in parallelo (da qui l'idea della mia implementazione)
+
+%
 
 In chapter \ref{dl} we introduce the Description Logics and briefly describe some proposals for non--monotonic extensions, while in chapter \ref{dlt} we describe the non--monotonic logic $\alctmin$.
 
@@ -493,15 +506,6 @@ In chapter
 %Different approaches for distributed Prolog implementations already exists and they are described in literature.
 %A general description of our design idea will be given in chapter 7.
 
-
-%[TODO] completare introduzione
-
-%\chapter{Why}
-%\chapter{What}
-%\chapter{Logics}
-%\chapter{The problem}
-%\chapter{Automated reasoning}
-%\chapter{State of the art}
 
 \newpage
 
@@ -582,6 +586,22 @@ Investigating this trade--off between the expressivity of DLs and the complexity
 
 \newpage
 
+%%%TODO: DA RIORDINARE
+%%% TBox: definire bene, con inclusioni
+%%% metti esempio di reasoning, qui o all'inizio
+%%% metti bene i modelli mu = <delta^I>
+
+% netta asimmetria tra la descrizione delle DL generali e le logiche con la T
+% siccome partiamo dal AL, ..., ci vorrebbero le cose che poi introduciamo dopo:
+%	- introduzione, già nelle DL, di quello che facicamo a pagina 9
+%		una KB è fatta da TBox e ABox, la TBox contiene le inclusioni, le inclusioni sono fatte così (esempio), ecc <= facciamolo anche prima di entrare nel dettaglio tecnico delle DL classiche
+%		*** diciamo come è fatta una TBox (dire che è fatta da inclusioni o da definizioni di ruoli)
+%		*** inserire alcuni esempi (di reasoning)- o dopo aver definito AL, o all'inizio, o dopo ALC -
+%			^- l'importante è metterlo prima di arrivare a dire cos'è ALC+T
+%		*** inserire i modelli (nel caso classico) - non si può dare la definizione dell'interpretazione dei concetti senza sapere cos'è I (metterlo meglio, come c'è nella parte per ALC+T);
+%
+%
+
 \section{The basic description language $\al$}
 A knowledge representation system based on Description Logics provides facilities to set up knowledge bases, to reason about their content, and to manipulate them.
 A knowledge base (KB) comprises two components, the TBox and the ABox.
@@ -605,9 +625,7 @@ Concept descriptions in $\al$ are formed according to the following syntax rule:
 \item[] \itab{$\exists R.\vero $} \tab{(limited existential quantification)}
 \end{itemize}
 
-%%%TODO: TBox: definire bene, con inclusioni
-%%% metti esempio di reasoning, qui o all'inizio
-%%% metti bene i modelli mu = <delta^I>
+
 
 
 In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role $R$ a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$.
@@ -758,7 +776,7 @@ concepts of $\elle$.
     \end{itemize}
 \end{itemize}
 
-\noindent  A knowledge base is a pair (TBox, ABox). TBox contains subsumptions $C \sqsubseteq D$, where $C \in \elle$ is an extended concept of the form either $C'$ or $\tip(C')$, and $C', D \in \elle$ are concepts.
+\noindent  As in standard $\mathcal{ALC}$, a knowledge base is a pair (TBox, ABox). TBox contains subsumptions $C \sqsubseteq D$, where $C \in \elle$ is an extended concept of the form either $C'$ or $\tip(C')$, and $C', D \in \elle$ are concepts.
 ABox contains expressions of the form $C(a)$ and $aRb$ where $C \in \elle$ is an extended concept, $R \in \mathcal{R}$, and $a, b \in \mathcal{O}$.
 
 
@@ -818,8 +836,6 @@ Following KLM, the preference relation also satisfies a \emph{Smoothness Conditi
 \footnote{More precisely, the Limit Assumption entails the Smoothness Condition (i.e. that there are no infinite $<$ descending chains). Both properties come for free in finite models.};
 this condition ensures that, if the extension $C^I$ of a concept $C$ is not empty, then there is at least one \emph{minimal} element of $C^I$.
 
-%%TODO: mettere un disegnino, col modello, ad esempio animali,...
-
 This is stated in a rigorous manner in the following definition:
 
 \begin{definition}\label{Definition of $<$} Given an irreflexive and transitive relation  $<$ over a domain $\Delta$, called \emph{preference relation}, for all $S \subseteq \Delta$, we define
@@ -828,6 +844,13 @@ This is stated in a rigorous manner in the following definition:
 
 \noindent We say that $<$ satisfies the {\em Smoothness Condition} if for all $S \subseteq \Delta$, for all $x \in S$, either $x \in Min_<(S)$ or $\exists y \in  Min_<(S)$ such that $y < x$.
 \end{definition}
+
+%%TODO: mettere un disegnino, col modello, C minimali,...
+%% ad es: 2 disegni, con 3 individui, far vedere che la funzione seleziona questo e quest'altro, ma allora quello è C minimale, quindi tipico C incluso in D - vedere esempi incontri + caso classico studenti:
+%	antonio, mario >> in base alla relazione, mario è un po' più strano, quindi antonio gli è preferito
+%	gli studenti minimali non pagano le tasse (perchè sono studenti tipici), antonio  (perchè è uno studente lavoratore, quindi non tipico) paga le tasse   <<<<=== nei 2 casi far vedere i due tipi di modelli
+
+
 
 \noindent The following representation theorem is proved in \cite{FI09}:
 
@@ -1045,6 +1068,7 @@ Instead, we have that $\mbox{KB}' \models_{min}^{\ellet} \neg \mathit{Confident}
 This example shows that, in case of conflict (here, $\mathit{john}$ cannot be both a typical instance of $\mathit{Athlete}$ and of $\mathit{Athlete} \mint \mathit{Finnish}$), typicality in the more specific concept is preferred.
 
 %%%TODO: reindentare con più respiro
+% Scrivere la KB con le varie inclusioni messe per disteso
 
 \vspace{0.35cm}
 
@@ -1281,10 +1305,9 @@ In case a tableau node has the form $\sx S, x: \nott \bbox \nott C \tc U \tc K \
 The calculus $\secondo$ also contains the clash condition (Clash)$_{\vuoto}$. Since each application of $(\bbox^{-})$ removes the principal formula $x: \nott \bbox \nott C$ from the set $K$, when $K$ is empty all the negated boxed formulas occurring in {\bf B} also belong to the current branch.
 In this case, the model built by $\secondo$ satisfies the same set of negated boxed formulas (for all individuals) as {\bf B} and, thus, it is not preferred to the one represented by {\bf B}.\\
 
-%%%[FIXME]INIZIO PEZZO ADAM
 $\secondo$ always terminates.
 Intuitively, termination is ensured by the fact that dynamic rules make use of labels belonging to $\db$, which is finite, rather than introducing ``new'' labels in the tableau.
-%%%FINE PEZZO ADAM
+
 
 \begin{definition}\label{def processo}
 Let $KB$ be a knowledge base whose corresponding constraint system is $\sx S \tc U \dx$. Let $F$ be a query and let $S'$ be the set of constraints obtained by adding to $S$ the constraint corresponding to $\nott F$.
@@ -1322,16 +1345,12 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 
 \newpage
 
-\chapter{The distributed theorem prover: DysToPic}\label{chap_dystopic}
 
-\section{Background}\label{bg}
-%%% distributed - parallel
-%%%TODO: check!!!
-With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
-Theorem proving, with its vast combinatorially explosive search spaces and increasingly complex and bigger problems, can benefit from these new ways of programming and new technologies\cite{conf/ieeehpcs/SripriyaBS09}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% THEOREM PROVING FOR DL WITH TYPICALITY %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-This work investigates the application of a concurrent/collaborative approach to a pre--existing theorem prover called PreDeLo.
+\chapter{Theorem proving for Description Logics with Typicality}\label{chap_theorem_proving}
 
 \section{The previous theorem prover: PreDeLo}\label{predelo}
 \emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
@@ -1400,7 +1419,7 @@ As it should be clear, at the beginning all labels have age 1. Dynamic rules suc
 The theorem prover keeps a list of current labels in memory.
 
 
-%%%TODO: mettere a posto, tenendosi più sul generale (introdurre a parole)
+%%%TODO: mettere a posto, tenendosi più sul generale (introdurre a parole "quando serve, verrà invocato..." senza citare il nome del predicato)
 When invoked, the predicate \texttt{genLabel/3} checks this list and returns a new label using the following logic:
 \begin{itemize}
 \item let $N$ be the highest age value in the labels list; a new age $M = N + 1$ is generated;
@@ -1620,10 +1639,23 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 
 
 
+\chapter{The distributed theorem prover: DysToPic}\label{chap_dystopic}
+\section{Background}\label{bg}
+%%% distributed - parallel
+%%%TODO: check!!!
+With the increasing accessibility of multi--core processors and distributed computing networks, it has become imperative to investigate novel ways of using these concurrency and distribution technologies to tackle hard problems and to tap latent distribution and collaborative problem solving opportunities present in various tasks that computers are being used to solve.
+Theorem proving, with its vast combinatorially explosive search spaces and increasingly complex and bigger problems, can benefit from these new ways of programming and new technologies\cite{conf/ieeehpcs/SripriyaBS09}.
+
+
+This work investigates the application of a concurrent/collaborative approach to the pre--existing theorem prover called PreDeLo (described in \ref{predelo}).
 
 
 
-\chapter{Architectural design}\label{arch}
+%%\chapter{Architectural design}\label{arch}
+
+\section{Our solution: the DysToPic system}
+
+%%TODO: rivedere bene!
 
 %%%TODO: Mettere in evidenza che si tratta del contributo originale
 
@@ -1645,7 +1677,12 @@ The second phase, indeed, uses $\secondo$: in order for a model $\emme_i$ of $KB
 Conversely, in case even a single $\emme_j^{KB}$ is found to be preferred to an $\emme_i$, that $\emme_i$ cannot be the counterexample.
 If every $\emme_i$ has at least one corresponding $\emme_j^{KB}$ so that $\emme_j^{KB} \prec \emme_i$, then the whole research for a counterexample has failed, which means that $KB \unione \neg F$ has no models, and $KB \models_{min} F$.\\
 
-%%%TODO: fare un disegno
+%%%TODO: fare un disegno (eventualmente riciclare lo schema dell'esempio)
+%% qui quello che raccontiamo è il funzionamento: mostrare lo schema di una situazione in cui è stato generato un alberello
+%% > questo ramo resta aperto e non trova la contraddizione e parte fase2 e ciascuno genera un alberello
+%%   A QUESTO PUNTO: cosa fa predelo vs. cosa fa il mio <- dev'essere evidente il passo avanti che ho fatto con la mia soluzione
+%%
+%% 
 
 This procedure can be seen as the generation and traversal of a tree.
 The first phase generates branches \textbf{B}$_i$, corresponding to models $\emme($\textbf{B}$_i)$, and uses $\primo$ to accept or refuse them.
@@ -1737,7 +1774,7 @@ The \emph{worker} itself uses threads: its main thread (\verb$Phase2Worker.java$
 
 \subsection{System distribution - Java RMI}
 
-%%TODO: mettere il codice significativo!
+%%TODO: mettere il codice significativo! === mostrare soprattutto i punti di distacco da quello di adam
 
 The Java Remote Method Invocation (Java RMI) is a Java API that performs the object-oriented equivalent of remote procedure calls (RPC), with support for direct transfer of serialized Java classes and distributed garbage collection \cite{wiki_rmi}.
 It enables to create distributed Java applications, in which the methods of remote objects can be invoked from other Java virtual machines, possibly on different hosts\cite{oracle_rmi}.
@@ -1754,7 +1791,7 @@ Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository
 
 When the \emph{employer} starts, it retrieves the list of all the \emph{workers} which are currently bound to the RMI registry and consults it every time it needs a \emph{worker}.
 
-\chapter{An example of execution}
+\section{An example of execution}
 \begin{enumerate}
 
 \item The RMI registry is launched on the machine `A' on port `x': every other machine will have to perform their requests to it.
@@ -1792,11 +1829,25 @@ This elaboration yields an answer of the form \texttt{true} or \texttt{false}, w
 \end{enumerate}
 
 %%%TODO: Sezione test
+%indicare che sono risultati ampiamente preliminari
+% dire che in ogni caso non differisce dalle prestazioni della versione di adam (a meno di overhead)
+% dire che anche il generatore casuale è poco raffinato
 
 \chapter{Conclusions and future issues}
 
 %%TODO: riassumere il mio contributo
+% possiamo fare riferimento a cose già descritte all'interno
+% 
+
 %%TODO: mettere possibili sviluppi futuri
+
+% si può estendere in particolare alle logiche a bassa complessità (citare articoli ?!?)
+
+% aggiungere una section in cui si dice che il marchingegno è generalizzabile ai casi di DL-Lite, ad EL, ad altre DL con poco sforzo
+
+
+% la mia architettura è applicabile ad un qualunque sistema di ragionamento (es a modelli minimali per logiche condizionali), ci saranno altri casi in cui una "fase1" genera varie "fasi2" che possono girare in parallelo, ad esempio tutti i meccanismi di ragionamento che implementano una semantica a modelli preferiti (esistono per circumscription, ecc IN LETTERATURA)
+
 
 
 %****************************************************
