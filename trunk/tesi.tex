@@ -882,14 +882,14 @@ As usual, the adoption of the  unique name assumption greatly simplifies reasoni
 
 %%%TODO: mettere anche qui il disegnino con i Min_<(C^I)
 
-Considering the example of department staff having lunches, if (in addition to the TBox) the ABox only contains the following facts about Greg and Sara:
+Considering the example of students and taxpayers, if (in addition to the TBox) the ABox only contains the following facts about Luca and Antonio:
 
 \begin{quote}
-$\mathit{DepartmentMember}(\mathit{greg})$ \\
-$\mathit{DepartmentMember}(\mathit{sara}), \mathit{TemporaryWorker}(\mathit{sara})$
+$\mathit{Student}(\mathit{luca})$ \\
+$\mathit{Student}(\mathit{antonio}), \mathit{Worker}(\mathit{antonio})$
 \end{quote}
 
-\noindent we would like to infer that Greg takes his lunches at the restaurant, whereas Sara does not; but without the unique name hypothesis, we cannot get this conclusion since Greg and Sara might be the same individual.
+\noindent we would like to infer that Antonio pays the taxes, whereas Luca does not; but without the unique name hypothesis, we cannot get this conclusion since Luca and Antonio might be the same individual.
 To perform useful reasoning we would need to  extend the language with equality and make a case analysis according to possible identities of individuals. While this is technically possible, we prefer to keep the things simple here by adopting the unique name assumption.
 
 \begin{definition}[Model satisfying a Knowledge Base]\label{Def-ModelSatTBox-ABox} Consider a model $\emme$, as defined in Definition \ref{Semantics of T}.
@@ -909,7 +909,7 @@ In this case we write \emph{KB} $\models_{\alct} F$.
 
 
 \noindent Notice that the meaning of $\tip$ can be split into two parts: for any $x$ of the domain $\Delta$,  $x \in (\tip(C))^I$ just in case (i) $x \in C^I$, and (ii) there is no $y \in C^I$ such that $y < x$.
-As already mentioned in the Introduction, in order to isolate the second part of the meaning of $\tip$ (for the purpose of the calculus that we will present in Section \ref{calcolo}), we introduce a new modality $\bbox$.
+As already mentioned in the Introduction, in order to isolate the second part of the meaning of $\tip$ (for the purpose of the calculus that we will present in Section \ref{tab}), we introduce a new modality $\bbox$.
 The basic idea is simply to interpret the preference relation $<$ as an accessibility relation.
 By the Smoothness Condition, it turns out that $\bbox$ has the properties as in G\"odel-L\"ob modal logic of provability G.
 The Smoothness Condition ensures that typical elements of $C^I$ exist whenever $C^I \diverso \vuoto$, by avoiding infinitely descending chains of elements.
@@ -1484,15 +1484,17 @@ This is because the precondition (see figure \ref{fig_inc_rule}) for applying ru
 
 %%TODO: CHECK !!!
 
-\begin{figure}[htp]
+\begin{figure}[!ht]
+\[
 \begin{prooftree}
-\AxiomC{$\langle S\,|\,U,\,C\sqsubseteq D^L \rangle$}
-\RightLabel{$(\sqsubseteq)$}
-\UnaryInfC{$\langle S, \,x : \neg C \sqcup D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle$}
+ \langle S\,|\,U,\,C\sqsubseteq D^L \rangle
+ \justifies \langle S, \,x : \neg C \sqcup D\,|\,U,\,C\sqsubseteq D^{L, x} \rangle
+\using (\sqsubseteq)
 \end{prooftree}
-	\begin{flushright}\footnotesize if $x$ occurs in $S$ and $x \notin L$. \normalsize\end{flushright}
-	\caption{$\primo$ rule for $(\sqsubseteq)$ and its precondition.}
-	\label{fig_inc_rule}
+\]
+\begin{flushright}\footnotesize if $x$ occurs in $S$ and $x \notin L$. \normalsize\end{flushright}
+\caption{$\primo$ rule for $(\sqsubseteq)$ and its precondition.}
+\label{fig_inc_rule}
 \end{figure}
 
 In the Prolog implementation, if we had
@@ -1540,13 +1542,14 @@ Each rule in the tableaux is associated with a \texttt{prove(...)} predicate tha
 Let us consider the example of the rule shown in figure \ref{fig_union_rule}.
 
 \begin{figure}[htp]
-	\begin{prooftree}
-		\rootAtTop
-		\AxiomC{$\langle S,\, x : C,\,x\,: C \sqcup D\,|\,U \rangle$}
-		\AxiomC{$\langle S,\, x : D,\,x\,: C \sqcup D\,|\,U \rangle$}
-		\RightLabel{$(\sqcup^+)$}
-		\BinaryInfC{$\langle S,\, x\,: C\sqcup D\,|\,U \rangle$}
-	\end{prooftree}
+\begin{center}\includegraphics[scale=1.00]{img/union_rule.png}\end{center} %%FIXME: ripristinare l'albero!
+%	\begin{prooftree}
+%		\rootAtTop
+%		\AxiomC{$\langle S,\, x : C,\,x\,: C \sqcup D\,|\,U \rangle$}
+%		\AxiomC{$\langle S,\, x : D,\,x\,: C \sqcup D\,|\,U \rangle$}
+%		\RightLabel{$(\sqcup^+)$}
+%		\BinaryInfC{$\langle S,\, x\,: C\sqcup D\,|\,U \rangle$}
+%	\end{prooftree}
 	\begin{flushright}if $x : C \notin S$ and $x : D \notin S$.\\\end{flushright}
 	\caption{$\primo$ rule for $(\sqcup^+)$ and its precondition.}
 	\label{fig_union_rule}
@@ -1580,17 +1583,18 @@ Static rules always introduce at most two branches in the proof tree (like in th
 This is not true for dynamic rules where the number of branches varies depending on the number of labels present in the tree.
 Figure \ref{fig_box_rule} shows an example.
 
-\begin{figure}[htp]
-\footnotesize
-\begin{prooftree}
-	\rootAtTop
-	\def\defaultHypSeparation{\hskip .02in}
-	\AxiomC{$\langle S, x : \neg \Box \neg C, y < x, y : C, y : \Box \neg C, S^M_{x\rightarrow y}|U \rangle$}
-	\AxiomC{$\langle S, x : \neg \Box \neg C, v_1 < x, v_1 : C, v_1 : \Box \neg C, S^M_{x\rightarrow {v_1}}|U \rangle\,\dots$}
-	\RightLabel{$(\Box^-)$}
-	\BinaryInfC{$\langle S,\, x : \neg \Box \neg C\,|\,U \rangle$}
-\end{prooftree}
 
+\begin{figure}[htp]
+\begin{center}\includegraphics[scale=1.00]{img/box_rule.png}\end{center} %%FIXME: ripristinare l'albero!
+%\footnotesize
+%\begin{prooftree}
+%	\rootAtTop
+%	\def\defaultHypSeparation{\hskip .02in}
+%	\AxiomC{$\langle S, x : \neg \Box \neg C, y < x, y : C, y : \Box \neg C, S^M_{x\rightarrow y}|U \rangle$}
+%	\AxiomC{$\langle S, x : \neg \Box \neg C, v_1 < x, v_1 : C, v_1 : \Box \neg C, S^M_{x\rightarrow {v_1}}|U \rangle\,\dots$}
+%	\RightLabel{$(\Box^-)$}
+%	\BinaryInfC{$\langle S,\, x : \neg \Box \neg C\,|\,U \rangle$}
+%\end{prooftree}
 \begin{flushright} with $y$ fresh,\\
 if $\not\exists z \prec x$ s.t. $z \equiv_{S,x:\neg \Box \neg C} x $ and $ \not\exists u$ t.c. $\{u < x, u : C, u : \neg \Box \neg C, S^M_{x\rightarrow u} \} \subseteq S$\\
 $\forall v_i$ occurring in $S$.
