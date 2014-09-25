@@ -240,10 +240,6 @@ $#2$}}
 % AUXILIARY ENVIRONMENTS
 }% end hide
 
-
-%MACRO NICOLA
-
-
 \newcommand {\SeCK} {{s\bf CK}}
 \newcommand {\caL} {{\cal L}}
 
@@ -287,11 +283,6 @@ $#2$}}
 
 \newcommand{\Mod}[1]{\mbox{$[\mid \hspace{-0.1cm}#1\hspace{-0.1cm}\mid ]$}}
 
-\newcommand{\green}[1]{{\color{green} #1 \normalcolor} }
-\newcommand{\red}[1]{{\color{red} #1 \normalcolor} } %Modifiche reviewer A e generali
-\newcommand{\blue}[1]{{\color{blue} #1 \normalcolor} } %Modifiche reviewer B
-\newcommand{\magenta}[1]{{\color{magenta} #1 \normalcolor} } %Modifiche al weakening implicito
-\newcommand{\cyan}[1]{{\color{cyan} #1 \normalcolor} } %Modifiche reviewer C
 
 \newenvironment{frase}{\center\vspace{0.2cm}\scshape}{\\\normalfont\vspace{0.6cm}}
 
@@ -308,8 +299,6 @@ $#2$}}
 \newcommand {\sottosezione}{\vspace{0.4cm}}
 \newcommand {\sezione}{\vspace{1cm}}
 
-
-%\documentclass[oneside,a4paper,11pt,titlepage]{book}
 \usepackage{prooftree}
 
 
@@ -323,12 +312,8 @@ $#2$}}
 \usepackage{colortbl}
 \usepackage{fancyhdr}
 
-\newenvironment{ultimissimi}{\color{black}}{\color{black}} %Modifiche reviewer cattivo
-\newenvironment{rosso}{\color{black}}{\color{black}} %Modifiche reviewer cattivo
-\newenvironment{blu}{\color{black}}{\color{black}} %Modifiche reviewer buono e aggiunta di R
 \newcommand {\provafatto}[1]{\begin{flushright}$\bbox$ \emph{Fact #1}\end{flushright}}
 \newcommand {\ellep}[1]{\elle^{\Gamma_0}_{\bbox^{#1}}}
-
 
 \newtheorem{teorema}{Theorem}[chapter]
 \newtheorem{proposizione}[teorema]{Proposition}
@@ -459,15 +444,90 @@ The system is designed for scalability and based on a "worker/employer" paradigm
 
 In this thesis we present the design and implementation of a distributed theorem prover for the non--monotonic description logic $\alctmin$.
 
+\subsubsection{Description Logics}
 Description Logics (DL) are a family of formal knowledge representation languages. They are a decidable fragment of the first-order logic formalism used to provide semantics to representation structures.
-DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain. It is of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science are in the field of bioinformatics and in the codification of medical knowledge. A DL knowledge base (KB) comprises two components: the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them, and the ABox containing instances of concepts and roles. Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arises. The traditional approach is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery.
+DLs are used in artificial intelligence for formal reasoning on the concepts of an application domain, and are of particular importance in providing a logical formalism for ontologies and the Semantic Web. The most notable applications outside information science are in the field of bioinformatics and in the codification of medical knowledge. A more detailed description can be found in chapter \ref{dl}.\\
 
+
+A DL knowledge base (KB) comprises two components:
+\begin{itemize}
+	\item the TBox, containing the definition of concepts (and possibly roles) and a specification of inclusion relations among them.
+	
+	For instance, we can state that penguins are birds
+\begin{center}$Penguin\sqsubseteq Bird$\end{center}
+which means that ``every individual which is a member of the concept \emph{Penguin}, is also a member of the concept \emph{Bird}''.
+	\item the ABox containing \emph{facts} of the domain of interest, such as memberships of individuals to concepts (e.g. $Bird(tweety)$), and relationships between individuals (e.g. $Hunts(sylvester, tweety)$).
+\end{itemize}
+
+
+This allows us to draw the conclusion that if an individual named Tux is a penguin, it is also a bird.
+\begin{center}$Penguin(tux)\models Bird(tux)$\end{center}
+
+The ``traditional'' DLs are however expressively limited since they do not allow the representation of typical properties of concepts, nor to make an efficient use of defeasible inheritance.
+Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arises.
+For instance, since one of the main practical applications of the DLs is the definition and use of medical taxonomies, let us consider a case of defeasible inheritance.
+In a ``normal'' patient, the heart is situated more in the left side of the thorax than in the right.
+\begin{center}
+$Heart \sqsubseteq \exists Position.Left$
+\end{center}
+The \emph{exception} to this is constituted by patients born with the condition known as \emph{situs inversus}, who have their major visceral organs reversed or mirrored from their normal positions. In case of exceptions, such as this, with the `traditional'' DLs, the KB becomes trivial.\\
+
+Let us introduce another limit with an example:
+\begin{center}
+$Penguin \sqsubseteq Bird$\\
+$Bird \sqsubseteq FlyingAnimal$\\
+$Penguin \sqsubseteq \neg FlyingAnimal$
+\end{center}
+This KB is consistent only if there are no individuals which are penguins.\\
+
+The traditional approach to overcome these limits is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery. This is presented extensively in section \ref{nonmonotonic_reasoning}.\\
+
+Chapter \ref{dlt} describes another approach, based on a typicality operator, to build non--monotonic logics. We focus on $\alct$ (presented in section \ref{alct}) and $\alctmin$ (section \ref{alctmin}), which are the base for our work.
+
+In brief, $\alctmin$ allows us to consistently represent the following TBox:
+\begin{center}
+$\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
+$\tip(Student \sqcap Worker) \sqsubseteq IncomeTaxPayer$\\
+$\tip(Student \sqcap Worker \sqcap \exists HasAChild.\top) \sqsubseteq \neg IncomeTaxPayer$
+\end{center}
+Note that such a KB, without the typicality operator \tip would be consistent only in case no individual was both a student and a worker.\\
+
+Let us now consider the following ABox:
+\begin{center}$Student(mario)$\\
+$\exists HasAChild.Student(franco)$\end{center}
+
+In $\alctmin$, from the $KB={ABox, TBox}$ we can infer that
+\begin{center}$\neg IncomeTaxPayer(mario)$\end{center}
+while
+\begin{center}$\exists HasAChild.IncomeTaxPayer(franco)$\end{center}
+This shows us that an individual has the properties of the \emph{most specific} concept to which it belongs.\\
+
+$\alctmin$ is also non--monotonic: a formula $F$ which can be inferred from a $KB$ is not necessarily inferable from another $KB' \supset KB$.
+
+Following the example, if we added to the ABox the information
+\begin{center}$Worker(mario)$\end{center}
+the previous conclusion ($\neg IncomeTaxPayer(mario)$ would not be inferable anymore. On the other hand we could infer
+\begin{center}$IncomeTaxPayer(mario)$\end{center}
+
+Furthermore, $\alctmin$ can deal with a form of \emph{irrelevance}.
+
+Let us expand the previous $KB$ with:
+\begin{center}
+$\tip(Student \sqcap Tall) \sqsubseteq \neg IncomeTaxPayer$\\
+$\tip(Student \sqcap Worker \sqcap Tall) \sqsubseteq IncomeTaxPayer$
+\end{center}
+since the characteristic of being tall is \emph{irrelevant} to being or not being a taxpayer. All the previous inferences involving Mario and him being a taxpayer would still be valid, even if we added to the ABox
+\begin{center}
+$Tall(mario)$
+\end{center}
+
+\newpage
 
 %%%%%TODO: Aggiungere già qui qualche parola su ALC+T e ALC+Tmin
 %[cosa vuol dire fare le inferenze? rappresentiamo delle inclusioni, ad esempio diciamo che i pinguini sono inclusi nell'insieme degli uccelli, se tom è un pinguino allora è anche un uccello] > mettere un raccordo con quello che si dirà dopo: le DL hanno il grosso limite di non poter rappresentare l'ereditarietà con cancellazione -> se abbiamo un'eccezione la KB diventa triviale, viceversa se gli studenti lavoratori pagano le tasse e gli altri no la KB è consistente solo se non ci sono studenti lavoratori
 
 %%%%%TODO: Metti qualcosa sul fatto che il calcolo è a due fasi, che è il punto di partenza del tuo lavoro
-% - KB, voler ragionare tulle eccezioni, soluzione basata sull'operatore di tipicalità;
+% - KB, voler ragionare sulle eccezioni, soluzione basata sull'operatore di tipicalità;
 % -   NO: modelli, funzione di selezione, ecc
 % -   SI: da dove salta fuori T, cosa formalizzo (INCLUSIONI); esempi di inclusioni in DL
 %		TABLEAU in 2 FASI: dov'è il mio contributo => stiamo parlando di DL con la tipicalità, io arrivo perchè c'è un tableau in 2 fasi che però è implementato in modo che le 2 fasi siano fatte in fila
@@ -478,8 +538,6 @@ DLs are used in artificial intelligence for formal reasoning on the concepts of 
 % -> il tableau a 2 fasi (non ci interessano le singole regole), ci interessa l'idea che questo costruisce il ramo in fase1 che è un candidato [vedere dopo], ma che gli serve fase2 per verificare se davvero è un contromodello => queste cose possono essere fatte in parallelo (da qui l'idea della mia implementazione)
 
 %
-
-In chapter \ref{dl} we introduce the Description Logics and briefly describe some proposals for non--monotonic extensions, while in chapter \ref{dlt} we describe the non--monotonic logic $\alctmin$.
 
 Our implementation is based on the tableaux proof method, which is a mechanism that allows to demonstrate the validity of a formula in a given logical system.
 The tableaux calculus allows us to conclude that a formula is valid (or not) just by applying the tableaux computation rules, i.e., without appealing to the semantics.
@@ -657,7 +715,7 @@ whose semantics is:
 \cite{obitko}
 
 
-\section{Non--monotonic reasoning and the operator $\tip$}
+\section{Non--monotonic reasoning and the operator $\tip$}\label{nonmonotonic_reasoning}
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
 The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic reasoning mechanism.
 This has led to study non--monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
@@ -676,8 +734,6 @@ A tableau calculus for circumscriptive $\mathcal{ALCO}$ is presented in \cite{hi
 In \cite{casinistraccia2010,stracciaijcai2011} a non--monotonic extension of $\mathcal{ALC}$  based on the application of Lehmann and Magidor's \emph{rational closure} \cite{whatdoes} to $\mathcal{ALC}$ is proposed. The approach is based on the introduction of a consequence relation $\ent$ among concepts and of a consequence relation $\Vdash$ among an unfoldable KB and assertions. The authors show that such consequence relations are \emph{rational}. It is also shown that such relations inherit the same computational complexity of the underlying DL.
 
 Recent works discuss the combination of open and closed world reasoning in DLs. In particular, formalisms have been defined for combining DLs with logic programming rules (see, for instance, \cite{eiter2004} and \cite{rosatiacm}). A grounded circumscription approach for DLs with local closed world capabilities has been defined in \cite{hitzlerdl}.
-
-\newpage
 
 A non--monotonic extension should have the following characteristics:
 
@@ -1155,7 +1211,6 @@ $\emme$ satisfies  a constraint $F$ under $\alpha$, written $\emme \models_\alph
 A constraint system $\sx S \tc U \dx$ is satisfiable if there is a model $\emme$ and a function $\alpha$ such that $\emme$ satisfies  every constraint in $S$ under $\alpha$ and that, for all $C \sqsubseteq D^L \in U$ and for all $x \in \Delta$, we have that if $x \in C^I$ then $x \in D^I$.
 \end{definition}
 
-%[FIXME] correggere frasi come questa sotto!
 Let us now show that:
 
 \begin{proposition}\label{corresp constr system} KB=(TBox,ABox) is satisfiable in an $\alct$ model if
