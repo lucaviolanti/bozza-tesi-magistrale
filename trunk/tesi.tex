@@ -478,11 +478,13 @@ $Penguin \sqsubseteq Bird$\\
 $Bird \sqsubseteq FlyingAnimal$\\
 $Penguin \sqsubseteq \neg FlyingAnimal$
 \end{center}
-This KB is consistent only if there are no individuals which are penguins.\\
+This KB is consistent only if there are no individuals which are penguins.
+
+\subsubsection{Non--monotonic reasoning and typicality}
 
 The traditional approach to overcome these limits is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery. This is presented extensively in section \ref{nonmonotonic_reasoning}.\\
 
-Chapter \ref{dlt} describes another approach, based on a typicality operator, to build non--monotonic logics. We focus on $\alct$ (presented in section \ref{alct}) and $\alctmin$ (section \ref{alctmin}), which are the base for our work.
+Chapter \ref{dlt} describes another approach, based on a typicality operator (\tip), to build non--monotonic logics. We focus on $\alct$ (presented in section \ref{alct}) and $\alctmin$ (section \ref{alctmin}), which are the base for our work.
 
 In brief, $\alctmin$ allows us to consistently represent the following TBox:
 \begin{center}
@@ -490,7 +492,9 @@ $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker) \sqsubseteq IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker \sqcap \exists HasAChild.\top) \sqsubseteq \neg IncomeTaxPayer$
 \end{center}
-Note that such a KB, without the typicality operator \tip would be consistent only in case no individual was both a student and a worker.\\
+Note that such a KB, without the typicality operator \tip, would be consistent only in case no individual was both a student and a worker.
+
+\newpage
 
 Let us now consider the following ABox:
 \begin{center}$Student(mario)$\\
@@ -516,7 +520,7 @@ Let us expand the previous $KB$ with:
 $\tip(Student \sqcap Tall) \sqsubseteq \neg IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker \sqcap Tall) \sqsubseteq IncomeTaxPayer$
 \end{center}
-since the characteristic of being tall is \emph{irrelevant} to being or not being a taxpayer. All the previous inferences involving Mario and him being a taxpayer would still be valid, even if we added to the ABox
+Since the characteristic of being tall is \emph{irrelevant} to being or not being a taxpayer, all the previous inferences involving Mario and him being a taxpayer would still be valid, even if we added to the ABox
 \begin{center}
 $Tall(mario)$
 \end{center}
@@ -530,6 +534,10 @@ $Tall(mario)$
 % - KB, voler ragionare sulle eccezioni, soluzione basata sull'operatore di tipicalità;
 % -   NO: modelli, funzione di selezione, ecc
 % -   SI: da dove salta fuori T, cosa formalizzo (INCLUSIONI); esempi di inclusioni in DL
+
+
+
+
 %		TABLEAU in 2 FASI: dov'è il mio contributo => stiamo parlando di DL con la tipicalità, io arrivo perchè c'è un tableau in 2 fasi che però è implementato in modo che le 2 fasi siano fatte in fila
 % da subito diciamo che del tableau (di cui non diciamo ancora nient'altro oltre al fatto che è un tableau in 2 fasi) c'è un'implementazione che però fa sì che fase 1 faccia così... però le fasi 2 potrebbero essere mandate in esecuzione senza aspettare l'esito della fase2 del primo ramo che resta aperto
 % il mio contributo è un'implementazione in questo senso
@@ -539,31 +547,27 @@ $Tall(mario)$
 
 %
 
+\subsubsection{The tableaux calculus $\nuovoc$}
+
 Our implementation is based on the tableaux proof method, which is a mechanism that allows to demonstrate the validity of a formula in a given logical system.
-The tableaux calculus allows us to conclude that a formula is valid (or not) just by applying the tableaux computation rules, i.e., without appealing to the semantics.
-Proof methods can be implemented in many different programming languages, but logic programming languages offer a better solution since in this paradigm we make use of mathematical logic for computer programming.
 
-In chapter \ref{tab} we introduce the tableaux calculus for $\alctmin$, which is at the base of our theorem prover\ref{arch}.
+In chapter \ref{tab} we introduce $\nuovoc$ (the tableaux calculus for $\alctmin$), which forms the basis of our theorem prover. This tableaux calculus allows us to conclude whether a query ($F$) is \emph{minimally} entailed by a $KB$ ($KB \models_{min} F$) or not, just by applying the various computation rules, i.e. without appealing to the semantics.
 
-Since our work is an expansion of a previous theorem prover called PreDeLo, chapter \ref{predelo} is dedicated to its description. In chapter \ref{bg} we 
+This is performed as a proof by contradiction: $\nuovoc$ tries to find a \emph{counterexample} (a model of $KB \cup \neg F$) by generating of various candidate models and then verifying if they are \emph{minimal}.
+The calculus requires two phases: 
+\begin{itemize}
+\item a first phase, $\primo$ (presented extensively in section \ref{tableau_ph1}), which can generate various branches (corresponding to various candidate models);
+\item a second phase, $\secondo$ (section \ref{tableau_ph2}), which verifies the minimality of such candidate branches.
+\end{itemize}
 
-In chapter 
+Chapter \ref{chap_theorem_proving} shows how all these mechanisms have been put into practice by a previous theorem prover called PreDeLo (section \ref{predelo}), while section \ref{tableaux_implementation} extensively describes how $\nuovoc$ was implemented using the logic programming language SICStus Prolog.
 
+PreDeLo is the first implementation of a theorem prover for $\alctmin$: when presented with a query, it runs the first phase of the calculus, and whenever the first phase generates a candidate branch, it interrupts the execution of the first phase to verify whether such branch is a counterexample, using the second phase. Only when the branch has been checked, the execution of the first phase can be resumed. This constitutes the main limitation of PreDeLo: the first phase is in fact independent from the second, and the two phases could be run in parallel.
 
-\ref{arch}\\
+\subsubsection{DysToPic}
 
-%In our implementation we used SICStus Prolog and for this reason we dedicate chapter 2 to analyse its fundamental concepts.
-%The Prolog engine of our application was the first component to be developed.
-%In chapter 5 we will describe in details the implementations and their structures explaining what considerations driven our choices.
-%The theorem prover’s functionalities are accessible through a graphical user interface (GUI) that has been developed in the Java programming language.
-%These functionalities are described in detail in chapter 6.
-%We will also provide a brief explanation of how Java and Prolog are interconnected and work together.
-%Finally, we will describe what are the possible future improvements.
-%Our main idea is to deploy the theorem prover in a distributed environment.
-%Since we often have to deal with high complexity calculi, grid computing could offer a solution for distributing such complexity on different computing resources.
-%Different approaches for distributed Prolog implementations already exists and they are described in literature.
-%A general description of our design idea will be given in chapter 7.
-
+Our work aims to improve PreDeLo by tackling this limitation: to do so we developed a new theorem prover named DysToPic (illustrated in chapter \ref{chap_dystopic}), which is a distributed software, capable of exploiting multiple computing units in parallel to performing its inferences.
+The approach is described first at a higher level in section \ref{workemp}, and then detailed more techically  in section \ref{tech}. An example of execution is also presented in \ref{example}.
 
 \newpage
 
@@ -588,6 +592,9 @@ Each fragment has different features, leading to computational problems of varia
 Typically, nodes are used to characterize concepts, i.e., sets of individuals, and links are used to characterize relationships among them.
 Concepts can have simple properties, which are typically attached to the corresponding nodes.
 It is rather simple to make a correspondence between network structures and Description Logics because the latter are equipped with unary predicates representing sets of individuals, binary predicates representing relationships among them, and a mechanism of inclusion statements to express concept properties.
+
+\newpage
+
 Indeed, we can represent concept properties with the inclusion statement $Carnivore \sqsubseteq Animal$, and we can express the following facts about an individual $lion$: 
 
 \begin{itemize}
@@ -599,7 +606,6 @@ Indeed, we can represent concept properties with the inclusion statement $Carniv
 
 It is also possible to use intersection concepts with the syntax $Carnivore \sqcap Plant$ to select individuals which belong to both $Carnivore$ and $Plant$.
 
-\newpage
 
 \section{Application domains}
 Description Logics are used in the implementation of many systems that demonstrate their practical effectiveness. Some of these systems have found their way into production use, despite the fact that there was no real commercial platform that could be used for developing them.\\
@@ -628,16 +634,20 @@ In this kind of application, DL structures can represent views, and DL systems c
 
 \section{Basic Description Logics}
 As the name Description Logics indicates, one of the characteristics of these languages is that they are equipped with a formal, logic--based semantics.
-Another distinguished feature is the emphasis on reasoning as a central service: reasoning allows one to infer implicitly represented knowledge from the knowledge that is explicitly contained in the knowledge base.
+Another distinguished feature is the emphasis on reasoning as a central service: reasoning allows one to infer implicitly represented knowledge from the knowledge that is explicitly contained in the knowledge base.\\
+
 Description Logics support inference patterns that occur in many applications of intelligent information processing systems, and which are also used by humans to structure and understand the world: classification of concepts and individuals.
+
 Classification of concepts determines subconcept/superconcept relationships (called subsumption relationships in DL) between the concepts of a given terminology, and thus allows one to structure the terminology in the form of a subsumption hierarchy.
-Classification of individuals (or objects) determines whether a given individual is always an instance of a certain concept (i.e., whether this instance relationship is implied by the description of the individual and the definition of the concept).
-It thus provides useful information on the properties of an individual.
-Moreover, instance relationships may trigger the application of rules that insert additional facts into the knowledge base.
+
+Classification of individuals (or objects) determines whether a given individual is always an instance of a certain concept (i.e., whether this instance relationship is implied by the description of the individual and the definition of the concept). It thus provides useful information on the properties of an individual.
+Moreover, instance relationships may trigger the application of rules that insert additional facts into the knowledge base.\\
+
 The implementation of reasoning services requires building procedures that should always terminate, both for positive and for negative answers, but also complexity needs to be taken into consideration.
 Decidability and complexity of the inference problems depend on the expressive power of the DL at hand.
 On the one hand, very expressive DLs are likely to have inference problems of high complexity.
 On the other hand, very weak DLs (with efficient reasoning procedures) may not be sufficiently expressive to represent the important concepts of a given application.
+
 Investigating this trade--off between the expressivity of DLs and the complexity of their reasoning problems is one of the most important issues in DL research
 \cite{Baader:2003:BDL:885746.885749}.
 
@@ -662,13 +672,42 @@ Investigating this trade--off between the expressivity of DLs and the complexity
 
 \section{The basic description language $\al$}
 A knowledge representation system based on Description Logics provides facilities to set up knowledge bases, to reason about their content, and to manipulate them.
+
 A knowledge base (KB) comprises two components, the TBox and the ABox.
-The TBox introduces the terminology, i.e., the vocabulary of an application domain, while the ABox contains assertions about named individuals in terms of this vocabulary.
+
+The TBox introduces the terminology, i.e., the vocabulary of an application domain, and contains inclusions or definitions of roles. 
+
+An instance of TBox:
+\begin{center}
+$Penguin \sqsubseteq Bird$\\
+$Bird \sqsubseteq Animal$\\
+$Cat \sqsubseteq Animal$
+\end{center}
+
+
+The ABox contains assertions about named individuals in terms of this vocabulary.
+
+An instance of ABox:
+\begin{center}
+$Bird(tweety)$\\
+$Cat(sylvester)$\\
+$Hates(sylvester, tweety)$
+\end{center}
+
 The vocabulary consists of concepts, which denote sets of individuals, and roles, which denote binary relationships between individuals.
+
 Elementary descriptions are atomic concepts and atomic roles.
-Complex descriptions can be built from them inductively with concept constructors.
+
+Complex descriptions can be built from them inductively with concept constructors.\\
+
+
+
 In abstract notation, we use the letters $A$ and $B$ for atomic concepts, the letter $R$ for atomic roles, and the letters $C$ and $D$ for concept descriptions.
-In the sequel we present the language $\al$ that has been introduced in \cite{Schmidt-SchaubB:1991:ACD:114341.114342} as a minimal language that is of practical interest. The other languages of this family are extensions of $\al$.
+In the sequel we present the language $\al$ (Attributive concept Language), that has been introduced in \cite{Schmidt-SchaubB:1991:ACD:114341.114342} as a minimal language that is of practical interest. The other languages of this family are extensions of $\al$.
+
+\newpage
+
+\subsection{Syntax}
 
 Concept descriptions in $\al$ are formed according to the following syntax rule:
 
@@ -684,9 +723,22 @@ Concept descriptions in $\al$ are formed according to the following syntax rule:
 \end{itemize}
 
 
+\subsection{Semantics}
+
+In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$, a set $A^{\II} \subseteq \Delta^{\II}$ (the set of the individuals of the domain which belong to such concept), and to every atomic role $R$ a binary relation, $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$ (which is a couple of elements of the domain).
+
+\begin{figure}[!htp]
+\centering
+\includegraphics[scale=.50]{img/diagram1_1.png}
+\caption{The arrows represent the assignments established by $\II$}
+\label{}
+\end{figure}
 
 
-In order to define a formal semantics of $\al$-concepts we consider interpretations $\II$ that consist of a non--empty set $\Delta$ (the domain of the interpretation) and an interpretation function, which assigns to every atomic concept $A$ a set $A^{\II} \subseteq \Delta^{\II}$ and to every atomic role $R$ a binary relation $R^{\II} \subseteq \Delta^{\II} \times \Delta^{\II}$.
+For instance if we have a domain that contains some individuals, some are birds and some are not:
+\begin{center}
+$Bird \xrightarrow{\mathcal{I}} Bird^{\mathcal{I}}$
+\end{center}
 
 The interpretation function is extended to concept descriptions by the following
 inductive definitions:
@@ -702,48 +754,93 @@ inductive definitions:
 We say that two concepts $C$, $D$ are equivalent, and write $C = D$, if $C^{\II} = D^{\II}$ for all interpretations $\II$
 \cite{Baader:2003:BDL:885746.885749}.
 
+%%%% TODO: CHECK!!!!
+\subsection{Models}
+A model is a structure $\mathcal{M} = \langle \Delta, \mathcal{I}\rangle$, where:
+\begin{itemize}
+\item $\Delta$ is the domain;
+\item $\mathcal{I}$ is the extension function that maps each extended concept $C$ to $C^\mathcal{I} \subseteq \Delta$, every atomic concept $A \in C$ to a set $C^\mathcal{I} \subseteq \Delta$, and each role $R$ to a $R^\mathcal{I} \subseteq \Delta \times \Delta$.
+\end{itemize}
+
+The models attribute a meaning to the inclusions: a certain inclusion $C \sqsubseteq D$ holds in a model $\mathcal{M}$ if $C^\mathcal{I} \sqsubseteq D^\mathcal{I}$.
+
+\newpage
+
+For instance, the model $\mathcal{M}_{1}$ confirms the inclusion $Penguin \sqsubseteq Bird$ since the extension of the penguins ($Penguin^{\mathcal{I}}$) is included in the extension of the birds ($Bird^{\mathcal{I}}$).
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.34]{img/diagram1_2.png}
+\caption{The model $\mathcal{M}_1$}
+\label{}
+\end{figure}
+
+\vspace{1.0cm}
+
+If we had another model made as $\mathcal{M}_{2}$, in which some of the penguins are not birds, the inclusion would not hold.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=.34]{img/diagram1_3.png}
+\caption{The model $\mathcal{M}_2$}
+\label{}
+\end{figure}
+
+\newpage
+
 \section{Complex concept negation: $\alc$}
-A basic extension of $\al$ is the negation of an arbitrary concept:
+A basic extension of $\al$ is $\alc$ (Attributive concept Language with Complements), which introduces (see \cite{obitko}) the negation of an arbitrary concept:
 \begin{itemize}
 \item[] \itab{$\neg C$} \tab{(concept negation)}
 \end{itemize}
 
 whose semantics is:
 \begin{itemize}
-\item[] \itab{$(\neg C)^{\II} = \Delta^{\II} $\textbackslash $C^{\II}$}
+\item[] \itab{$(\neg C)^{\II} = \Delta^{\II} $\textbackslash $C^{\II}$} 
 \end{itemize}
-\cite{obitko}
+
+
+This allows us to express notions such as:
+\begin{center}
+$Penguin \sqsubseteq \neg FlyingAnimal$
+\end{center}
 
 
 \section{Non--monotonic reasoning and the operator $\tip$}\label{nonmonotonic_reasoning}
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
 The traditional approach is to handle defeasible inheritance by integrating some kind of non--monotonic reasoning mechanism.
+
 This has led to study non--monotonic extensions of DLs \cite{baader95a, baader95b, bonattilutzwolterkr06, casinistraccia2010, donini98, donini2002, eiter2004, straccia93}.
+
 However, finding a suitable non--monotonic extension for inheritance reasoning with exceptions is far from obvious.
 To give a brief account, \cite{baader95a} proposes the extension of DL with Reiter's default logic.
 However, the same authors have pointed out that this integration may lead to both semantical and computational difficulties.
+
 Indeed, the unsatisfactory treatment of open defaults via Skolemization may lead to an undecidable default consequence relation. For this reason, \cite{baader95a} proposes a restricted semantics for open default theories, in which default rules are only applied to individuals explicitly mentioned in the ABox.
 Furthermore, Reiter's default logic does not provide a direct way of modeling inheritance with exceptions.
 This has motivated the study of extensions of DLs with prioritized defaults
 \cite{straccia93,baader95b}.
+
 A more general approach is undertaken in \cite{donini2002}, where it is proposed an extension of DL with two epistemic operators. This extension allows to encode Reiter's default logic as well as to express epistemic concepts and procedural rules.
+
 In \cite{bonattilutz} the authors propose an extension of DL with circumscription. One of the motivating applications of circumscription is indeed to express prototypical properties with exceptions, and this is done by introducing ``abnormality'' predicates, whose extension is minimized.
 The authors provide decidability and complexity results based on theoretical analysis.
+
 A tableau calculus for circumscriptive $\mathcal{ALCO}$ is presented in \cite{hitzlertableau}.
 
 In \cite{casinistraccia2010,stracciaijcai2011} a non--monotonic extension of $\mathcal{ALC}$  based on the application of Lehmann and Magidor's \emph{rational closure} \cite{whatdoes} to $\mathcal{ALC}$ is proposed. The approach is based on the introduction of a consequence relation $\ent$ among concepts and of a consequence relation $\Vdash$ among an unfoldable KB and assertions. The authors show that such consequence relations are \emph{rational}. It is also shown that such relations inherit the same computational complexity of the underlying DL.
 
-Recent works discuss the combination of open and closed world reasoning in DLs. In particular, formalisms have been defined for combining DLs with logic programming rules (see, for instance, \cite{eiter2004} and \cite{rosatiacm}). A grounded circumscription approach for DLs with local closed world capabilities has been defined in \cite{hitzlerdl}.
+Recent works discuss the combination of open and closed world reasoning in DLs. In particular, formalisms have been defined for combining DLs with logic programming rules (see, for instance, \cite{eiter2004} and \cite{rosatiacm}). A grounded circumscription approach for DLs with local closed world capabilities has been defined in \cite{hitzlerdl}.\\
+
+Another approach, presented in \cite{tr2008} and expanded in \cite{trfundam} \cite{FI09}, \cite{aiia2011}, \cite{tableaux2011DLs}, \cite{Giordano:2013:NDL:2435476.2435957}, and \cite{conf/aiia/GiordanoGJOP13}, proposes the use of a typicality operator, $\tip$, for extending $\alc$ and allow a form of non--monotonic reasoning in Description Logics.\\
 
 A non--monotonic extension should have the following characteristics:
 
 \begin{enumerate}
-\item The (non--monotonic) extension must have a clear semantics and should be based on the same semantics as the underlying monotonic DL.
-\item The extension should allow to specify prototypical properties in a natural and direct way.
+\item The (non--monotonic) extension must have a clear semantics and should be based on the same semantics as the underlying monotonic DL;
+\item The extension should allow to specify prototypical properties in a natural and direct way;
 \item The extension must be decidable, if  so is the underlying monotonic DL, and standard proof methods for monotonic DL should be generalized to it.
 \end{enumerate}
-
-%%TODO  controllare bene questa parte
 
 Before entering the technical details, let us sketch how the pre--existent work makes use of the typicality operator $\tip$ for inference. The KB is comprised of the standard TBox and ABox, with the addition of a set of assertions of the form $\tip(C)\sqsubseteq D$, where $D$ is a concept not mentioning $\tip$.
 
@@ -774,9 +871,7 @@ Suppose  further that the ABox contains alternatively one of the following facts
 3. $\mathit{\neg IncomeTaxPayer}(\mathit{marco})$
 \end{quote}
 
-\noindent Moreover, we would also like to infer (defeasible) properties of individuals
-implicitly introduced by existential restrictions, for instance,
-if the ABox contains
+\noindent Moreover, we would also like to infer (defeasible) properties of individuals implicitly introduced by existential restrictions, for instance, if the ABox contains
 
 \begin{quote}
 $\exists \mathit{HasChild}.\mathit{Student(grazia)}$
@@ -797,9 +892,7 @@ $\tip (\mathit{Student} \mint Worker \mint Erasmus \mint \mathit{Tall})  \sqset 
 
 \noindent as  $\mathit{Tall}$ is irrelevant with respect to paying income taxes or not. For the same reason, the conclusion about $\mathit{luca}$ being an instance of $\neg IncomeTaxPayer$ or not should not be influenced by adding $\mathit{Tall}(\mathit{luca})$ to the ABox.\\
 
-Hereinafter we introduce a non--monotonic extension for defeasible reasoning in description logics, called $\alctmin$, which is an extension of $\alct$.
-
-%%TODO fine parte da controllare
+Hereinafter we present a non--monotonic extension for defeasible reasoning in description logics, called $\alctmin$, that extends the logic $\alct$ (which introduced the typicality operator \tip).
 
 \newpage
 
@@ -1020,23 +1113,27 @@ As a difference with respect to standard $\alc$, in $\alct$ we can consistently 
 \begin{quote}
 $\tip (\mathit{DepartmentMember}) \sqset \mathit{LunchAtRestaurant}$\\
 $\tip (\mathit{DepartmentMember} \mint \mathit{TemporaryResearcher})  \sqset \nott \mathit{LunchAtRestaurant}$\\
-$\tip (\mathit{DepartmentMember} \mint \mathit{TemporaryResearcher} \mint \exists \mathit{Owns}.\mathit{RestaurantTicket})  \sqset \mathit{LunchAtRestaurant}$
+$\tip (\mathit{DepartmentMember} \mint \mathit{TemporaryResearcher} \mint \exists \mathit{Owns}.\mathit{RestaurantTicket}) \sqset \mathit{LunchAtRestaurant}$
 \end{quote}
 
 \noindent Assume that $\mathit{greg}$ is an instance of the concept
-$\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket}$. What can we conclude about
-$\mathit{\mathit{greg}}$? We have already mentioned that if the ABox explicitly points out that $\mathit{greg}$ is a {\em typical} instance of the  concept, and it contains the assertion that:
+\begin{center}$\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket}$. \end{center}
+What can we conclude about $\mathit{\mathit{greg}}$? We have already mentioned that if the ABox explicitly points out that $\mathit{greg}$ is a {\em typical} instance of the  concept, and it contains the assertion that:
 
-$(*)  \ \tip(\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$
+\begin{center}$(*)  \ \tip(\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$\end{center}
 
 %%%TODO: reindentare con più respiro
 
 \noindent then, in $\alct$, we can conclude that
 
-$\mathit{LunchAtRestaurant(\mathit{greg})}.$
+\begin{center}$\mathit{LunchAtRestaurant(\mathit{greg})}.$\end{center}
 
-\noindent However, if (*) is replaced by the weaker $(**)  \ (\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.
-\mathit{RestaurantTicket})(\mathit{greg}),$ in which there is no information about the typicality of $\mathit{greg}$, in $\alct$ we can no longer draw this conclusion, and indeed we cannot make any inference about whether $\mathit{greg}$ spends its lunch time at a restaurant or not. The limitation here lies in the fact that $\alct$ is {\em monotonic}, whereas we would like to make a non--monotonic inference.
+\noindent However, if (*) is replaced by the weaker
+\begin{center} $(**)  \ (\mathit{DepartmentMember} \sqcap \mathit{TemporaryResearcher} \sqcap \exists \mathit{Owns}.\mathit{RestaurantTicket})(\mathit{greg}),$ \end{center}
+
+in which there is no information about the typicality of $\mathit{greg}$, in $\alct$ we can no longer draw this conclusion, and indeed we cannot make any inference about whether $\mathit{greg}$ spends its lunch time at a restaurant or not.
+
+The limitation here lies in the fact that $\alct$ is {\em monotonic}, whereas we would like to make a non--monotonic inference.
 Indeed, we would like to non--monotonically assume, in the absence of information to the contrary, that $\mathit{greg}$ is a typical instance of the concept.
 In general, we would like to infer that individuals are typical instances of the concepts they belong to, if this is consistent with the KB.
 
@@ -1172,7 +1269,7 @@ As we will define in Definition \ref{corresponding constraint system}, the ABox 
 
 Let us now separately analyse the two components of the calculus $\nuovoc$, starting with $\primo$.
 
-\section{The tableau calculus $\primo$}
+\section{The tableau calculus $\primo$}\label{tableau_ph1}
 
 Let us first define the basic notions of a tableau system in $\primo$:
 
@@ -1419,7 +1516,7 @@ For a complete description of \emph{PreDeLo}, the reader should refer to \cite{c
 
 In \cite{conf/aiia/GiordanoGJOP13}, the tableaux calculus for checking entailment in the rational extension of $\alc$ is also introduced.
 
-\section{The tableaux calculi's implementation}
+\section{The tableaux calculi's implementation}\label{tableaux_implementation}
 
 \subsection{Operators}
 
@@ -1675,29 +1772,6 @@ The implementation of $\secondo$ is coded in the module \texttt{alct2}, which ex
 \newpage
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 \chapter{The distributed theorem prover: DysToPic}\label{chap_dystopic}
 \section{Background}\label{bg}
 %%% distributed - parallel
@@ -1723,6 +1797,8 @@ In the previous software, especially when using $\alctmin$, the extremely high c
 \footnote{In Theorem \ref{overall_complexity} we showed that the problem of deciding whether \emph{KB} $\models_{min}^{\ellet} F$ is in $\textsc{co-NExp}^\textsc{NP}$.}
 could delay the result of several minutes even for a query formula of medium length.
 We aim to build a distributed application for theorem proving, so that it can spread its computational burden amongst different machines which can work in parallel.
+
+\newpage
 
 \section{A two--phase calculus}\label{calc_2ph}
 
@@ -1782,7 +1858,7 @@ This means that the \emph{employer} has to keep a continuous dialogue with the \
 
 \newpage
 
-\section{Technologies used}
+\section{Technologies used}\label{tech}
 
 %%%%%%%%%%%% SICSTUS %%%%%%%%%%%%%%%%%%%%%
 
@@ -1850,7 +1926,7 @@ Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository
 
 When the \emph{employer} starts, it retrieves the list of all the \emph{workers} which are currently bound to the RMI registry and consults it every time it needs a \emph{worker}.
 
-\section{An example of execution}
+\section{An example of execution}\label{example}
 \begin{enumerate}
 
 \item The RMI registry is launched on the machine `A' on port `x': every other machine will have to perform their requests to it.
@@ -1920,7 +1996,4 @@ This elaboration yields an answer of the form \texttt{true} or \texttt{false}, w
 \bibliography{biblioMarzo2010}
 
 
-
-
 \end{document}
-@
