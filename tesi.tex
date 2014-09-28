@@ -2140,9 +2140,321 @@ This elaboration yields an answer of the form \texttt{true} or \texttt{false}, w
 
 \newpage
 
-\section{Testing}
+\chapter{Preliminary performance testing}\label{testing}
+
+We have made a preliminary attempt to show how \emph{DysToPic} performs, especially in comparison with \emph{Predelo}.\\
+
+Due to the novelty of the $\alctmin$ language, there are no public KBs available for testing purposes.
+
+A draft of an automated random generator of KBs (and queries) was developed for \emph{Predelo}.
+We can confirm that the data that it produces are still compatible with \emph{DysToPic}, although the generator itself calls for further analysis. This is outside the scope of this thesis.
+
+This chapter is far from being an exhaustive verification; however we can already say that the results for our prover are at the very least comparable with those obtainable by \emph{Predelo}.
+In the sequel we will illustrate both some interesting test cases and the environment in which the tests were performed.
+
+\section{Hardware and software platforms}
+
+\subsection{Software}
+
+Both \emph{Predelo}'s and \emph{DysToPic}'s Prolog cores have been compiled with SICStus 4.1.1 (version x86\_64-linux-glibc2.7).
+
+Due to compatibility reasons between Java and SICStus (via the Jasper library), the Java applications had to be developed using the Java 6 platform (we used the javac compiler at version 1.6.0\_32)\footnote{Newer versions of SICStus have been released which are compatible with Java 7, although they require a new license.}.
 
 
+
+\newpage
+
+\subsection{Hardware}\label{hardware}
+The machines used for our tests are:
+
+\begin{itemize}
+
+\item \textbf{ninjavm}: a desktop PC with 
+
+CPU: Intel Core i5-3570K (3.4-3.8GHz, 6MB L3 cache) - 4 cores, 4 threads;\\
+RAM: 8GB\\
+running Ubuntu 14.04.1 64 bit OS (kernel 3.13.0-35) in a virtual machine, with 2 available virtual cores and 4GB of available RAM; the host OS is Windows 7.
+
+\item \textbf{evo}: another desktop PC with
+
+CPU: Intel Pentium G2030 (3.0GHz, 3MB L3 cache) - 2 cores, 2 threads;\\
+RAM: 4GB\\
+running natively Ubuntu 14.04.1 64 bit OS (kernel 3.13.0-29)
+
+\item \textbf{x220}: a Lenovo X220 laptop with
+
+CPU: Intel Core i7-2640M (2.8-3.5GHz, 4MB L3 cache) - 2 cores, 4 threads;\\
+RAM: 8GB\\
+running natively Ubuntu 14.04.1 64 bit OS (kernel 3.13.0-35)
+
+
+\item \textbf{x230vm}: a Lenovo X230 laptop with
+
+CPU: Intel Core i7-3520M (2.9-3.6GHz, 4MB L3 cache) - 2 cores, 4 threads;\\
+RAM: 8GB\\
+running Ubuntu 14.04.1 64 bit OS (kernel 3.13.0-35) in a virtual machine, with 2 available virtual cores and 4GB of available RAM; the host OS is Windows 7.
+
+\end{itemize}
+
+All are fairly recent machines and can be considered almost equal in terms of calculating capacity.
+The following results have been obtained with each machine connected to a LAN over a domestic router, via Ethernet links at 100 Mbit/s.
+
+\newpage
+
+\section{Expectations}
+Following what we stated in \ref{calc_2ph}, we recall that the possible outcomes of an execution of $\nuovoc$ on a query are:
+\begin{enumerate}
+\item an immediate \emph{YES} at the end of the first phase ($\primo$), without need of any verification with the second phase ($\secondo$).
+
+This can happen in case the query is trivially true or the KB is inconsistent;
+
+\item a global \emph{NO}, which requires that at least one \emph{worker} had answered \texttt{"false"} to an open branch;
+
+\item a global \emph{YES}, which requires that every \emph{worker} had answered \texttt{"true"} to every open branch
+\footnote{Our tests seem to suggest that the random generator described at the beginning of chapter \ref{testing} cannot generate examples of case 3. Further investigation of this issue is required before drawing definitive conclusions. We reaffirm that this is outside the scope of this work.}
+.
+\end{enumerate}
+
+Clearly we know that the increased parallelism achieved by \emph{DysToPic} comes at the price of an initial overhead required for the set--up of the various distributed components of its architecture.
+\emph{DysToPic} uses the \emph{repository} as a form of shared memory for the partial results, which can also be a source of slowdowns.
+Moreover, it is clear that the responses will take some time to come from the remote \emph{workers} to the local \emph{repository}.
+
+For these reasons, we obviously expect the queries of case 1. (immediate \emph{YES}) to be resolved faster by \emph{Predelo}.
+
+In general, we also expect that this overhead can cause \emph{Predelo} to have a bit of advantage in case the  query requires only a small amount of running time.
+
+The cases 2. and 3. are instead more promising for \emph{DysToPic}: its parallelism can be fully exploited when case various branches require the verification of the second phase.
+
+\newpage
+
+\section{Experimental results}
+
+\subsection{Naming convention}
+
+Obviously, since \emph{Predelo} is a sequential program, it can be only executed on a single machine; we tested it only on \textbf{ninjavm}.\\
+
+On the other hand, \emph{Dystopic} was tested in various configurations.
+While both the \emph{employer} and the \emph{repository} were always executed on \textbf{ninjavm}, in the sequel we call:
+
+\begin{itemize}
+
+\item \textbf{2W} a configuration in which 2 \emph{workers} were executed on \textbf{ninjavm};
+\item \textbf{4W} a configuration in which 2 \emph{workers} were executed on \textbf{ninjavm} and 2 on \textbf{evo};
+\item \textbf{8W} a configuration in which 2 \emph{workers} were executed on \textbf{ninjavm}, 2 on \textbf{evo} and 4 on \textbf{x220};
+\item \textbf{10W} a configuration in which 2 \emph{workers} were executed on \textbf{ninjavm}, 2 on \textbf{evo}, 4 on \textbf{x220} and 2 on \textbf{x230vm}.
+
+\end{itemize}
+
+As we showed in section \ref{hardware}, some of the machines are actually virtualised, although we limited the amount of \emph{workers} per machine, so that each machine has exactly one \emph{worker} per logical thread.
+
+\newpage
+
+
+\subsection{Comparison of running times}
+
+\subsubsection{Query 1: answer YES (case 1)}
+%BIRDS4#prove([ [[tweety,1],bird], [[tweety,1],penguin] ], [ [[ti bird inc flying],[]], [[penguin inc bird],[]], [[penguin inc neg flying],[]] ], [[tweety,1],neg flying], Tree).
+
+This query does not produce any open branch in $\primo$.\\
+
+\begin{tabular}{ll}
+	\textbf{ABox} & \textbf{TBox}\\
+	$Bird(tweety)$ & $\tip(Bird) \sqsubseteq FlyingAnimal$\\
+	$Penguin(tweety)$ & $Penguin \sqsubseteq Bird$\\
+	& $Penguin \sqsubseteq \neg FlyingAnimal$\\[0.5cm]
+\end{tabular}
+
+\begin{tabular}{ll}
+\textbf{Query} & \textbf{Result}\\
+$\neg FlyingAnimal(tweety)?$ & YES\\
+\end{tabular}
+
+\begin{figure}[ht]
+\begin{bchart}[step=200,max=200,unit=ms,scale=1.4]
+	\bcbar[label=Predelo, value=2]{2}
+    \medskip
+    \bcbar[label=2W, value=124]{124}
+    \medskip
+    \bcbar[label=4W, value=124]{124}
+    \medskip
+    \bcbar[label=8W, value=126]{126}
+    \medskip
+    \bcbar[label=10W, value=127]{127}
+\end{bchart}
+\caption{}
+\end{figure}
+
+This chart shows us that, in this first case, the set--up overhead dominates the running time of \emph{DysToPic}: the query can be easily solved by $\primo$ and \emph{Predelo} does it more efficiently.
+
+On the other hand, from a practical point of view, there is no noticeable difference between the running times of both theorem provers.
+
+We can also notice how a small amount of time is required to start the various \emph{workers}.
+
+\newpage
+
+\subsubsection{Query 2: answer NO (case 2)}
+%prove([[[mario,1], student],[[mario,1],workingStudent],[[mario,1],father], [[mario,1],tall] ],
+%     [  [[ti student inc neg taxPayer],[]],[[workingStudent inc student],[]], [[ti workingStudent inc taxPayer],[]]   ],       [[mario,1], neg taxPayer],Tree).
+
+This query generates 1 open branch in $\primo$, which has to be tested by a single \emph{worker} in $\secondo$.\\
+
+\begin{tabular}{ll}
+	\textbf{ABox} & \textbf{TBox}\\
+	$Student(mario)$ & $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
+	$WorkingStudent(mario)$ & $WorkingStudent \sqsubseteq Student$\\
+	$Tall(mario)$ & $\tip(WorkingStudent) \sqsubseteq IncomeTaxPayer$\\[0.5cm]
+\end{tabular}
+
+\begin{tabular}{ll}
+\textbf{Query} & \textbf{Result}\\
+$\neg IncomeTaxPayer(mario)?$ & NO\\
+\end{tabular}
+
+
+\begin{figure}[ht]
+\begin{bchart}[step=200,max=200,unit=ms,scale=1.4]
+	\bcbar[label=Predelo, value=2]{2}
+    \medskip
+    \bcbar[label=2W, value=164]{164}
+    \medskip
+    \bcbar[label=4W, value=173]{173}
+    \medskip
+    \bcbar[label=8W, value=180]{180}
+    \medskip
+    \bcbar[label=10W, value=179]{179}
+\end{bchart}
+\caption{}
+\end{figure}
+
+The same considerations done for the previous chart still hold in this case.
+
+Even if a branch requires further verification by $\secondo$, this requires very little effort (it takes less than 2 ms if done sequentially) and the running time is still widely dominated by the overhead.
+
+However, \emph{DysToPic} is not noticeably slower than \emph{Predelo}.
+
+\newpage
+
+\subsubsection{Query 3: answer YES (case 3)}
+
+This query generates 2 open branches in $\primo$, which have to be tested by the \emph{workers} in $\secondo$.\\
+
+\begin{tabular}{ll}
+	\textbf{ABox} & \textbf{TBox}\\
+	$Student(mario)$ & $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
+	$WorkingStudent(mario)$ & $WorkingStudent \sqsubseteq Student$\\
+	$Tall(mario)$ & $\tip(WorkingStudent) \sqsubseteq IncomeTaxPayer$\\[0.5cm]
+\end{tabular}
+
+\begin{tabular}{ll}
+\textbf{Query} & \textbf{Result}\\
+$IncomeTaxPayer(mario)?$ & YES\\
+\end{tabular}
+
+\begin{figure}[ht]
+\begin{bchart}[step=300,max=300,unit=ms,scale=1.4]
+	\bcbar[label=Predelo, value=66]{66}
+    \medskip
+    \bcbar[label=2W, value=215]{215}
+    \medskip
+    \bcbar[label=4W, value=225]{225}
+    \medskip
+    \bcbar[label=8W, value=238]{238}
+    \medskip
+    \bcbar[label=10W, value=243]{243}
+\end{bchart}
+\caption{}
+\end{figure}
+
+This chart confirms that two, ``easy'', open branches are still not enough for \emph{DysToPic} to take advantage of its parallelism; the running times are a bit longer for \emph{Predelo}, but still nothing noticeable happens.\\
+
+In general, we can make a query more complicate in various ways, for instance by adding elements to both the ABox or the TBox, or increasing the degree of nesting in the inclusions in the TBox.
+
+We decided to test how each theorem prover reacted to a query which is substantially identical to the previous one, but with a larger KB.
+
+In section \ref{alctmin} (Definition \ref{LogicalConsequenceALCTMIN}), we showed how adding \emph{irrelevant} assertions does not modify the result of the entailment.
+Though, as we can see from the results, this comes at the cost of a larger number of open branches generated by $\primo$.
+
+\subsubsection{Query 4: answer YES (case 3)}
+
+
+
+This query generates 37 open branches in $\primo$, which have to be tested by the \emph{workers} in $\secondo$.\\
+
+\begin{tabular}{ll}
+	\textbf{ABox} & \textbf{TBox}\\
+	$Student(mario)$ & $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
+	$WorkingStudent(mario)$ & $WorkingStudent \sqsubseteq Student$\\
+	$Tall(mario)$ & $\tip(WorkingStudent) \sqsubseteq IncomeTaxPayer$\\
+	$Student(carlo)$ &\\
+	$WorkingStudent(carlo)$ &\\
+	$Tall(carlo)$ &\\[0.5cm]
+\end{tabular}
+
+\begin{tabular}{ll}
+\textbf{Query} & \textbf{Result}\\
+$IncomeTaxPayer(mario)?$ & YES\\
+\end{tabular}
+
+\begin{figure}[ht]
+\begin{bchart}[step=5000,max=5000,unit=ms,scale=1.4]
+	\bcbar[label=Predelo, value=4504]{4504}
+    \medskip
+    \bcbar[label=2W, value=3138]{3138}
+    \medskip
+    \bcbar[label=4W, value=2118]{2118}
+    \medskip
+    \bcbar[label=8W, value=2069]{2069}
+    \medskip
+    \bcbar[label=10W, value=1942]{1942}
+\end{bchart}
+\caption{}
+\end{figure}
+
+This is the first case in which \emph{DysToPic} can prevail; notice that the improvement is also visibly noticeable (in terms of seconds!).
+
+The 37 open branches have to be verified sequentially by \emph{Predelo} and this clearly slows it down.
+The fact that the performances of \emph{DysToPic} do not directly scale at the increase of the number of \emph{workers} may mean that one of these branches is more complex than the others, and its running time dominates the global result.
+
+\newpage
+
+\subsubsection{Query 5: answer YES (case 3)}
+
+This query generates 1090 open branches in $\primo$, which have to be tested by the \emph{workers} in $\secondo$.\\
+
+\begin{tabular}{ll}
+	\textbf{ABox} & \textbf{TBox}\\
+	$Student(mario)$ & $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
+	$WorkingStudent(mario)$ & $WorkingStudent \sqsubseteq Student$\\
+	$Tall(mario)$ & $\tip(WorkingStudent) \sqsubseteq IncomeTaxPayer$\\
+	$Student(carlo)$ &\\
+	$WorkingStudent(carlo)$ &\\
+	$Tall(carlo)$ &\\
+	$Student(giuseppe)$ &\\
+	$WorkingStudent(giuseppe)$ &\\
+	$Tall(giuseppe)$ &\\[0.5cm]
+\end{tabular}
+
+\begin{tabular}{ll}
+\textbf{Query} & \textbf{Result}\\
+$IncomeTaxPayer(mario)?$ & YES\\
+\end{tabular}
+
+\begin{figure}[ht]
+\begin{bchart}[step=400,max=400,unit=s,scale=1.4]
+	\bcbar[label=Predelo, value=370]{370}
+    \medskip
+    \bcbar[label=2W, value=210]{210}
+    \medskip
+    \bcbar[label=4W, value=112]{112}
+    \medskip
+    \bcbar[label=8W, value=95]{95}
+    \medskip
+    \bcbar[label=10W, value=82]{82}
+\end{bchart}
+\caption{Please note that this chart shows data measured in seconds,\\while the previous charts were measured in milliseconds.}
+\end{figure}
+
+Here, the improvement of \emph{DysToPic} is even more evident. We can see how the performance increase scales well up to 4 \emph{workers}. The improvement with more \emph{workers} is marginal, meaning that probably there are some branches that require prolonged running times.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%  CONCLUSIONS  %%%%%%%%%%%%%%%%%%%%%%%%
