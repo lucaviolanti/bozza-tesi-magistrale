@@ -424,9 +424,9 @@ $#2$}}
 \section*{Abstract}
 
 In this work we present a distributed theorem prover for a non--monotonic Description Logic called $\alct$.
-The logic is an extension of the Description Logic $\alc$, adding a typicality operator $\tip$, which allows to define concepts such as $\tip(C)$, i.e. selecting the "most typical" or "most normal" instances of the concept $C$. This allows the knowledge bases to contain subsumption relations (e.g. $\tip(C) \sqsubseteq D$ - the typical members of $C$ are instances of the concept $D$). Moreover, the use of a "minimal model" semantics (i.e. models that maximise typical instances of concepts), allows new forms of non--monotonic reasoning on prototypical properties and defeasible inheritance.
+The logic is an extension of the Description Logic $\alc$, adding a typicality operator $\tip$, which allows to define concepts such as $\tip(C)$, i.e. selecting the ``most typical'' or ``most normal'' instances of the concept $C$. This allows the knowledge bases to contain subsumption relations (e.g. $\tip(C) \sqsubseteq D$ - the typical members of $C$ are instances of the concept $D$). Moreover, the use of a ``minimal model'' semantics (i.e. models that maximise typical instances of concepts), allows new forms of non--monotonic reasoning on prototypical properties and defeasible inheritance.
 Expanding a pre--existing sequential software, the application is based on a \emph{SICStus Prolog} implementation of the tableaux calculi $\nuovoc$, wrapped by a Java interface which relies on the Java RMI APIs for the distribution.
-The system is designed for scalability and based on a "worker/employer" paradigm: the computational burden for the "employer" can be spread among an arbitrarily high number of "workers" which operate in complete autonomy, so that they can be either deployed on a single machine or on a computer grid.
+The system is designed for scalability and based on a ``worker--employer'' paradigm: the computational burden for the ``employer'' can be spread among an arbitrarily high number of ``workers'' which operate in complete autonomy, so that they can be either deployed on a single machine or on a computer grid.
 
 \newpage
 
@@ -463,7 +463,7 @@ which means that ``every individual which is a member of the concept \emph{Pengu
 
 
 This allows us to draw the conclusion that if an individual named Tux is a penguin, it is also a bird.
-\begin{center}$Penguin(tux)\models Bird(tux)$\end{center}
+\begin{center}$TBox \sqcap ABox \sqcap \{Penguin(tux)\}\models Bird(tux)$\end{center}
 
 The ``traditional'' DLs are however expressively limited since they do not allow the representation of typical properties of concepts, nor to make an efficient use of defeasible inheritance.
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties naturally arises.
@@ -484,8 +484,7 @@ This KB is consistent only if there are no individuals which are penguins.
 
 \subsubsection{Non--monotonic reasoning and typicality}
 
-The traditional approach to overcome these limits is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery. This is presented extensively in section \ref{nonmonotonic_reasoning}.\\
-
+The traditional approach to overcome these limits is to handle defeasible inheritance by integrating DLs with some kind of non--monotonic reasoning machinery. This is presented extensively in section \ref{nonmonotonic_reasoning}.\\[0.3cm]
 Chapter \ref{dlt} describes another approach, based on a typicality operator (\tip), to build non--monotonic logics. We focus on $\alct$ (presented in section \ref{alct}) and $\alctmin$ (section \ref{alctmin}), which are the base for our work.
 
 In brief, $\alctmin$ allows us to consistently represent the following TBox:
@@ -494,6 +493,9 @@ $\tip(Student) \sqsubseteq \neg IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker) \sqsubseteq IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker \sqcap \exists HasAChild.\top) \sqsubseteq \neg IncomeTaxPayer$
 \end{center}
+These axioms model the following assertions: the typical students do not have to pay income taxes, whereas typically a student which is also a worker does.
+
+Moreover, we suppose the existence of a tax exemption for the typical students which have a job and also are fathers.\\[0.3cm]
 Note that such a KB, without the typicality operator \tip, would be consistent only in case no individual was both a student and a worker.
 
 \newpage
@@ -506,7 +508,7 @@ In $\alctmin$, from the $KB={ABox, TBox}$ we can infer that
 \begin{center}$\neg IncomeTaxPayer(mario)$\end{center}
 while
 \begin{center}$\exists HasAChild.IncomeTaxPayer(franco)$\end{center}
-This shows us that an individual has the properties of the \emph{most specific} concept to which it belongs.\\
+This shows us that an individual has the properties of the \emph{most specific} concept to which it belongs. Unlike what happens with other languages, in $\alctmin$ the inferences are correctly applied both to the individuals explicitly nominated in the ABox (e.g. Mario) and those introduced by the use of quantifiers (e.g. Franco's son).\\
 
 $\alctmin$ is also non--monotonic: a formula $F$ which can be inferred from a $KB$ is not necessarily inferable from another $KB' \supset KB$.
 
@@ -517,16 +519,18 @@ the previous conclusion ($\neg IncomeTaxPayer(mario)$ would not be inferable any
 
 Furthermore, $\alctmin$ can deal with a form of \emph{irrelevance}.
 
-Let us expand the previous $KB$ with:
+From the previous KB we are able to infer also that
 \begin{center}
 $\tip(Student \sqcap Tall) \sqsubseteq \neg IncomeTaxPayer$\\
 $\tip(Student \sqcap Worker \sqcap Tall) \sqsubseteq IncomeTaxPayer$
 \end{center}
-Since the characteristic of being tall is \emph{irrelevant} to being or not being a taxpayer, all the previous inferences involving Mario and him being a taxpayer would still be valid, even if we added to the ABox
+since the characteristic of being tall is \emph{irrelevant} to being or not being a taxpayer.
+
+Even if we added to the ABox
 \begin{center}
 $Tall(mario)$
 \end{center}
-
+all the previous inferences involving Mario and him being a taxpayer would still be valid.
 \newpage
 
 %%%%%TODO: Aggiungere già qui qualche parola su ALC+T e ALC+Tmin
@@ -568,8 +572,16 @@ Chapter \ref{chap_theorem_proving} shows how all these mechanisms have been put 
 
 \subsubsection{DysToPic}
 
-Our work aims to improve \emph{PreDeLo} by tackling this limitation: to do so we developed a new theorem prover named \emph{DysToPic} (illustrated in chapter \ref{chap_dystopic}), which is a distributed software, capable of exploiting multiple computing units in parallel to performing its inferences.
+Our work aims to improve \emph{PreDeLo} by tackling this limitation: to do so we developed a new theorem prover named \emph{DysToPic} (illustrated in chapter \ref{chap_dystopic}), which is a distributed software, capable of exploiting multiple computing units in parallel to perform its inferences.
+
 The approach is described first at a higher level in section \ref{workemp}, and then detailed more techically  in section \ref{tech}. An example of execution is also presented in \ref{example}.
+
+\newpage
+
+\subsubsection{Preliminary tests}
+
+Chapter \ref{testing} is dedicated to the description of a series of preliminary performance tests on our software.
+We expect our solution to outperform the previous, at least in some cases, as explained in section \ref{expectations}. For example if, in a particular proof, even a single branch generated by the first phase required a long verification by the second phase, while a sequential software would be forced to wait such verification to end, our parallel approach could simultaneously perform a certain number of other verifications on other branches. This is especially useful in case of queries which have ``NO'' as an answer, i.e. a case in which the query does not entail from the KB (see ``case 2'' in \ref{expectations}): when the execution of the second phase on a branch answers \texttt{"false"}, it means the whole entailment does not hold. Verifying such a branch, therefore leads to an immediate result (``NO''), exempting the prover from verifying other branches. We expect \emph{DysToPic} to take great advantage of its parallelism, for instance, in this case.
 
 \newpage
 
@@ -677,9 +689,8 @@ A knowledge representation system based on Description Logics provides facilitie
 
 A knowledge base (KB) comprises two components, the TBox and the ABox.
 
-The TBox introduces the terminology, i.e., the vocabulary of an application domain, and contains inclusions or definitions of roles. 
-
-An instance of TBox:
+The TBox introduces the terminology, i.e., the vocabulary of an application domain, and contains inclusions or definitions of roles.\\[.2cm]
+As an example of TBox, here we have a fraction of a hierarchy of animals. To represent that the penguins are birds and that both the birds and the cats are animals, we have
 \begin{center}
 $Penguin \sqsubseteq Bird$\\
 $Bird \sqsubseteq Animal$\\
@@ -687,15 +698,14 @@ $Cat \sqsubseteq Animal$
 \end{center}
 
 
-The ABox contains assertions about named individuals in terms of this vocabulary.
-
-An instance of ABox:
+The ABox contains assertions about named individuals in terms of this vocabulary.\\[.2cm]
+For instance, an ABox can contain the following facts
 \begin{center}
 $Bird(tweety)$\\
 $Cat(sylvester)$\\
 $Hates(sylvester, tweety)$
 \end{center}
-
+representing that Tweety is a bird, Sylvester is a cat, and that Sylvester hates Tweety, respectively.\\[.2cm]
 The vocabulary consists of concepts, which denote sets of individuals, and roles, which denote binary relationships between individuals.
 
 Elementary descriptions are atomic concepts and atomic roles.
@@ -754,10 +764,9 @@ inductive definitions:
 \end{itemize}
 
 We say that two concepts $C$, $D$ are equivalent, and write $C = D$, if $C^{\II} = D^{\II}$ for all interpretations $\II$
-\cite{Baader:2003:BDL:885746.885749}.
+\cite{Baader:2003:BDL:885746.885749}.\\
 
-%%%% TODO: CHECK!!!!
-\subsection{Models}
+
 A model is a structure $\mathcal{M} = \langle \Delta, \mathcal{I}\rangle$, where:
 \begin{itemize}
 \item $\Delta$ is the domain;
@@ -766,7 +775,6 @@ A model is a structure $\mathcal{M} = \langle \Delta, \mathcal{I}\rangle$, where
 
 The models attribute a meaning to the inclusions: a certain inclusion $C \sqsubseteq D$ holds in a model $\mathcal{M}$ if $C^\mathcal{I} \sqsubseteq D^\mathcal{I}$.
 
-\newpage
 
 For instance, the model $\mathcal{M}_{1}$ confirms the inclusion $Penguin \sqsubseteq Bird$ since the extension of the penguins ($Penguin^{\mathcal{I}}$) is included in the extension of the birds ($Bird^{\mathcal{I}}$).
 
@@ -788,8 +796,6 @@ If we had another model made as $\mathcal{M}_{2}$, in which some of the penguins
 \label{}
 \end{figure}
 
-\newpage
-
 \section{Complex concept negation: $\alc$}
 A basic extension of $\al$ is $\alc$ (Attributive concept Language with Complements), which introduces (see \cite{obitko}) the negation of an arbitrary concept:
 \begin{itemize}
@@ -801,12 +807,12 @@ whose semantics is:
 \item[] \itab{$(\neg C)^{\II} = \Delta^{\II} $\textbackslash $C^{\II}$} 
 \end{itemize}
 
-
 This allows us to express notions such as:
 \begin{center}
 $Penguin \sqsubseteq \neg FlyingAnimal$
 \end{center}
 
+\newpage
 
 \section{Non--monotonic reasoning and the operator $\tip$}\label{nonmonotonic_reasoning}
 Since the very objective of the TBox is to build a taxonomy of concepts, the need of representing prototypical properties and of reasoning about defeasible inheritance of such properties easily arises.
@@ -1645,7 +1651,7 @@ See \cite{Giordano:2013:NDL:2435476.2435957}.
 \chapter{Theorem proving for Description Logics with Typicality}\label{chap_theorem_proving}
 
 \section{The previous theorem prover: PreDeLo}\label{predelo}
-\emph{PreDeLo} is a theorem prover for Preferential Description Logics, non--monotonic extensions of standard DLs based on a typicality operator $\tip$, which enjoys a preferential semantics.
+\emph{PreDeLo} is a theorem prover for the Preferential Description Logic $\alctmin$ described in section \ref{alctmin}.
 
 The core of the software is a Prolog implementation of labelled tableaux calculi for such extensions, which is able to deal with $\alctmin$ (the preferential extension of the basic DL $\alc$), as well as with the preferential extension of the lightweight DL called $DL-Lite_{core}$.
 
@@ -1965,8 +1971,7 @@ We therefore aim to build a distributed application for theorem proving in $\alc
 \newpage
 
 \section{A two--phase calculus}\label{calc_2ph}
-
-$\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the minimal models of the $KB$.\\
+For the sake of clarity we recall here that, as we described in detail in chapter \ref{tab}, $\nuovoc$ uses a tableaux calculus to verify whether a query entails from a knowledge base, i.e. $KB \models_{min} F$, which is equivalent to state that $F$ is verified in all the minimal models of the $KB$.\\
 To do so, the calculus tries to build a model of $KB \unione \neg F$ (a counterexample). If it fails, then the query entails from the $KB$, otherwise it does not.\\
 
 The process is designed as a two--phase calculus.
@@ -1988,12 +1993,12 @@ This procedure can be seen as the generation and traversal of a tree.
 The first phase generates branches \textbf{B}$_i$, corresponding to models $\emme($\textbf{B}$_i)$, and uses $\primo$ to accept or refuse them.
 A branch is considered $open$ until it is verified and, if it does not represent a counterexample, it is $closed$. The branches which are still \emph{open} after the first phase require further verification by $\secondo$, therefore they will be processed by the second phase.
 
-As we showed in \ref{predelo_execution}, \emph{Predelo} was forced to immediately verify with $\secondo$ each branch generated by $\primo$, sequentially, interrupting de facto $\primo$.
+As we showed in \ref{predelo_execution}, \emph{PreDeLo} was forced to immediately verify with $\secondo$ each branch generated by $\primo$, sequentially, interrupting de facto $\primo$.
 
 In this section, instead, we explain that there is no need for the first phase of the calculus to wait for the result of one elaboration of the second phase on an open branch, before generating another candidate branch.
 
 Indeed, in order to prove whether a query entails from a $KB$, the first phase can be executed on a machine; every time that a branch remains open after the first phase, the execution of the second phase for this branch can be performed in parallel, on a different machine.
-Meanwhile, the main machine, instead of waiting for the termination of the second phase on that branch (as it happened in the sequential implementation of \emph{Predelo}), can carry on with the computation of the first phase (potentially generating other branches).
+Meanwhile, the main machine, instead of waiting for the termination of the second phase on that branch (as it happened in the sequential implementation of \emph{PreDeLo}), can carry on with the computation of the first phase (potentially generating other branches).
 
 If, after the verification of the second phase, a branch remains open, then the whole entailment cannot be satisfied (we have therefore found a counterexample), so the computation process can be interrupted early.
 
@@ -2142,21 +2147,21 @@ This elaboration yields an answer of the form \texttt{true} or \texttt{false}, w
 
 \chapter{Preliminary performance testing}\label{testing}
 
-We have made a preliminary attempt to show how \emph{DysToPic} performs, especially in comparison with \emph{Predelo}.\\
+We have made a preliminary attempt to show how \emph{DysToPic} performs, especially in comparison with \emph{PreDeLo}.\\
 
 Due to the novelty of the $\alctmin$ language, there are no public KBs available for testing purposes.
 
-A draft of an automated random generator of KBs (and queries) was developed for \emph{Predelo}.
+A draft of an automated random generator of KBs (and queries) was developed for \emph{PreDeLo}.
 We can confirm that the data that it produces are still compatible with \emph{DysToPic}, although the generator itself calls for further analysis. This is outside the scope of this thesis.
 
-This chapter is far from being an exhaustive verification; however we can already say that the results for our prover are at the very least comparable with those obtainable by \emph{Predelo}.
+This chapter is far from being an exhaustive verification; however we can already say that the results for our prover are at the very least comparable with those obtainable by \emph{PreDeLo}.
 In the sequel we will illustrate both some interesting test cases and the environment in which the tests were performed.
 
 \section{Hardware and software platforms}
 
 \subsection{Software}
 
-Both \emph{Predelo}'s and \emph{DysToPic}'s Prolog cores have been compiled with SICStus 4.1.1 (version x86\_64-linux-glibc2.7).
+Both \emph{PreDeLo}'s and \emph{DysToPic}'s Prolog cores have been compiled with SICStus 4.1.1 (version x86\_64-linux-glibc2.7).
 
 Due to compatibility reasons between Java and SICStus (via the Jasper library), the Java applications had to be developed using the Java 6 platform (we used the javac compiler at version 1.6.0\_32)\footnote{Newer versions of SICStus have been released which are compatible with Java 7, although they require a new license.}.
 
@@ -2201,7 +2206,7 @@ The following results have been obtained with each machine connected to a LAN ov
 
 \newpage
 
-\section{Expectations}
+\section{Expectations}\label{expectations}
 Following what we stated in \ref{calc_2ph}, we recall that the possible outcomes of an execution of $\nuovoc$ on a query are:
 \begin{enumerate}
 \item an immediate \emph{YES} at the end of the first phase ($\primo$), without need of any verification with the second phase ($\secondo$).
@@ -2219,9 +2224,9 @@ Clearly we know that the increased parallelism achieved by \emph{DysToPic} comes
 \emph{DysToPic} uses the \emph{repository} as a form of shared memory for the partial results, which can also be a source of slowdowns.
 Moreover, it is clear that the responses will take some time to come from the remote \emph{workers} to the local \emph{repository}.
 
-For these reasons, we obviously expect the queries of case 1. (immediate \emph{YES}) to be resolved faster by \emph{Predelo}.
+For these reasons, we obviously expect the queries of case 1. (immediate \emph{YES}) to be resolved faster by \emph{PreDeLo}.
 
-In general, we also expect that this overhead can cause \emph{Predelo} to have a bit of advantage in case the  query requires only a small amount of running time.
+In general, we also expect that this overhead can cause \emph{PreDeLo} to have a bit of advantage in case the  query requires only a small amount of running time.
 
 The cases 2. and 3. are instead more promising for \emph{DysToPic}: its parallelism can be fully exploited when case various branches require the verification of the second phase.
 
@@ -2231,7 +2236,7 @@ The cases 2. and 3. are instead more promising for \emph{DysToPic}: its parallel
 
 \subsection{Naming convention}
 
-Obviously, since \emph{Predelo} is a sequential program, it can be only executed on a single machine; we tested it only on \textbf{ninjavm}.\\
+Obviously, since \emph{PreDeLo} is a sequential program, it can be only executed on a single machine; we tested it only on \textbf{ninjavm}.\\
 
 On the other hand, \emph{Dystopic} was tested in various configurations.
 While both the \emph{employer} and the \emph{repository} were always executed on \textbf{ninjavm}, in the sequel we call:
@@ -2271,7 +2276,7 @@ $\neg FlyingAnimal(tweety)?$ & YES\\
 
 \begin{figure}[ht]
 \begin{bchart}[step=200,max=200,unit=ms,scale=1.4]
-	\bcbar[label=Predelo, value=2]{2}
+	\bcbar[label=PreDeLo, value=2]{2}
     \medskip
     \bcbar[label=2W, value=124]{124}
     \medskip
@@ -2284,7 +2289,7 @@ $\neg FlyingAnimal(tweety)?$ & YES\\
 \caption{}
 \end{figure}
 
-This chart shows us that, in this first case, the set--up overhead dominates the running time of \emph{DysToPic}: the query can be easily solved by $\primo$ and \emph{Predelo} does it more efficiently.
+This chart shows us that, in this first case, the set--up overhead dominates the running time of \emph{DysToPic}: the query can be easily solved by $\primo$ and \emph{PreDeLo} does it more efficiently.
 
 On the other hand, from a practical point of view, there is no noticeable difference between the running times of both theorem provers.
 
@@ -2313,7 +2318,7 @@ $\neg IncomeTaxPayer(mario)?$ & NO\\
 
 \begin{figure}[ht]
 \begin{bchart}[step=200,max=200,unit=ms,scale=1.4]
-	\bcbar[label=Predelo, value=2]{2}
+	\bcbar[label=PreDeLo, value=2]{2}
     \medskip
     \bcbar[label=2W, value=164]{164}
     \medskip
@@ -2330,7 +2335,7 @@ The same considerations done for the previous chart still hold in this case.
 
 Even if a branch requires further verification by $\secondo$, this requires very little effort (it takes less than 2 ms if done sequentially) and the running time is still widely dominated by the overhead.
 
-However, \emph{DysToPic} is not noticeably slower than \emph{Predelo}.
+However, \emph{DysToPic} is not noticeably slower than \emph{PreDeLo}.
 
 \newpage
 
@@ -2352,7 +2357,7 @@ $IncomeTaxPayer(mario)?$ & YES\\
 
 \begin{figure}[ht]
 \begin{bchart}[step=300,max=300,unit=ms,scale=1.4]
-	\bcbar[label=Predelo, value=66]{66}
+	\bcbar[label=PreDeLo, value=66]{66}
     \medskip
     \bcbar[label=2W, value=215]{215}
     \medskip
@@ -2365,7 +2370,7 @@ $IncomeTaxPayer(mario)?$ & YES\\
 \caption{}
 \end{figure}
 
-This chart confirms that two, ``easy'', open branches are still not enough for \emph{DysToPic} to take advantage of its parallelism; the running times are a bit longer for \emph{Predelo}, but still nothing noticeable happens.\\
+This chart confirms that two, ``easy'', open branches are still not enough for \emph{DysToPic} to take advantage of its parallelism; the running times are a bit longer for \emph{PreDeLo}, but still nothing noticeable happens.\\
 
 In general, we can make a query more complicate in various ways, for instance by adding elements to both the ABox or the TBox, or increasing the degree of nesting in the inclusions in the TBox.
 
@@ -2397,7 +2402,7 @@ $IncomeTaxPayer(mario)?$ & YES\\
 
 \begin{figure}[ht]
 \begin{bchart}[step=5000,max=5000,unit=ms,scale=1.4]
-	\bcbar[label=Predelo, value=4504]{4504}
+	\bcbar[label=PreDeLo, value=4504]{4504}
     \medskip
     \bcbar[label=2W, value=3138]{3138}
     \medskip
@@ -2412,7 +2417,7 @@ $IncomeTaxPayer(mario)?$ & YES\\
 
 This is the first case in which \emph{DysToPic} can prevail; notice that the improvement is also visibly noticeable (in terms of seconds!).
 
-The 37 open branches have to be verified sequentially by \emph{Predelo} and this clearly slows it down.
+The 37 open branches have to be verified sequentially by \emph{PreDeLo} and this clearly slows it down.
 The fact that the performances of \emph{DysToPic} do not directly scale at the increase of the number of \emph{workers} may mean that one of these branches is more complex than the others, and its running time dominates the global result.
 
 \newpage
@@ -2441,7 +2446,7 @@ $IncomeTaxPayer(mario)?$ & YES\\
 
 \begin{figure}[ht]
 \begin{bchart}[step=400,max=400,unit=s,scale=1.4]
-	\bcbar[label=Predelo, value=370]{370}
+	\bcbar[label=PreDeLo, value=370]{370}
     \medskip
     \bcbar[label=2W, value=210]{210}
     \medskip
@@ -2475,7 +2480,7 @@ Here, the improvement of \emph{DysToPic} is even more evident. We can see how th
 % la mia architettura è applicabile ad un qualunque sistema di ragionamento (es a modelli minimali per logiche condizionali), ci saranno altri casi in cui una "fase1" genera varie "fasi2" che possono girare in parallelo, ad esempio tutti i meccanismi di ragionamento che implementano una semantica a modelli preferiti (esistono per circumscription, ecc IN LETTERATURA)
 
 
-In this thesis we presented a distributed theorem prover implementation for $\nuovoc$.\\
+In this thesis we presented \emph{DysToPic}, a distributed theorem prover implementation for $\nuovoc$.\\
 
 
 After describing the Description Logic $\mathcal{ALC}$, we showed how it was non--monotonically extended to obtain an expressive language for knowledge representation, $\alctmin$, for reasoning about prototypical properties and inheritance with exceptions.
@@ -2483,9 +2488,10 @@ After describing the Description Logic $\mathcal{ALC}$, we showed how it was non
 Then we introduced the tableau calculus $\nuovoc$, presented in \cite{Giordano:2013:NDL:2435476.2435957}, which has been developed for deciding the satisfiability of $\alctmin$, and we discussed how the degree of expressiveness affects the decision complexity: the problem of deciding if a formula is minimally entailed respect to a $KB$ is in $\textsc{co-NExp}^\textsc{NP}$.
 Such a high complexity classifies the problem itself as untreatable, nonetheless logics such as this are adopted in many real-life environments, thanks to various adaptations to the specific application environments, which provide approachable complexities. This shows us how even extremely complex problems can be treated, under specific conditions.\\
 
-Since the previously developed theorem prover, \emph{Predelo}, showed promising results in the demonstration of complex formulas for this calculus, we decided to improve such approach.
+Since the previously developed theorem prover, \emph{PreDeLo}, showed the possibility of a mechanism of automated demonstration of complex formulas for this calculus, we decided to improve such approach.
 
-\emph{DysToPic} is a Java software, built around two Prolog cores which implement the two phases of $\nuovoc$ ($\primo$ and $\secondo$). It relies on the RMI technology for the distribution of the calculus and it is multi--threaded for its parallelisation.\\
+\emph{DysToPic} is a Java software, built around two separate Prolog cores which implement the two phases of $\nuovoc$ ($\primo$ and $\secondo$). It relies on the RMI technology for the distribution of the calculus and it is multi--threaded for its parallelisation. This allows us to run the verifications (of the second phase) of multiple branches in parallel, on multiple machines at the same time, possibly finding faster a counterexample in case of answer ``NO''.\\
+Even if \emph{DysToPic}'s performances are promising, we intend to study further improvements through the application of refinements. We think that the first step in this direction should be the implementation of a query generator, to obtain a set of significant examples in order to perform further automatised performance tests.\\
 
 \emph{DysToPic}'s system architecture has been designed to be as general as possible, in order to be open to further applications and improvements.\\
 For instance, the adaptation of this software to the low complexity tableaux calculus $\calclite$ (the calculus corresponding to $DL-Lite_c\tip_{min}$), would be almost effortless; doing so we would sacrifice some language expressiveness as a tradeoff for the decreased complexity of the decision.
