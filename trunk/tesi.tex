@@ -419,6 +419,7 @@ $#2$}}
 
 \end{center}
 \end{titlepage}
+
 \newpage
 
 %****************************************************
@@ -816,6 +817,18 @@ This allows us to express notions such as:
 $Penguin \sqsubseteq \neg FlyingAnimal$
 \end{center}
 
+Another addition is that in $\alc$ the existential quantification is qualified\footnote{In the traditional $\alc$ we had only $\exists R.\top)$.}, i.e. we admit assertions as
+
+\begin{itemize}
+\item[] \itab{$\exists R.C$} \tab{(full quantification)}
+\end{itemize}
+
+
+Its semantics is:
+\begin{itemize}
+\item[] \itab{$\{a \in \Delta^\mathcal{I}|\exists b.(a, b)\in R^\mathcal{I} \wedge b \in C^\mathcal{I}\}$}
+\end{itemize}
+
 \newpage
 
 \section{Non--monotonic reasoning and the operator $\tip$}\label{nonmonotonic_reasoning}
@@ -1079,7 +1092,7 @@ Furthermore, $I$ is extended as in Definition \ref{Semantics with f_tip} with th
 
 \noindent Let us now introduce the notion of satisfiability of an $\alct$ knowledge base.
 
-In order to define the semantics of the assertions of the ABox, we  extend the function $I$ to individual constants;  we assign to each individual constant $a \in \mathcal{O}$ a \emph{distinct} domain element $a^I \in \Delta$, that is to say we enforce the \emph{unique name assumption}.
+In order to define the semantics of the assertions of the ABox, we  extend the function $I$ to individual constants;  we assign to each individual constant $a \in \mathcal{O}$ a \emph{distinct} domain element $a^I \in \Delta$, that is to say we enforce the \emph{unique name assumption}, i.e. distinct domain elements are associated to different constant names in the ABox.
 
 As usual, the adoption of the  unique name assumption greatly simplifies reasoning about prototypical properties of individuals denoted by different individual constants.\\
 
@@ -2072,9 +2085,9 @@ The library module \verb$library(jasper)$  provides functionality for controllin
 
 Jasper can be used in two modes, depending on which system acts as \emph{parent application}.
 \begin{enumerate}
-\item If Java is the parent application, the SICStus runtime kernel will be loaded into the JVM using the \verb$System.loadLibrary()$ method (this is done indirectly when instantiating a SICStus object). In this mode, SICStus is loaded as a runtime system.
+\item[(case 1)] If Java is the parent application, the SICStus runtime kernel will be loaded into the JVM using the \verb$System.loadLibrary()$ method (this is done indirectly when instantiating a SICStus object). In this mode, SICStus is loaded as a runtime system.
 
-\item If SICStus is the parent application, Java will be loaded as a foreign resource using the query \verb$use_module(library(jasper))$. The Java engine is initialized using \verb$jasper_initialize/[1,2]$\cite{sicstus_jasper}.\\
+\item[(case 2)] If SICStus is the parent application, Java will be loaded as a foreign resource using the query \verb$use_module(library(jasper))$. The Java engine is initialized using \verb$jasper_initialize/[1,2]$\cite{sicstus_jasper}.\\
 \end{enumerate}
 
 Our implementation uses both of these modes, with the purpose of decoupling the two phases of the calculus.
@@ -2197,7 +2210,7 @@ The \emph{repository} (which runs on the same machine as the \emph{employer}) wi
 Due to a limitation in the RMI protocol, we had to make the repository expose a method called \texttt{proxyRebind(String name, Remote stub)}, which binds the Remote object that is supplied to it to the local RMI registry, with the selected \texttt{name}
 \footnote{This is required since by default one cannot bind a service on a RMI registry which is on a remote machine.}.
 
-Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository} (steps \circled{1} and \circled{2}) and uses \texttt{proxyRebind} to bind itself (steps \circled{3} and \circled{4}) to the RMI registry as \texttt{"Worker*"}, where \texttt{*} is any string, i.e. both \texttt{"Worker1"} and \texttt{"WorkerFoo"} are valid names.
+Each \emph{worker} then asks the RMI registry to lookup for the \emph{repository} (steps \circled{1} and \circled{2}) and uses \texttt{proxyRebind} to bind itself (steps \circled{3} and \circled{4}) to the RMI registry as \texttt{"Worker*"}, where \texttt{*} is any string, e.g. both \texttt{"Worker1"} and \texttt{"WorkerFoo"} are valid names.
 
 \begin{figure}[H]
 \centering
@@ -2679,7 +2692,7 @@ Such a high complexity classifies the problem itself as untreatable, nonetheless
 
 Since the previously developed theorem prover, \emph{PreDeLo}, showed the possibility of a mechanism of automated demonstration of complex formulas for this calculus, we decided to improve such approach.
 
-\emph{DysToPic} is a Java software, built around two separate Prolog cores which implement the two phases of $\nuovoc$ ($\primo$ and $\secondo$). It relies on the RMI technology for the distribution of the calculus and it is multi--threaded for its parallelisation. This allows us to run the verifications (of the second phase) of multiple branches in parallel, on multiple machines at the same time, possibly finding faster a counterexample in case of answer ``NO''.\\
+\emph{DysToPic} is a Java software, built around two separate Prolog cores which implement the two phases of $\nuovoc$ ($\primo$ and $\secondo$). It relies on the RMI technology for the distribution of the calculus and it is multi--threaded for its parallelisation. This allows us to run the verifications (of the second phase) of multiple branches in parallel, on an unlimited number of machines at the same time, possibly finding a counterexample (in case of answer ``NO'') more rapidly.\\
 Even if \emph{DysToPic}'s performances are promising, we intend to study further improvements through the application of refinements. We think that the first step in this direction should be the implementation of a query generator, to obtain a set of significant examples in order to perform further automatised performance tests.\\
 
 \emph{DysToPic}'s system architecture has been designed to be as general as possible, in order to be open to further applications and improvements.\\
